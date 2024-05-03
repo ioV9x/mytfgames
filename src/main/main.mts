@@ -1,10 +1,6 @@
-import { app, BrowserWindow } from "electron";
 import path from "node:path";
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (false && require("electron-squirrel-startup")) {
-  app.quit();
-}
+import { app, BrowserWindow } from "electron";
 
 const createWindow = () => {
   // Create the browser window.
@@ -12,7 +8,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(import.meta.dirname, "preload.js"),
     },
   });
 
@@ -20,8 +16,11 @@ const createWindow = () => {
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+    void mainWindow.loadFile(
+      path.join(
+        import.meta.dirname,
+        `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`,
+      ),
     );
   }
 

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "packageManager": "yarn@4.1.1",
   "private": true,
-  "main": ".vite/build/main.js",
+  "main": ".vite/build/main.mjs",
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
     "@electron-forge/maker-zip": "^7.4.0",

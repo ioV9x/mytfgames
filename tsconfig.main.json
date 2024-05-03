@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src/main",
+    "outDir": "out/dist/main",
+  },
+  "include": [
+    "src/main/**/*.ts",
+    "src/main/**/*.cts",
+    "src/main/**/*.mts",
+    "forge.env.d.mts",
+  ]
+}
