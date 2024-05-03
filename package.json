@@ -11,6 +11,7 @@
     "@electron-forge/shared-types": "^7.4.0",
     "@types/node": "^20.12.8",
     "electron": "^30.0.2",
+    "prettier": "3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.11"
