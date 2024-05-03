@@ -1,9 +1,10 @@
 import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig, mergeConfig } from "vite";
+
 import {
+  external,
   getBuildConfig,
   getBuildDefine,
-  external,
 } from "./vite.base.config.mjs";
 
 // https://vitejs.dev/config
@@ -14,6 +15,7 @@ export default defineConfig((env) => {
   const config: UserConfig = {
     build: {
       lib: {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         entry: forgeConfigSelf.entry!,
         fileName: () => "[name].mjs",
         formats: ["es"],

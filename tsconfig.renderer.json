@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src/renderer",
+    "outDir": "out/dist/renderer"
+  },
+  "include": [
+    "src/renderer/**/*.ts",
+    "src/renderer/**/*.cts",
+    "src/renderer/**/*.mts"
+  ]
+}

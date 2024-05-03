@@ -1,19 +1,16 @@
 {
   "extends": "./tsconfig.base.json",
-  "include": [
-    "*.ts",
-    "*.cts",
-    "*.mts",
-  ],
-  "exclude": [
-    "src/**/*"
-  ],
+  "include": ["*.ts", "*.cts", "*.mts"],
+  "exclude": ["src/**/*"],
   "references": [
     {
       "path": "./tsconfig.main.json"
     },
     {
       "path": "./tsconfig.preload.json"
+    },
+    {
+      "path": "./tsconfig.renderer.json"
     }
   ]
 }

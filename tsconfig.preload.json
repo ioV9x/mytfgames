@@ -5,7 +5,5 @@
     "rootDir": "src",
     "outDir": "out/dist/preload"
   },
-  "include": [
-    "src/preload.ts",
-  ]
+  "include": ["src/preload.ts"]
 }

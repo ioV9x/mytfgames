@@ -1,6 +1,7 @@
 import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig, mergeConfig } from "vite";
-import { getBuildConfig, external } from "./vite.base.config.mjs";
+
+import { external, getBuildConfig } from "./vite.base.config.mjs";
 
 // https://vitejs.dev/config
 export default defineConfig((env) => {
@@ -11,6 +12,7 @@ export default defineConfig((env) => {
       rollupOptions: {
         external,
         // Preload scripts may contain Web assets, so use the `build.rollupOptions.input` instead `build.lib.entry`.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         input: forgeConfigSelf.entry!,
         output: {
           format: "cjs",
