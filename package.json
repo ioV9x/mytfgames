@@ -1,8 +1,22 @@
 {
   "name": "mytfgames",
+  "version": "0.0.1",
   "packageManager": "yarn@4.1.1",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ]
+  "main": ".vite/build/main.js",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-vite": "^7.4.0",
+    "@electron-forge/shared-types": "^7.4.0",
+    "@types/node": "^20.12.8",
+    "electron": "^30.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
+  },
+  "resolutions": {
+    "@electron-forge/core-utils@npm:7.4.0": "patch:@electron-forge/core-utils@npm%3A7.4.0#~/.yarn/patches/@electron-forge-core-utils-npm-7.4.0-881d5c9e73.patch",
+    "@electron-forge/core@npm:7.4.0": "patch:@electron-forge/core@npm%3A7.4.0#~/.yarn/patches/@electron-forge-core-npm-7.4.0-4c33fc0cff.patch"
+  }
 }

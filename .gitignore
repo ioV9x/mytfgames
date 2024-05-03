@@ -1,3 +1,4 @@
+# yarn temporaries
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -5,5 +6,12 @@
 !.yarn/sdks
 !.yarn/versions
 # https://yarnpkg.com/features/caching#zero-installs
-!.yarn/cache
-#.pnp.*
+#!.yarn/cache
+.pnp.*
+
+# vite output
+.vite
+
+# electron-forge output
+out
+node_modules

@@ -1,0 +1,12 @@
+diff --git a/dist/api/start.js b/dist/api/start.js
+index db36a549af102fd75d23684f5d829fd4c61dbb7b..aa28c4cb10d4184520e4ce2db31b44a6332ddec4 100644
+--- a/dist/api/start.js
++++ b/dist/api/start.js
+@@ -116,6 +116,7 @@ exports.default = (0, tracer_1.autoTrace)({ name: 'start()', category: '@electro
+                         ELECTRON_ENABLE_STACK_DUMPING: 'true',
+                     }
+                     : {}),
++                NODE_OPTIONS: undefined,
+             },
+         };
+         if (runAsNode) {
