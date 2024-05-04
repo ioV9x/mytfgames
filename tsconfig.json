@@ -1,7 +1,6 @@
 {
-  "extends": "./tsconfig.base.json",
-  "include": ["*.ts", "*.cts", "*.mts"],
-  "exclude": ["src/**/*"],
+  "include": [],
+  "files": [],
   "references": [
     {
       "path": "./tsconfig.main.json"
@@ -11,6 +10,9 @@
     },
     {
       "path": "./tsconfig.renderer.json"
+    },
+    {
+      "path": "./tsconfig.tools.json"
     }
   ]
 }

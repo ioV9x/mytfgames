@@ -3,11 +3,14 @@
   "compilerOptions": {
     "composite": true,
     "rootDir": "src/renderer",
-    "outDir": "out/dist/renderer"
+    "outDir": "out/dist/renderer",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable"],
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true
   },
-  "include": [
-    "src/renderer/**/*.ts",
-    "src/renderer/**/*.cts",
-    "src/renderer/**/*.mts"
-  ]
+  "include": ["src/renderer"]
 }
