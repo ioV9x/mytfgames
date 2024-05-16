@@ -1,3 +1,6 @@
+# local/dev application data folder
+/_data
+
 # yarn temporaries
 .yarn/*
 !.yarn/patches
