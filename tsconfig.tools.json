@@ -4,6 +4,6 @@
     "composite": true,
     "noEmit": true
   },
-  "include": ["*.ts", "*.cts", "*.mts"],
+  "include": ["*.ts", "*.cts", "*.mts", "package.json"],
   "exclude": ["src/**/*"]
 }

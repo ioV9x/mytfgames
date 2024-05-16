@@ -2,13 +2,16 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
+    "baseUrl": "./src",
     "rootDir": "src/main",
-    "outDir": "out/dist/main"
+    "outDir": "out/dist/main",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "paths": {
+      "$main/*": ["./main/*/index.mts"]
+    }
   },
-  "include": [
-    "src/main/**/*.ts",
-    "src/main/**/*.cts",
-    "src/main/**/*.mts",
-    "forge.env.d.mts"
-  ]
+  "include": ["src/main", "forge.env.d.mts"]
 }

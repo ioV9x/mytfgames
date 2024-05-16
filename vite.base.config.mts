@@ -7,6 +7,9 @@ import pkg from "./package.json";
 
 export const builtins = [
   "electron",
+  "electron/browser",
+  "electron/main",
+  "electron/shared",
   ...builtinModules.map((m) => [m, `node:${m}`]).flat(),
 ];
 
@@ -31,7 +34,9 @@ export function getBuildConfig(env: ConfigEnv<"build">): UserConfig {
       // 🚧 Multiple builds may conflict.
       outDir: ".vite/build",
       watch: command === "serve" ? {} : null,
+      sourcemap: command === "serve",
       minify: command === "build",
+      target: "ES2022",
     },
     clearScreen: false,
   };

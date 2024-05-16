@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src/worker",
+    "outDir": "out/dist/worker",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false
+  },
+  "include": ["src/worker"]
+}

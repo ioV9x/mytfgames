@@ -1,5 +1,6 @@
 import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig, mergeConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 import {
   external,
@@ -30,6 +31,11 @@ export default defineConfig((env) => {
       // Load the Node.js entry.
       mainFields: ["module", "jsnext:main", "jsnext"],
     },
+    plugins: [
+      tsconfigPaths({
+        projects: ["tsconfig.main.json"],
+      }),
+    ],
   };
 
   return mergeConfig(getBuildConfig(forgeEnv), config);
