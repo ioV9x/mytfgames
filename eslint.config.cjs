@@ -41,6 +41,10 @@ module.exports = ts.config(
           ignoreVoidOperator: true,
         },
       ],
+      "@typescript-eslint/no-floating-promises": [
+        "error",
+        { ignoreVoid: true },
+      ],
     },
   },
   {
@@ -58,15 +62,11 @@ module.exports = ts.config(
   {
     languageOptions: {
       parserOptions: {
-        project: [
-          "tsconfig.json",
-          "tsconfig.main.json",
-          "tsconfig.preload.json",
-          "tsconfig.renderer.json",
-          "tsconfig.tools.json",
-          "tsconfig.worker.json",
-        ],
+        project: "./tsconfig.json",
         tsconfigRootDir: __dirname,
+        // typescript-eslint specific options
+        warnOnUnsupportedTypeScriptVersion: true,
+        EXPERIMENTAL_useProjectService: true,
       },
     },
   },

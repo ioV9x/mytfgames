@@ -7,6 +7,9 @@
   "files": [],
   "references": [
     {
+      "path": "./tsconfig.ipc.json"
+    },
+    {
       "path": "./tsconfig.main.json"
     },
     {

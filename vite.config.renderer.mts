@@ -22,6 +22,10 @@ export default defineConfig((env) => {
     plugins: [react({}), pluginExposeRenderer(name)],
     resolve: {
       preserveSymlinks: true,
+      // ts-config-paths doesn't seem to be working with react (or root?) 🤷‍♀️
+      alias: {
+        "$ipc/main-renderer": "../ipc/main-renderer",
+      },
     },
     clearScreen: false,
   } as UserConfig;

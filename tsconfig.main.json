@@ -10,8 +10,14 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "paths": {
+      "$ipc/*": ["./ipc/*/index.mts"],
       "$main/*": ["./main/*/index.mts"]
     }
   },
-  "include": ["src/main", "forge.env.d.mts"]
+  "include": ["src/main", "forge.env.d.mts"],
+  "references": [
+    {
+      "path": "./tsconfig.ipc.json"
+    }
+  ]
 }

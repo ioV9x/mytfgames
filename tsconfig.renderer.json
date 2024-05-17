@@ -2,6 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
+    "baseUrl": "./src/renderer",
     "rootDir": "src/renderer",
     "outDir": "out/dist/renderer",
     "module": "ESNext",
@@ -10,7 +11,15 @@
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable"],
     "allowImportingTsExtensions": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "$ipc/*": ["../ipc/*/index.mts"]
+    }
   },
-  "include": ["src/renderer"]
+  "include": ["src/renderer"],
+  "references": [
+    {
+      "path": "./tsconfig.ipc.json"
+    }
+  ]
 }

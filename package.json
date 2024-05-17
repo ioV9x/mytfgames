@@ -39,13 +39,14 @@
     "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^7.8.0",
+    "typescript-eslint": "^7.9.0",
     "vite": "^5.2.11",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0"
   },
   "resolutions": {
     "@electron-forge/core-utils@npm:7.4.0": "patch:@electron-forge/core-utils@npm%3A7.4.0#~/.yarn/patches/@electron-forge-core-utils-npm-7.4.0-881d5c9e73.patch",
-    "@electron-forge/core@npm:7.4.0": "patch:@electron-forge/core@npm%3A7.4.0#~/.yarn/patches/@electron-forge-core-npm-7.4.0-4c33fc0cff.patch"
+    "@electron-forge/core@npm:7.4.0": "patch:@electron-forge/core@npm%3A7.4.0#~/.yarn/patches/@electron-forge-core-npm-7.4.0-4c33fc0cff.patch",
+    "@typescript-eslint/typescript-estree@npm:7.9.0": "patch:@typescript-eslint/typescript-estree@npm%3A7.9.0#~/.yarn/patches/@typescript-eslint-typescript-estree-npm-7.9.0-bfd3da0bbb.patch"
   }
 }
