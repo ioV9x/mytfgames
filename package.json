@@ -2,7 +2,7 @@
   "name": "mytfgames",
   "productName": "My TFGames",
   "version": "0.0.1",
-  "packageManager": "yarn@4.1.1",
+  "packageManager": "yarn@4.2.2",
   "private": true,
   "main": ".vite/build/main.mjs",
   "scripts": {
