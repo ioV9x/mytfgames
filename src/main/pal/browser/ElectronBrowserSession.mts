@@ -24,7 +24,7 @@ export class ElectronBrowserSessionConfigurer
   constructor() {
     this.rendererAppPath = path.resolve(
       import.meta.dirname,
-      `../renderer/${MAIN_WINDOW_VITE_NAME}`,
+      `../renderer/${RENDERER_VITE_NAME}`,
     );
   }
 

@@ -45,8 +45,8 @@ class ElectronBrowserWindow implements BrowserWindow {
 
   async loadApp(): Promise<void> {
     const appUrl =
-      MAIN_WINDOW_VITE_DEV_SERVER_URL && !app.isPackaged
-        ? MAIN_WINDOW_VITE_DEV_SERVER_URL
+      RENDERER_VITE_DEV_SERVER_URL && !app.isPackaged
+        ? RENDERER_VITE_DEV_SERVER_URL
         : "app://renderer.invalid";
     await this.handle.loadURL(appUrl);
   }

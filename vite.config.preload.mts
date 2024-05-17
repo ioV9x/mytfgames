@@ -1,7 +1,11 @@
 import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig, mergeConfig } from "vite";
 
-import { external, getBuildConfig } from "./vite.base.config.mjs";
+import {
+  external,
+  getBuildConfig,
+  pluginFullReload,
+} from "./vite.base.config.mjs";
 
 // https://vitejs.dev/config
 export default defineConfig((env) => {
@@ -24,7 +28,7 @@ export default defineConfig((env) => {
         },
       },
     },
-    // plugins: [pluginHotRestart('reload')],
+    plugins: [pluginFullReload()],
   };
 
   return mergeConfig(getBuildConfig(forgeEnv), config);

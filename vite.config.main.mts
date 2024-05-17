@@ -6,6 +6,7 @@ import {
   external,
   getBuildConfig,
   getBuildDefine,
+  pluginHotRestart,
 } from "./vite.base.config.mjs";
 
 // https://vitejs.dev/config
@@ -25,7 +26,6 @@ export default defineConfig((env) => {
         external,
       },
     },
-    // plugins: [pluginHotRestart('restart')],
     define,
     resolve: {
       // Load the Node.js entry.
@@ -35,6 +35,7 @@ export default defineConfig((env) => {
       tsconfigPaths({
         projects: ["tsconfig.main.json"],
       }),
+      pluginHotRestart(),
     ],
   };
 

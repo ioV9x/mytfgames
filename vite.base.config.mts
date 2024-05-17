@@ -1,7 +1,7 @@
 import { builtinModules } from "node:module";
 import type { AddressInfo } from "node:net";
 
-import type { ConfigEnv, Plugin, UserConfig } from "vite";
+import type { ConfigEnv, Plugin, UserConfig, ViteDevServer } from "vite";
 
 import pkg from "./package.json";
 
@@ -42,52 +42,58 @@ export function getBuildConfig(env: ConfigEnv<"build">): UserConfig {
   };
 }
 
-export function getDefineKeys(names: string[]) {
-  const define: Record<string, VitePluginRuntimeKeys> = {};
-
-  return names.reduce((acc, name) => {
-    const NAME = name.toUpperCase();
-    const keys: VitePluginRuntimeKeys = {
-      VITE_DEV_SERVER_URL: `${NAME}_VITE_DEV_SERVER_URL`,
-      VITE_NAME: `${NAME}_VITE_NAME`,
-    };
-
-    return { ...acc, [name]: keys };
-  }, define);
+function getDefineKeysFor(name: string): VitePluginRuntimeKeys {
+  const NAME = name.toUpperCase();
+  return {
+    VITE_DEV_SERVER_URL: `${NAME}_VITE_DEV_SERVER_URL`,
+    VITE_NAME: `${NAME}_VITE_NAME`,
+  };
 }
 
-export function getBuildDefine(env: ConfigEnv<"build">) {
-  const { command, forgeConfig } = env;
-  const names = forgeConfig.renderer
-    .filter(({ name }) => name != null)
-    .map(({ name }) => name!);
-  const defineKeys = getDefineKeys(names);
-  const define = Object.entries(defineKeys).reduce<
-    Record<string, string | undefined>
-  >((acc, [name, keys]) => {
-    const { VITE_DEV_SERVER_URL, VITE_NAME } = keys;
-    const def = {
-      [VITE_DEV_SERVER_URL]:
-        command === "serve"
-          ? JSON.stringify(process.env[VITE_DEV_SERVER_URL])
-          : undefined,
-      [VITE_NAME]: JSON.stringify(name),
-    };
-    return { ...acc, ...def };
-  }, {});
+function getDefinesFor(
+  command: string,
+  name: string,
+): Record<string, string | undefined> {
+  const { VITE_DEV_SERVER_URL, VITE_NAME } = getDefineKeysFor(name);
+  return {
+    [VITE_DEV_SERVER_URL]:
+      command === "serve"
+        ? JSON.stringify(process.env[VITE_DEV_SERVER_URL])
+        : undefined,
+    [VITE_NAME]: JSON.stringify(name),
+  };
+}
 
-  return define;
+export function getBuildDefine(
+  env: ConfigEnv<"build">,
+): Record<string, string | undefined> {
+  const { command, forgeConfig } = env;
+
+  const defines = forgeConfig.renderer
+    .filter(({ name }) => name != null)
+    .map(({ name }) => getDefinesFor(command, name!));
+
+  return Object.assign({}, ...defines) as Record<string, string | undefined>;
+}
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface Process {
+      viteDevServers?: Record<string, ViteDevServer>;
+    }
+  }
 }
 
 export function pluginExposeRenderer(name: string): Plugin {
-  const { VITE_DEV_SERVER_URL } = getDefineKeys([name])[name]!;
+  const { VITE_DEV_SERVER_URL } = getDefineKeysFor(name);
 
   return {
     name: "@electron-forge/plugin-vite:expose-renderer",
     configureServer(server) {
-      // process.viteDevServers ??= {};
-      // // Expose server for preload scripts hot reload.
-      // process.viteDevServers[name] = server;
+      process.viteDevServers ??= {};
+      // Expose server for preload scripts hot reload.
+      process.viteDevServers[name] = server;
 
       server.httpServer?.once("listening", () => {
         const addressInfo = server.httpServer!.address() as AddressInfo;
@@ -99,22 +105,32 @@ export function pluginExposeRenderer(name: string): Plugin {
   };
 }
 
-/*
-export function pluginHotRestart(command: "reload" | "restart"): Plugin {
+/**
+ * A plugin which forces all known renderer dev servers to reload the app.
+ * This is useful to propagate changes in the `preload` script.
+ */
+export function pluginFullReload(): Plugin {
   return {
-    name: "@electron-forge/plugin-vite:hot-restart",
+    name: "@electron-forge/plugin-vite:force-reload",
     closeBundle() {
-      if (command === "reload") {
-        for (const server of Object.values(process.viteDevServers)) {
-          // Preload scripts hot reload.
-          server.ws.send({ type: "full-reload" });
-        }
-      } else {
-        // Main process hot restart.
-        // https://github.com/electron/forge/blob/v7.2.0/packages/api/core/src/api/start.ts#L216-L223
-        process.stdin.emit("data", "rs");
+      for (const server of Object.values(process.viteDevServers ?? {})) {
+        // Preload scripts force hot reload.
+        server.hot.send({ type: "full-reload" });
       }
     },
   };
 }
-*/
+
+/**
+ * Restarts the main process if changes to the main script have been detected.
+ */
+export function pluginHotRestart(): Plugin {
+  return {
+    name: "@electron-forge/plugin-vite:hot-restart",
+    closeBundle() {
+      // Main process hot restart.
+      // https://github.com/electron/forge/blob/v7.2.0/packages/api/core/src/api/start.ts#L216-L223
+      process.stdin.emit("data", "rs");
+    },
+  };
+}

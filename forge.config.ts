@@ -33,7 +33,7 @@ const config: ForgeConfig = {
       ],
       renderer: [
         {
-          name: "main_window",
+          name: "renderer",
           config: "vite.config.renderer.mts",
         },
       ],
