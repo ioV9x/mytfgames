@@ -18,7 +18,10 @@
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    // these are covered by eslint
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": [],
   "files": []

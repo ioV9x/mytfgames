@@ -14,7 +14,7 @@
       "$main/*": ["./main/*/index.mts"]
     }
   },
-  "include": ["src/main", "forge.env.d.mts"],
+  "include": ["src/main/**/*.mts", "forge.env.d.mts"],
   "references": [
     {
       "path": "./tsconfig.ipc.json"

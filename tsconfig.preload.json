@@ -2,8 +2,11 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
+    "baseUrl": "./src",
     "rootDir": "src",
-    "outDir": "out/dist/preload"
+    "outDir": "out/dist/preload",
+    "module": "ESNext",
+    "moduleResolution": "bundler"
   },
-  "include": ["src/preload.ts"]
+  "include": ["src/preload.ts", "forge.env.d.mts"]
 }

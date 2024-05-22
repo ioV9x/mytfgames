@@ -9,7 +9,9 @@
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
-    "paths": {}
+    "paths": {
+      "$ipc/core": ["ipc/core/index.mjs"]
+    }
   },
   "include": ["src/ipc"]
 }

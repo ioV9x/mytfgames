@@ -9,12 +9,14 @@ import { makeServiceIdentifier } from "$main/utils";
 
 import { AppModule } from "./app/app.module.mjs";
 import { PalBrowserModule } from "./pal/browser.module.mjs";
+import { PalIpcModule } from "./pal/Ipc/IpcModule.mjs";
 
 const container = new Container();
 container.load(
   // keep this list sorted
   AppModule,
   PalBrowserModule,
+  PalIpcModule,
 );
 
 const mainAppTypeId = makeServiceIdentifier<MainApp>("main app");

@@ -4,6 +4,7 @@ import { defineConfig, mergeConfig } from "vite";
 import {
   external,
   getBuildConfig,
+  getBuildDefine,
   pluginFullReload,
 } from "./vite.base.config.mjs";
 
@@ -11,10 +12,11 @@ import {
 export default defineConfig((env) => {
   const forgeEnv = env as ConfigEnv<"build">;
   const { forgeConfigSelf } = forgeEnv;
+  const define = getBuildDefine(forgeEnv);
   const config: UserConfig = {
     build: {
       rollupOptions: {
-        external,
+        external: ["electron/renderer", ...external],
         // Preload scripts may contain Web assets, so use the `build.rollupOptions.input` instead `build.lib.entry`.
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         input: forgeConfigSelf.entry!,
@@ -28,6 +30,7 @@ export default defineConfig((env) => {
         },
       },
     },
+    define,
     plugins: [pluginFullReload()],
   };
 

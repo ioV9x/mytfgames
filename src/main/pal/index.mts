@@ -1,1 +1,2 @@
-export * from "./browser.mjs";
+export * from "./Browser/index.mjs";
+export * from "./Ipc/index.mjs";

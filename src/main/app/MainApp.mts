@@ -9,6 +9,7 @@ import {
   BrowserSessionConfigurer,
   type BrowserWindow,
   BrowserWindowFactory,
+  MainIpcServer,
 } from "$main/pal";
 
 @injectable()
@@ -20,6 +21,7 @@ export class MainApp {
     @inject(BrowserSessionConfigurer)
     readonly sessionConfigurer: BrowserSessionConfigurer,
     @inject(BrowserWindowFactory) readonly windowFactory: BrowserWindowFactory,
+    @inject(MainIpcServer) readonly _ipcServer: unknown,
   ) {}
 
   async run(): Promise<void> {

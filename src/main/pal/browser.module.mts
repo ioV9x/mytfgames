@@ -1,9 +1,9 @@
 import { ContainerModule } from "inversify";
 
-import { BrowserSessionConfigurer } from "./browser/BrowserSession.mjs";
-import { BrowserWindowFactory } from "./browser/BrowserWindow.mjs";
-import { ElectronBrowserSessionConfigurer } from "./browser/ElectronBrowserSession.mjs";
-import { ElectronBrowserWindowFactory } from "./browser/ElectronBrowserWindow.mjs";
+import { BrowserSessionConfigurer } from "./Browser/BrowserSession.mjs";
+import { BrowserWindowFactory } from "./Browser/BrowserWindow.mjs";
+import { ElectronBrowserSessionConfigurer } from "./Browser/ElectronBrowserSession.mjs";
+import { ElectronBrowserWindowFactory } from "./Browser/ElectronBrowserWindow.mjs";
 
 export const PalBrowserModule = new ContainerModule((bind) => {
   bind(BrowserSessionConfigurer)

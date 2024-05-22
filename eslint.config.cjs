@@ -27,6 +27,7 @@ module.exports = ts.config(
     },
     rules: {
       "@typescript-eslint/no-non-null-assertion": "off",
+      "no-console": "warn",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
     },
@@ -44,6 +45,20 @@ module.exports = ts.config(
       "@typescript-eslint/no-floating-promises": [
         "error",
         { ignoreVoid: true },
+      ],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          vars: "all",
+          varsIgnorePattern: "^_",
+          args: "all",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+          // reportUsedIgnorePattern: true,
+        },
       ],
     },
   },

@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import path, { join } from "node:path";
 
 import react from "@vitejs/plugin-react";
 import type { ConfigEnv, UserConfig } from "vite";
@@ -24,7 +24,11 @@ export default defineConfig((env) => {
       preserveSymlinks: true,
       // ts-config-paths doesn't seem to be working with react (or root?) 🤷‍♀️
       alias: {
-        "$ipc/main-renderer": "../ipc/main-renderer",
+        "$ipc/core": path.join(import.meta.dirname, "src/ipc/core/index.mjs"),
+        "$ipc/main-renderer": path.join(
+          import.meta.dirname,
+          "src/ipc/main-renderer/index.mjs",
+        ),
       },
     },
     clearScreen: false,

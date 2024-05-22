@@ -13,10 +13,15 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "paths": {
-      "$ipc/*": ["../ipc/*/index.mts"]
+      "$ipc/*": ["../ipc/*/index.mjs"]
     }
   },
-  "include": ["src/renderer"],
+  "include": [
+    "src/renderer/**/*.mts",
+    "src/renderer/**/*.tsx",
+    "src/renderer/**/*.svg",
+    "src/renderer/**/*.json"
+  ],
   "references": [
     {
       "path": "./tsconfig.ipc.json"
