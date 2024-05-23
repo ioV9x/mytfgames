@@ -1,5 +1,3 @@
-import { useRouteError } from "react-router-dom";
-
 function errorToString(error: unknown): string {
   if (
     typeof error === "object" &&
@@ -19,9 +17,7 @@ function errorToString(error: unknown): string {
 }
 
 export default function ErrorPage() {
-  const error = useRouteError();
-  console.error(error);
-
+  const error = "hello, I'm a stub";
   return (
     <div id="error-page">
       <h1>Oops!</h1>

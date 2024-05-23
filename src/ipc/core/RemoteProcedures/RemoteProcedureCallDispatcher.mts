@@ -25,7 +25,6 @@ export class RemoteProcedureCallDispatcher {
       }
     });
     transport.addEventListener("ipc-message", ({ data }: IpcMessageEvent) => {
-      console.log(data);
       if (data[0] !== "rpc:result") {
         return;
       }

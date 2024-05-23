@@ -24,6 +24,7 @@ container.bind(mainAppTypeId).to(MainApp).inSingletonScope();
 const mainApp = (globalThis.main = container.get(mainAppTypeId));
 
 mainApp.run().catch((error: unknown) => {
+  // eslint-disable-next-line no-console
   console.error(`MainApp.run() failed`, error);
   app.exit(-1);
 });

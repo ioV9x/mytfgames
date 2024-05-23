@@ -101,7 +101,6 @@ export class RemoteProcedureServer {
     result: unknown,
   ): void {
     target.postMessage(["rpc:result", txn, result]);
-    console.log("posted result", txn, result);
   }
 
   private makeId(serviceId: string, procId: string): string {

@@ -21,8 +21,8 @@ export class ElectronBrowserWindowFactory implements BrowserWindowFactory {
   } satisfies WebPreferences);
 
   readonly defaultWindowOptions = Object.freeze({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
   } satisfies BrowserWindowConstructorOptions);
 
   create(): BrowserWindow {
