@@ -19,7 +19,7 @@ export default defineConfig((env) => {
         external: ["electron/renderer", ...external],
         // Preload scripts may contain Web assets, so use the `build.rollupOptions.input` instead `build.lib.entry`.
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        input: forgeConfigSelf.entry!,
+        input: forgeConfigSelf!.entry,
         output: {
           format: "cjs",
           // It should not be split chunks.

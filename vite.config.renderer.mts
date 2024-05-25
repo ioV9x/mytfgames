@@ -10,7 +10,7 @@ import { pluginExposeRenderer } from "./vite.base.config.mjs";
 export default defineConfig((env) => {
   const forgeEnv = env as ConfigEnv<"renderer">;
   const { root, mode, forgeConfigSelf } = forgeEnv;
-  const name = forgeConfigSelf.name ?? "";
+  const name = forgeConfigSelf?.name ?? "";
 
   return {
     root: join(root, "src/renderer"),
@@ -28,6 +28,10 @@ export default defineConfig((env) => {
         "$ipc/main-renderer": path.join(
           import.meta.dirname,
           "src/ipc/main-renderer/index.mjs",
+        ),
+        "$renderer/utils": path.join(
+          import.meta.dirname,
+          "src/renderer/utils/index.mjs",
         ),
       },
     },

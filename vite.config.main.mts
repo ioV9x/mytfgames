@@ -16,15 +16,21 @@ export default defineConfig((env) => {
   const define = getBuildDefine(forgeEnv);
   const config: UserConfig = {
     build: {
-      lib: {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        entry: forgeConfigSelf.entry!,
-        fileName: () => "[name].mjs",
-        formats: ["es"],
-      },
+      lib:
+        forgeConfigSelf?.entry != null
+          ? {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              entry: forgeConfigSelf.entry,
+              fileName: () => "[name].mjs",
+              formats: ["es"],
+            }
+          : false,
       rollupOptions: {
         external,
       },
+    },
+    test: {
+      setupFiles: ["src/main/setupTests.mts"],
     },
     define,
     resolve: {

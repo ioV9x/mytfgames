@@ -22,7 +22,7 @@ declare module "vite" {
     K extends keyof VitePluginConfig = keyof VitePluginConfig,
   > {
     root: string;
-    forgeConfig: VitePluginConfig;
-    forgeConfigSelf: VitePluginConfig[K][number];
+    forgeConfig?: VitePluginConfig;
+    forgeConfigSelf?: VitePluginConfig[K][number];
   }
 }
