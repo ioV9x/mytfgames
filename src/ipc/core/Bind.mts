@@ -114,7 +114,7 @@ export function registerIpcServices(
       serviceId,
       procId,
       options,
-      procedure,
+      procedure.bind(ipcServiceProvider),
     );
   }
 }
