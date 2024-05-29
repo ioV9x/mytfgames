@@ -7,6 +7,7 @@ import { Container } from "inversify";
 import { MainApp } from "$main/app";
 import { makeServiceIdentifier } from "$main/utils";
 
+import { ApiModule } from "./api/api.module.mjs";
 import { AppModule } from "./app/app.module.mjs";
 import { PalBrowserModule } from "./pal/browser.module.mjs";
 import { PalIpcModule } from "./pal/Ipc/IpcModule.mjs";
@@ -14,6 +15,7 @@ import { PalIpcModule } from "./pal/Ipc/IpcModule.mjs";
 const container = new Container();
 container.load(
   // keep this list sorted
+  ApiModule,
   AppModule,
   PalBrowserModule,
   PalIpcModule,

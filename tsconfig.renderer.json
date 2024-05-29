@@ -7,13 +7,15 @@
     "outDir": "out/dist/renderer",
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "exactOptionalPropertyTypes": false,
     "noEmit": true,
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable"],
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "paths": {
-      "$ipc/*": ["../ipc/*/index.mjs"]
+      "$ipc/*": ["../ipc/*/index.mjs"],
+      "$renderer/*": ["./*/index.mjs"]
     }
   },
   "include": [

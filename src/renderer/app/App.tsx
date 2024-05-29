@@ -16,9 +16,9 @@ import {
 import { useEffect } from "react";
 import { Link, Route, Router, Switch } from "wouter";
 
-import Games from "./routes/Games/index.tsx";
-import NotFound from "./routes/NotFound.tsx";
-import Root from "./routes/Root.tsx";
+import Games from "../features/games/Games.tsx";
+import NotFound from "./NotFound.tsx";
+import Root from "./Root.tsx";
 
 interface HeaderContainerRenderProps {
   isSideNavExpanded: boolean;

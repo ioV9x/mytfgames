@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>
+<head>
+<title>TFGames.Site - Interactive Game Database (IGDB)</title>
+<link rel=stylesheet href="includes/template/style.css" type=text/css>
+<link rel=stylesheet href="includes/template/jquery-ui-1.8.21.custom.css" type=text/css>
+<script type="text/javascript" src="includes/template/javascript/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="includes/template/javascript/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="includes/template/javascript/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="includes/template/javascript/ajax.js"></script>
+
+<script type="text/javascript">
+$(function() {
+	$('#searchtext').autocomplete({source:'includes/template/gamelookup.php', minLength:2});
+
+/*	$('#searchbutton').click(function() {
+		window.location = 'index.php?module=search&searchcontent=' +  $('input:text[name=searchtext]').val()
+	});*/
+});
+</script>
+
+</head>
+
+<body>
+<div class='header' style='width: 100%; height: 128px;'>
+	<div style='display: inline; float: left; width: 25%'><img src='images/site_logo.png'></div>
+
+</div>
+<div class='topmenu'>
+<div class='topmenulinks'><div class='nav'>
+<ul>
+	<li><a href='index.php'><span>Home</span></a></li>
+	<li><a href='/phpbb3/index.php'><span>Community</span></a>
+	<ul>
+		<li><a href='/phpbb3/index.php'>Forum</a></li>
+		<li><a href='/phpbb3/chat/index.php'>Chat</a></li>
+	</ul>
+	</li>
+	<li><a href='http://www.tfgames.site/phpbb3/ucp.php?mode=login&redirect=/'>Login</a></li></ul>
+</div>
+</div>
+<div class='topmenusearch'><form method='post'>Quick Search: <input type='hidden' id='module' name='module' value='search'><input type='text' id='searchcontent' name='searchcontent'><input type='submit' id='searchbutton' class='formtextbox' value='Search'></form></div></div>
+<br>
+<div class='bodyplaceholder'>
+	<div class='bodyplaceholder_left'>
+<script type="text/javascript">
+
+$(document).ready(function() {});
+
+$(function() {
+
+});
+
+</script>
+
+<div class='searchresultcontainer'>	<div class='searchdetails'>
+		<div style='margin: 5px;'>
+			<b>Advanced Search Details</b>
+			<hr>
+			<b><u>Search For</u></b>: Type the name or part of the name for the game you a looking for. The search engine will attempt to look for the game you are specifying.<br>
+			<br>
+			<b><u>Include Options</u></b>: If you are looking for exact specifics in a game, you can leave the "Search For" box empty and specify various themes, authors, engines, ratings, and various miscellaneous options. If you are looking to limit your results, you may also specify the game name to search for alongside the Include Options.<br>
+			<br>
+			<b><u>Exclude Options</u></b>: If a particular subject happens to turn you off, you can select multiple options to exclude games from your list. This works in conjunction with the Include list and may severely limit your results.<br>
+		</div>
+	</div>
+<br><br>Showing 3 results.<br><hr><br><table width='100%' border='0'>
+	<thead style='bottom-border: 1px solid #000'>
+		<th>Name</th>
+		<th>Author</th>
+		<th>Last Update</th>
+		<th>Rating</th>
+		<th>Likes</th>
+		<th>Engine</th>
+		<th>TF Themes</th>
+	</thead>
+	<tbody>
+	<tr>
+		<td><a href='index.php?module=viewgame&id=314'>The uninvited guest</a></td>
+		<td>darronbor</td>
+		<td>2013-11-11</td>
+		<td>X</td>
+		<td>2</td>
+		<td>Game Maker</td>
+		<td>AR F2M M2F Object </td>
+	</tr>
+	<tr>
+		<td><a href='index.php?module=viewgame&id=317'>Cromexx Funhouse for NWN 1</a></td>
+		<td>CleoKraft</td>
+		<td>2013-03-13</td>
+		<td>G</td>
+		<td>1</td>
+		<td>Other</td>
+		<td>AR Vol </td>
+	</tr>
+	<tr>
+		<td><a href='index.php?module=viewgame&id=66'>Vampire Fate</a></td>
+		<td>Blacksun</td>
+		<td>2013-01-12</td>
+		<td>XXX</td>
+		<td>41</td>
+		<td>RAGS</td>
+		<td>BE F2M Grow Invol M2F Other Herm Shrink Myth Corr Animal SheM </td>
+	</tr>
+	</tbody>
+</table>
+<br><br>
+</div>
+	</div>
+	<div class='bodyplaceholder_right'>
+<div class='menuheader'>Find</div>
+<div class='menu'>
+	<ul>
+		<li><a href='?module=search'>Advanced Search</a></li>
+	</ul>
+</div>
+<div class='menuheader'>Browse</div>
+<div class='menu'>
+	<ul>
+		<li><a href='?module=browse&by=engine'>Browse by Game Engine</a></li>
+		<li><a href='?module=browse&by=author'>Browse by Author</a></li>
+		<li><a href='?module=browse&by=adult'>Browse by Adult Theme</a></li>
+		<li><a href='?module=browse&by=transformation'>Browse by Transformation Theme</a></li>
+		<li><a href='?module=browse&by=multimedia'>Browse by Multimedia Theme</a></li>
+		<li><a href='?module=browse&by=rating'>Browse by Content Rating</a></li>
+		<li><a href='?module=browse&by=contest'>Browse by Contest</a></li>
+	</ul>
+</div>
+<div class='menuheader'>Database Statistics</div>
+Total Games: <i>2,191</i><br>Total Contests: <i>32</i><br>Total Reviews: <i>20,838</i><br>Total Engines: <i>33</i><br>Total Adult Themes: <i>10</i><br>Total Transformation Themes: <i>26</i><br>Total Multimedia Themes: <i>10</i><br>Total Online Plays: <i>4,833,208</i><br><br><center>Support TFGS!<br><a href='https://www.patreon.com/lashek' target='_new'><img src='/images/becomeAPatronBanner.png' style='max-width: 90%; max-height: 70px;'></a></center><br>
+<br>
+<center><a href='https://discord.gg/yPrWNP4'><img src='https://discordapp.com/api/guilds/438302782311890964/widget.png?style=banner2' style='max-width: 90%;'></a></center><br>
+</div>
+	</div>
+</div>
+<div class='footer'><center><font color='red'>TFGS IGDB</font> is copyright &copy; 2012-2024 TFGames.Site. All games and content are copyright &copy; their respective authors.</center></div>
+</body>
+</html>
