@@ -1,9 +1,9 @@
 import fs from "node:fs";
-import path from "node:path";
 
 import { app, session } from "electron/main";
 import { inject, injectable } from "inversify";
 
+import { AppConfiguration } from "$main/configuration";
 import {
   type BrowserSession,
   BrowserSessionConfigurer,
@@ -21,6 +21,7 @@ export class MainApp {
     @inject(BrowserSessionConfigurer)
     readonly sessionConfigurer: BrowserSessionConfigurer,
     @inject(BrowserWindowFactory) readonly windowFactory: BrowserWindowFactory,
+    @inject(AppConfiguration) readonly configuration: AppConfiguration,
     @inject(MainIpcServer) readonly _ipcServer: unknown,
   ) {}
 
@@ -38,16 +39,19 @@ export class MainApp {
   }
 
   setupPaths(): void {
-    if (!app.isPackaged) {
-      const dataPath = path.resolve("./_data");
-      fs.mkdirSync(dataPath, { recursive: true });
-      app.setPath("userData", dataPath);
-    }
+    const paths = this.configuration.root.paths;
 
-    app.setAppLogsPath();
-    const sessionDataPath = path.join(app.getPath("userData"), "chromium");
-    fs.mkdirSync(sessionDataPath, { recursive: true });
-    app.setPath("sessionData", sessionDataPath);
+    this.setupElectronPath("userData", paths.user_data);
+
+    // logs path should be set via app.setAppLogsPath and is therefore special
+    fs.mkdirSync(paths.logs_path, { recursive: true });
+    app.setAppLogsPath(paths.logs_path);
+
+    this.setupElectronPath("sessionData", paths.session_data);
+  }
+  private setupElectronPath(which: string, path: string): void {
+    fs.mkdirSync(path, { recursive: true });
+    app.setPath(which, path);
   }
 
   initialize(): void {

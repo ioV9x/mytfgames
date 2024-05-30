@@ -13,11 +13,11 @@ export default defineConfig((env) => {
   const name = forgeConfigSelf?.name ?? "";
 
   return {
-    root: join(root, "src/renderer"),
+    root: join(root, "src", name),
     mode,
     base: "./",
     build: {
-      outDir: join(root, `.vite/renderer`, name),
+      outDir: join(root, `.vite`, name),
     },
     plugins: [react({}), pluginExposeRenderer(name)],
     resolve: {
