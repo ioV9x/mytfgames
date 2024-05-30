@@ -14,6 +14,9 @@
     "start": "electron-forge start",
     "test": "vitest --typecheck"
   },
+  "dependencies": {
+    "better-sqlite3": "^10.0.0"
+  },
   "devDependencies": {
     "@carbon/colors": "^11.22.0",
     "@carbon/grid": "^11.23.0",
@@ -29,9 +32,11 @@
     "@eslint/js": "^8.57.0",
     "@ibm/plex": "^6.4.1",
     "@reduxjs/toolkit": "^2.2.5",
+    "@types/better-sqlite3": "^7.6.10",
     "@types/node": "^20.12.8",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^9",
     "@vitejs/plugin-react": "^4.2.1",
     "ajv": "^8.14.0",
     "cheerio": "^1.0.0-rc.12",
@@ -42,6 +47,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "inversify": "^6.0.2",
+    "kysely": "^0.27.3",
     "prettier": "3.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -52,6 +58,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.9.0",
+    "uuid": "^9.0.1",
     "vite": "^5.2.11",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0",

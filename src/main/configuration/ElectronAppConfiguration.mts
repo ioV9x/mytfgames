@@ -24,7 +24,10 @@ const appConfigurationSchema: JTDSchemaType<MinimalAppConfigurationTree> = {
   optionalProperties: {
     paths: {
       optionalProperties: {
-        logs_path: {
+        database: {
+          type: "string",
+        },
+        logs: {
           type: "string",
         },
         session_data: {
@@ -68,7 +71,8 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
     } else {
       return {
         paths: {
-          logs_path: "<config-dir>/logs",
+          database: "<config-dir>/db.sqlite3",
+          logs: "<config-dir>/logs",
           user_data: "<config-dir>",
           session_data: "<config-dir>/chromium",
         },
@@ -137,11 +141,12 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
     };
 
     return {
+      database: resolveConfigPath(
+        minimal.database ?? "<default-user-data>/db.sqlite3",
+      ),
       config_dir: configurationDirectory,
       renderer_app: path.resolve(app.getAppPath(), ".vite/renderer"),
-      logs_path: resolveConfigPath(
-        minimal.logs_path ?? "<default-user-data>/logs",
-      ),
+      logs: resolveConfigPath(minimal.logs ?? "<default-user-data>/logs"),
       user_data: resolveConfigPath(minimal.user_data ?? "<default-user-data>"),
       session_data: resolveConfigPath(
         minimal.session_data ?? "<default-user-data>/chromium",

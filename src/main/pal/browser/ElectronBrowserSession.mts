@@ -3,7 +3,9 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { net, protocol, type Session } from "electron/main";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+
+import { AppConfiguration } from "$main/configuration";
 
 import {
   type BrowserSession,
@@ -21,11 +23,10 @@ export class ElectronBrowserSessionConfigurer
 {
   readonly rendererAppPath: string;
 
-  constructor() {
-    this.rendererAppPath = path.resolve(
-      import.meta.dirname,
-      `../renderer/${RENDERER_VITE_NAME}`,
-    );
+  constructor(
+    @inject(AppConfiguration) private readonly configuration: AppConfiguration,
+  ) {
+    this.rendererAppPath = this.configuration.root.paths.renderer_app;
   }
 
   registerCustomProtocolPriviliges(): void {

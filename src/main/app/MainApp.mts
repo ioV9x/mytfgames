@@ -12,6 +12,8 @@ import {
   MainIpcServer,
 } from "$main/pal";
 
+import { migrate } from "../database/KyselyDatabaseProvider.mjs";
+
 @injectable()
 export class MainApp {
   session: BrowserSession | undefined;
@@ -35,6 +37,9 @@ export class MainApp {
 
     this.initialize();
 
+    // apply migrations before starting the renderer in order to avoid DB access
+    await migrate(this.configuration.root.paths.database);
+
     await this.startRenderer();
   }
 
@@ -44,8 +49,8 @@ export class MainApp {
     this.setupElectronPath("userData", paths.user_data);
 
     // logs path should be set via app.setAppLogsPath and is therefore special
-    fs.mkdirSync(paths.logs_path, { recursive: true });
-    app.setAppLogsPath(paths.logs_path);
+    fs.mkdirSync(paths.logs, { recursive: true });
+    app.setAppLogsPath(paths.logs);
 
     this.setupElectronPath("sessionData", paths.session_data);
   }

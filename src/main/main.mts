@@ -14,6 +14,7 @@ import { makeServiceIdentifier } from "$main/utils";
 import { ApiModule } from "./api/api.module.mjs";
 import { AppModule } from "./app/app.module.mjs";
 import { ConfigurationModule } from "./configuration/configuration.module.mjs";
+import { DatabaseModule } from "./database/database.module.mjs";
 import { PalBrowserModule } from "./pal/browser.module.mjs";
 import { PalIpcModule } from "./pal/Ipc/IpcModule.mjs";
 
@@ -23,6 +24,7 @@ container.load(
   ApiModule,
   AppModule,
   ConfigurationModule,
+  DatabaseModule,
   PalBrowserModule,
   PalIpcModule,
 );

@@ -2,7 +2,8 @@ import { type DeepRequired, makeServiceIdentifier } from "$main/utils";
 
 export interface MinimalAppConfigurationTree {
   readonly paths?: {
-    readonly logs_path?: string;
+    readonly database?: string;
+    readonly logs?: string;
     readonly session_data?: string;
     readonly user_data?: string;
   };
