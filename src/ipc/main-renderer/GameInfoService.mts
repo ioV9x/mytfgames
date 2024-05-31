@@ -11,7 +11,7 @@ export interface GameInfo {
   /**
    * remote id of the game used by tfgames.site
    */
-  rid?: string;
+  rid?: string | undefined;
   /**
    * Name of the game.
    */

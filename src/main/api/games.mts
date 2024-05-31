@@ -2,8 +2,8 @@ import { Cheerio, Element, load as cheerioLoad } from "cheerio";
 import { net } from "electron/main";
 import { injectable } from "inversify";
 
-import { remoteProcedure } from "$ipc/core";
-import { GameInfo, GameInfoService } from "$ipc/main-renderer";
+import { GameInfo } from "$ipc/main-renderer";
+import { makeServiceIdentifier } from "$main/utils";
 
 const idRegex = /&id=(\d+)/;
 
@@ -21,9 +21,17 @@ const propExtractors = Object.assign(
   },
 );
 
+const GamesApi = makeServiceIdentifier<GamesApi>("games api");
+interface GamesApi {
+  getGames(): Promise<GameInfo[]>;
+}
+export { GamesApi };
+
 @injectable()
-export class GamesApi {
-  @remoteProcedure(GameInfoService, "getGames")
+export class GamesApiImpl {
+  /**
+   * Note that this call is not cached and _very_ expensive on the server side.
+   */
   async getGames(): Promise<GameInfo[]> {
     const endpoint = "https://tfgames.site/index.php";
     const requestParams = new URLSearchParams();
@@ -32,7 +40,13 @@ export class GamesApi {
         ["module", "search"],
         ["search", "1"],
         ["searchcontent", ""],
-        ["multimedia[]", "32"], // "32" == Voice
+        // We need to specify at least one search parameter in order to get
+        // any results at all. So I have excluded games via "author" using an
+        // account that has not been online for a long time and whose games are
+        // no longer available on the website.
+        // I'm sorry "Dude" but you're the chosen one.
+        // "3224" => "Dude"; 1 very old RAGS game; not online for over a decade
+        ["exauthor[]", "3224"],
         ["likesmin", "0"],
         ["likesmax", "0"],
       ] as const

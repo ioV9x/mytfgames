@@ -35,10 +35,7 @@ export const gamesSlice = createSliceWithThunks({
           fulfilled(state, action) {
             state.status = "loaded";
             state.games = Object.fromEntries(
-              action.payload.map((game, idx) => [
-                idx.toString(),
-                { ...game, id: idx.toString() },
-              ]),
+              action.payload.map((game) => [game.id, game]),
             );
           },
           rejected(state, action) {

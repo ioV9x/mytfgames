@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it, vi } from "vitest";
 
-import { GamesApi } from "./games.mjs";
+import { GamesApiImpl } from "./games.mjs";
 
 vi.mock("electron/main", () => ({ net: null }));
 
@@ -14,7 +14,7 @@ describe("Games API", () => {
       "utf8",
     );
 
-    const subject = new GamesApi();
+    const subject = new GamesApiImpl();
     const result = subject.parseGameList(response);
     expect(result).toMatchSnapshot();
   });

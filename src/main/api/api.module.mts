@@ -2,8 +2,10 @@ import { ContainerModule } from "inversify";
 
 import { IpcServiceProvider } from "$main/pal";
 
-import { GamesApi } from "./games.mjs";
+import { GamesApi, GamesApiImpl } from "./games.mjs";
 
 export const ApiModule = new ContainerModule((bind) => {
-  bind(IpcServiceProvider).to(GamesApi).inSingletonScope();
+  bind(GamesApiImpl).toSelf().inSingletonScope();
+  bind(GamesApi).toService(GamesApiImpl);
+  // bind(IpcServiceProvider).toService(GamesApiImpl);
 });
