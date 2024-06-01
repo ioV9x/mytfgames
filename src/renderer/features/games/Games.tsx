@@ -1,5 +1,6 @@
 import {
-  DataTable,
+  Pagination,
+  SkeletonText,
   Table,
   TableBody,
   TableCell,
@@ -7,69 +8,129 @@ import {
   TableHeader,
   TableRow,
 } from "@carbon/react";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
-import { GameInfo } from "$ipc/main-renderer";
+import { GameOrderType } from "$ipc/main-renderer";
 
 import { IpcContext } from "../../ipc/IpcContext.mjs";
 import { useAppDispatch, useAppSelector } from "../../utils/redux.mts";
-import { loadGamesFromMain, selectGameList } from "./gamesSlice.mts";
+import {
+  EntityRetrievalState,
+  LoadedGameInfo,
+  loadGameList,
+  selectPaginatedGameList,
+} from "./gamesSlice.mts";
 
 export default function Games() {
   const ipcContext = useContext(IpcContext);
   const store = useAppDispatch();
-  const games = useAppSelector(selectGameList);
+  const [paginationState, setPaginationState] = useState({
+    page: 1,
+    pageSize: 20,
+    orderType: GameOrderType.LastUpdate,
+  });
 
+  const numItems = useAppSelector((state) =>
+    Math.max(0, ...Object.values(state.games.order).map((v) => v.length)),
+  );
+  const games = useAppSelector((state) =>
+    selectPaginatedGameList(state, paginationState),
+  );
+
+  const pagination = (
+    <Pagination
+      totalItems={numItems}
+      page={paginationState.page}
+      pageSize={paginationState.pageSize}
+      pageSizes={[10, 20, 30, 40]}
+      onChange={({ page, pageSize }) => {
+        page =
+          paginationState.pageSize === pageSize
+            ? page
+            : Math.max(
+                1,
+                Math.floor(
+                  ((paginationState.page - 1) * paginationState.pageSize) /
+                    pageSize +
+                    1,
+                ),
+              );
+        setPaginationState((old) => ({ ...old, page, pageSize }));
+      }}
+    />
+  );
   useEffect(() => {
-    store(loadGamesFromMain({ gameInfo: ipcContext!.gameInfo })).catch(() => {
+    store(
+      loadGameList({
+        ...paginationState,
+        gameInfo: ipcContext!.gameInfo,
+        force: false,
+      }),
+    ).catch((err: unknown) => {
+      console.error(err);
       // FIXME: navigate to error page
     });
-  }, [ipcContext, store]);
+  }, [ipcContext, store, paginationState]);
 
-  const headers: { key: keyof GameInfo; header: string }[] = [
+  const headers: {
+    key: keyof LoadedGameInfo;
+    header: string;
+    order?: GameOrderType;
+  }[] = [
     {
       key: "id",
       header: "ID",
     },
     {
-      key: "rid",
+      key: "tfgamesId",
       header: "TFGames ID",
     },
     {
       key: "name",
       header: "Name",
+      order: GameOrderType.Name,
     },
     {
       key: "lastUpdate",
       header: "Last Update",
+      order: GameOrderType.LastUpdate,
     },
   ];
 
   return (
-    <DataTable headers={headers} rows={games}>
-      {({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
-        <Table {...getTableProps()}>
-          <TableHead>
-            <TableRow>
-              {headers.map((header) => (
-                // @ts-expect-error TableHeader has incorrect typings, see: https://github.com/carbon-design-system/carbon/issues/14831
-                <TableHeader {...getHeaderProps({ header })} key={header.key}>
-                  {header.header}
-                </TableHeader>
+    <>
+      {pagination}
+      <Table isSortable={true}>
+        <TableHead>
+          <TableRow>
+            {headers.map((header) => (
+              <TableHeader
+                key={header.key}
+                isSortable={header.order != null}
+                isSortHeader={header.order === paginationState.orderType}
+              >
+                {header.header}
+              </TableHeader>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {games.map((row, idx) => (
+            <TableRow key={row?.id ?? idx}>
+              {headers.map((cell) => (
+                <TableCell key={cell.key}>
+                  {row == null || row.type !== EntityRetrievalState.Loaded ? (
+                    <SkeletonText key={cell.key} />
+                  ) : (
+                    row[cell.key]
+                  )}
+                </TableCell>
               ))}
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow {...getRowProps({ row })} key={row.id}>
-                {row.cells.map((cell) => (
-                  <TableCell key={cell.id}>{cell.value}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
-    </DataTable>
+          ))}
+        </TableBody>
+      </Table>
+      {pagination}
+    </>
   );
 }

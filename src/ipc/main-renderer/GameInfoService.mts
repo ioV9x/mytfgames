@@ -11,7 +11,7 @@ export interface GameInfo {
   /**
    * remote id of the game used by tfgames.site
    */
-  rid?: string | undefined;
+  tfgamesId?: number | undefined;
   /**
    * Name of the game.
    */
@@ -22,6 +22,20 @@ export interface GameInfo {
   lastUpdate: string;
 }
 
+export enum GameOrderType {
+  Name = "name",
+  LastUpdate = "lastUpdate",
+}
+
+export interface GameList {
+  order: string[];
+  preloaded: GameInfo[];
+}
+
 export const GameInfoService = makeRemoteServiceDescriptor("games:info", {
-  getGames: makeRemoteProcedureDescriptor<[], GameInfo[]>(),
+  getGames: makeRemoteProcedureDescriptor<[ids: string[]], GameInfo[]>(),
+  getGameList: makeRemoteProcedureDescriptor<
+    [order: GameOrderType, page: number, pageSize: number, force: boolean],
+    GameList
+  >(),
 });

@@ -17,6 +17,7 @@ export async function up(db: Kysely<any>): Promise<void> {
         ["id"],
       )
       .addColumn("name", "text")
+      .addColumn("created_at", "text", (col) => col.notNull())
       .execute();
 
     await trx.schema
@@ -38,6 +39,16 @@ export async function up(db: Kysely<any>): Promise<void> {
       .column("tfgames_id")
       .unique()
       .execute();
+    await trx.schema
+      .createIndex("game_name_index")
+      .on("game")
+      .column("name")
+      .execute();
+    await trx.schema
+      .createIndex("game_created_at_index")
+      .on("game")
+      .column("created_at")
+      .execute();
 
     await trx.schema
       .createIndex("remote_game_id_index")
@@ -45,13 +56,41 @@ export async function up(db: Kysely<any>): Promise<void> {
       .column("id")
       .unique()
       .execute();
+    await trx.schema
+      .createIndex("remote_game_name_index")
+      .on("remote_game")
+      .column("name")
+      .execute();
+    await trx.schema
+      .createIndex("remote_game_last_update_index")
+      .on("remote_game")
+      .column("last_update")
+      .execute();
   });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function down(db: Kysely<any>): Promise<void> {
   await sqliteSafeMigration(db, async (trx) => {
-    await trx.schema.dropTable("games").execute();
+    await trx.schema
+      .dropIndex("remote_game_last_update_index")
+      .on("remote_game")
+      .execute();
+    await trx.schema
+      .dropIndex("remote_game_name_index")
+      .on("remote_game")
+      .execute();
+    await trx.schema
+      .dropIndex("remote_game_id_index")
+      .on("remote_game")
+      .execute();
+
+    await trx.schema.dropIndex("game_created_at_index").on("game").execute();
+    await trx.schema.dropIndex("game_name_index").on("game").execute();
+    await trx.schema.dropIndex("game_tfgames_id_index").on("game").execute();
+    await trx.schema.dropIndex("game_id_index").on("game").execute();
+
     await trx.schema.dropTable("remote_game").execute();
+    await trx.schema.dropTable("games").execute();
   });
 }

@@ -13,6 +13,10 @@ export interface GameTable {
    * Name of the game given by the user.
    */
   name: string | null;
+  /**
+   * Creation date of the local db entry in ISO 8601 format.
+   */
+  created_at: string;
 }
 export type Game = Selectable<GameTable>;
 export type NewGame = Insertable<GameTable>;

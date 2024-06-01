@@ -2,28 +2,48 @@ import { Cheerio, Element, load as cheerioLoad } from "cheerio";
 import { net } from "electron/main";
 import { injectable } from "inversify";
 
-import { GameInfo } from "$ipc/main-renderer";
 import { makeServiceIdentifier } from "$main/utils";
 
 const idRegex = /&id=(\d+)/;
 
-type PropExtractor = ($td: Cheerio<Element>) => Partial<GameInfo> | undefined;
+export interface RemoteIndexGameInfo {
+  /**
+   * remote id of the game used by tfgames.site
+   */
+  id: number;
+  /**
+   * Name of the game.
+   */
+  name: string;
+  /**
+   * Last update date of the game in ISO 8601 format.
+   */
+  lastUpdate: string;
+}
+
+type PropExtractor = (
+  $td: Cheerio<Element>,
+) => Partial<RemoteIndexGameInfo> | undefined;
 const propExtractors = Object.assign(
   Object.create(null) as Record<string, PropExtractor | undefined>,
   {
-    Name: ($td: Cheerio<Element>) => ({
-      rid: idRegex.exec($td.find("a").get(0)!.attribs["href"] ?? "")![1]!,
-      name: $td.text().trim(),
-    }),
-    "Last Update": ($td: Cheerio<Element>) => ({
-      lastUpdate: $td.text().trim(),
-    }),
+    Name: ($td: Cheerio<Element>) =>
+      ({
+        id: Number.parseInt(
+          idRegex.exec($td.find("a").get(0)!.attribs["href"] ?? "")![1]!,
+        ),
+        name: $td.text().trim(),
+      }) satisfies Partial<RemoteIndexGameInfo>,
+    "Last Update": ($td: Cheerio<Element>) =>
+      ({
+        lastUpdate: $td.text().trim(),
+      }) satisfies Partial<RemoteIndexGameInfo>,
   },
 );
 
 const GamesApi = makeServiceIdentifier<GamesApi>("games api");
 interface GamesApi {
-  getGames(): Promise<GameInfo[]>;
+  getGames(): Promise<RemoteIndexGameInfo[]>;
 }
 export { GamesApi };
 
@@ -32,7 +52,7 @@ export class GamesApiImpl {
   /**
    * Note that this call is not cached and _very_ expensive on the server side.
    */
-  async getGames(): Promise<GameInfo[]> {
+  async getGames(): Promise<RemoteIndexGameInfo[]> {
     const endpoint = "https://tfgames.site/index.php";
     const requestParams = new URLSearchParams();
     (
@@ -61,7 +81,7 @@ export class GamesApiImpl {
     return this.parseGameList(await response.text());
   }
 
-  parseGameList(response: string): GameInfo[] {
+  parseGameList(response: string): RemoteIndexGameInfo[] {
     const $ = cheerioLoad(response);
     const $searchresults = $("div.searchresultcontainer > table");
 
@@ -80,7 +100,7 @@ export class GamesApiImpl {
           .map((i, td) => columnPropExtractor[i]?.($(td)))
           .get();
         // TODO: validate that all props are defined
-        return Object.assign({}, ...partials) as GameInfo;
+        return Object.assign({}, ...partials) as RemoteIndexGameInfo;
       })
       .get();
 
