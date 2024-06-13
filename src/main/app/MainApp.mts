@@ -1,6 +1,10 @@
 import fs from "node:fs";
 
 import { app, session } from "electron/main";
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS,
+} from "electron-devtools-installer";
 import { inject, injectable } from "inversify";
 
 import { AppConfiguration } from "$main/configuration";
@@ -68,6 +72,13 @@ export class MainApp {
 
   async startRenderer(): Promise<void> {
     await app.whenReady();
+    if (!app.isPackaged) {
+      await installExtension([REDUX_DEVTOOLS], {
+        loadExtensionOptions: {
+          allowFileAccess: true,
+        },
+      });
+    }
 
     this.session = this.sessionConfigurer.configure(session.defaultSession);
     this.appWindow = this.windowFactory.create();

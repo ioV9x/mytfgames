@@ -12,21 +12,24 @@ import { store } from "./app/store.mts";
 import { BrowserIpcEndpoint } from "./ipc/BrowserIpcEndpoint.mts";
 import { IpcContext } from "./ipc/IpcContext.mts";
 
-window.addEventListener(
-  "message",
-  (ev) => {
-    const endpoint = new BrowserIpcEndpoint(ev.ports[0]!);
-    const boundservices = forgeRemoteServiceCollection(endpoint, services);
+window.addEventListener("message", main, { passive: true });
 
-    ReactDOM.createRoot(document.getElementById("root")!).render(
-      <React.StrictMode>
-        <IpcContext.Provider value={boundservices}>
-          <ReduxProvider store={store}>
-            <App />
-          </ReduxProvider>
-        </IpcContext.Provider>
-      </React.StrictMode>,
-    );
-  },
-  { once: true, passive: true },
-);
+function main(ev: MessageEvent) {
+  if (ev.data !== "main-world-port") {
+    return;
+  }
+  window.removeEventListener("message", main);
+
+  const endpoint = new BrowserIpcEndpoint(ev.ports[0]!);
+  const boundservices = forgeRemoteServiceCollection(endpoint, services);
+
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <IpcContext.Provider value={boundservices}>
+        <ReduxProvider store={store}>
+          <App />
+        </ReduxProvider>
+      </IpcContext.Provider>
+    </React.StrictMode>,
+  );
+}
