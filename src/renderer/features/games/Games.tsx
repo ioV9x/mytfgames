@@ -11,6 +11,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 
 import { GameOrderType } from "$ipc/main-renderer";
+import { AppLink } from "$renderer/components";
 
 import { IpcContext } from "../../ipc/IpcContext.mjs";
 import { useAppDispatch, useAppSelector } from "../../utils/redux.mts";
@@ -76,6 +77,7 @@ export default function Games() {
     key: keyof LoadedGameInfo;
     header: string;
     order?: GameOrderType;
+    render?(game: LoadedGameInfo): JSX.Element | string;
   }[] = [
     {
       key: "id",
@@ -89,6 +91,9 @@ export default function Games() {
       key: "name",
       header: "Name",
       order: GameOrderType.Name,
+      render(game) {
+        return <AppLink href={`/games/${game.id}`}>{game.name}</AppLink>;
+      },
     },
     {
       key: "lastUpdate",
@@ -122,7 +127,7 @@ export default function Games() {
                   {row == null || row.type !== EntityRetrievalState.Loaded ? (
                     <SkeletonText key={cell.key} />
                   ) : (
-                    row[cell.key]
+                    cell.render?.(row) ?? row[cell.key]
                   )}
                 </TableCell>
               ))}

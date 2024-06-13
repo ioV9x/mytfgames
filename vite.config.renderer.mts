@@ -29,12 +29,18 @@ export default defineConfig((env) => {
           import.meta.dirname,
           "src/ipc/main-renderer/index.mjs",
         ),
-        "$renderer/utils": path.join(
-          import.meta.dirname,
-          "src/renderer/utils/index.mjs",
-        ),
+        ...rendererAlias(["components", "utils"]),
       },
     },
     clearScreen: false,
   } as UserConfig;
 });
+
+function rendererAlias(names: string[]) {
+  return Object.fromEntries(
+    names.map((name) => [
+      `$renderer/${name}`,
+      path.join(import.meta.dirname, `src/renderer/${name}/index.mjs`),
+    ]),
+  );
+}

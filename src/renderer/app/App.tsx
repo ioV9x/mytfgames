@@ -16,6 +16,7 @@ import {
 import { useEffect } from "react";
 import { Link, Route, Router, Switch } from "wouter";
 
+import GameDetails from "../features/games/GameDetails.tsx";
 import Games from "../features/games/Games.tsx";
 import NotFound from "./NotFound.tsx";
 import Root from "./Root.tsx";
@@ -69,6 +70,9 @@ function AppWithShell({
           </Route>
           <Route path="/games">
             <Games />
+          </Route>
+          <Route path="/games/:gameId">
+            {({ gameId }) => <GameDetails gameId={gameId} />}
           </Route>
           <Route>
             <NotFound />
