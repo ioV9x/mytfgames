@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { sql } from "kysely";
+import { Insertable, sql } from "kysely";
 import * as R from "remeda";
 import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
@@ -12,7 +12,11 @@ import {
   GameOrderType,
 } from "$ipc/main-renderer";
 import { GamesApi } from "$main/api";
-import { DatabaseProvider } from "$main/database";
+import {
+  CategoryType,
+  DatabaseProvider,
+  RemoteCategoryTable,
+} from "$main/database";
 
 import { GameInfoService } from "./GameInfoService.mjs";
 
@@ -154,8 +158,8 @@ export class GameInfoServiceImpl implements GameInfoService {
   async refreshIndex(): Promise<void> {
     const currentIndex = await this.gamesApi.getGames();
 
-    await this.db.transaction().execute(async (trx) => {
-      await Promise.all(
+    const updatedIds = await this.db.transaction().execute(async (trx) => {
+      return await Promise.all(
         currentIndex.map(({ id, name, lastUpdate: last_update }) =>
           trx
             .insertInto("remote_game")
@@ -170,34 +174,133 @@ export class GameInfoServiceImpl implements GameInfoService {
                 last_update,
               }),
             )
+            .returning("id as id")
             .executeTakeFirstOrThrow(),
         ),
       );
+    });
 
-      const unknownIds = await trx
-        .selectFrom("remote_game")
-        .select("id")
-        .where(({ not, exists, selectFrom }) =>
-          not(
-            exists(
-              selectFrom("game")
-                .select("tfgames_id")
-                .whereRef("game.tfgames_id", "=", "remote_game.id"),
-            ),
-          ),
+    for (const { id } of updatedIds.slice(0, 16)) {
+      try {
+        await this.downloadGameInfo(id);
+      } catch (exc) {
+        console.error(`Failed to download game info for game ${id}`, exc);
+        return;
+      }
+    }
+  }
+
+  async downloadGameInfo(id: number): Promise<void> {
+    const gameDetails = await this.gamesApi.getGameDetails(id);
+
+    await this.db.transaction().execute(async (trx) => {
+      await trx
+        .insertInto("remote_game")
+        .values({
+          id: gameDetails.id,
+          name: gameDetails.name,
+          last_update: gameDetails.lastUpdate,
+          release_date: gameDetails.releaseDate,
+        })
+        .onConflict((oc) =>
+          oc.column("id").doUpdateSet({
+            name: gameDetails.name,
+            last_update: gameDetails.lastUpdate,
+            release_date: gameDetails.releaseDate,
+          }),
         )
         .execute();
 
       await Promise.all(
-        unknownIds.map(({ id: tfgames_id }) =>
+        gameDetails.authors.map((author) =>
           trx
-            .insertInto("game")
+            .insertInto("remote_author")
             .values({
-              id: uuid.v4(null, Buffer.allocUnsafe(16)),
-              tfgames_id,
-              created_at: sql<string>`date()`,
+              id: author.id,
+              name: author.name,
             })
+            .onConflict((oc) =>
+              oc.column("id").doUpdateSet({
+                name: author.name,
+              }),
+            )
+            .execute(),
+        ),
+      );
+      await Promise.all(
+        gameDetails.authors.map((author) =>
+          trx
+            .insertInto("remote_game_author")
+            .values({
+              game_id: gameDetails.id,
+              author_id: author.id,
+            })
+            .onConflict((oc) =>
+              oc.columns(["game_id", "author_id"]).doNothing(),
+            )
+            .execute(),
+        ),
+      );
+
+      const categories: Insertable<RemoteCategoryTable>[] = [
+        gameDetails.transformationThemes.map((tft) => ({
+          rid: tft.id,
+          type: CategoryType.Transformation,
+          name: tft.name,
+          abbreviation: tft.abbreviation,
+        })),
+      ].flat();
+
+      const categoryIds = await Promise.all(
+        categories.map((category) =>
+          trx
+            .insertInto("remote_category")
+            .values(category)
+            .onConflict((oc) =>
+              oc.columns(["type", "rid"]).doUpdateSet({
+                name: category.name,
+                abbreviation: category.abbreviation,
+              }),
+            )
+            .returning("id as id")
             .executeTakeFirstOrThrow(),
+        ),
+      );
+      await Promise.all(
+        categoryIds.map((category) =>
+          trx
+            .insertInto("remote_game_category")
+            .values({
+              game_id: gameDetails.id,
+              category_id: category.id,
+            })
+            .onConflict((oc) =>
+              oc.columns(["game_id", "category_id"]).doNothing(),
+            )
+            .execute(),
+        ),
+      );
+
+      await Promise.all(
+        gameDetails.versions.flatMap((versionInfo) =>
+          versionInfo.downloads.map((downloadInfo) =>
+            trx
+              .insertInto("remote_game_version")
+              .values({
+                game_id: gameDetails.id,
+                version: versionInfo.version,
+                url: downloadInfo.link,
+                name: downloadInfo.name,
+                note: downloadInfo.note,
+              })
+              .onConflict((oc) =>
+                oc.columns(["game_id", "version", "url"]).doUpdateSet({
+                  name: downloadInfo.name,
+                  note: downloadInfo.note,
+                }),
+              )
+              .execute(),
+          ),
         ),
       );
     });

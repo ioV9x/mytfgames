@@ -11,5 +11,7 @@ interface GameInfoService {
     pageSize: number,
     force: boolean,
   ): Promise<GameList>;
+
+  downloadGameInfo(id: number): Promise<void>;
 }
 export { GameInfoService };
