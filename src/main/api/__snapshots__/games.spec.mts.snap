@@ -3,19 +3,19 @@
 exports[`Games API > should parse a list response 1`] = `
 [
   {
+    "id": 314,
     "lastUpdate": "2013-11-11",
     "name": "The uninvited guest",
-    "rid": "314",
   },
   {
+    "id": 317,
     "lastUpdate": "2013-03-13",
     "name": "Cromexx Funhouse for NWN 1",
-    "rid": "317",
   },
   {
+    "id": 66,
     "lastUpdate": "2013-01-12",
     "name": "Vampire Fate",
-    "rid": "66",
   },
 ]
 `;
