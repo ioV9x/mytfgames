@@ -8,8 +8,8 @@ export async function up(db: Kysely<any>): Promise<void> {
   await sqliteSafeMigration(db, async (trx) => {
     await trx.schema
       .createTable("game")
-      .addColumn("id", "blob", (col) => col.primaryKey())
-      .addColumn("tfgames_id", "integer", (col) => col.unique())
+      .addColumn("id", "blob", (col) => col.notNull().primaryKey())
+      .addColumn("tfgames_id", "integer")
       .addForeignKeyConstraint(
         "tfgames_id_foreign",
         ["tfgames_id"],
@@ -19,25 +19,10 @@ export async function up(db: Kysely<any>): Promise<void> {
       .addColumn("name", "text")
       .addColumn("created_at", "text", (col) => col.notNull())
       .execute();
-
-    await trx.schema
-      .createTable("remote_game")
-      .addColumn("id", "integer", (col) => col.primaryKey())
-      .addColumn("name", "text", (col) => col.notNull())
-      .addColumn("last_update", "text", (col) => col.notNull())
-      .execute();
-
-    await trx.schema
-      .createIndex("game_id_index")
-      .on("game")
-      .column("id")
-      .unique()
-      .execute();
     await trx.schema
       .createIndex("game_tfgames_id_index")
       .on("game")
       .column("tfgames_id")
-      .unique()
       .execute();
     await trx.schema
       .createIndex("game_name_index")
@@ -51,10 +36,10 @@ export async function up(db: Kysely<any>): Promise<void> {
       .execute();
 
     await trx.schema
-      .createIndex("remote_game_id_index")
-      .on("remote_game")
-      .column("id")
-      .unique()
+      .createTable("remote_game")
+      .addColumn("id", "integer", (col) => col.primaryKey())
+      .addColumn("name", "text", (col) => col.notNull())
+      .addColumn("last_update", "text", (col) => col.notNull())
       .execute();
     await trx.schema
       .createIndex("remote_game_name_index")
@@ -80,17 +65,11 @@ export async function down(db: Kysely<any>): Promise<void> {
       .dropIndex("remote_game_name_index")
       .on("remote_game")
       .execute();
-    await trx.schema
-      .dropIndex("remote_game_id_index")
-      .on("remote_game")
-      .execute();
+    await trx.schema.dropTable("remote_game").execute();
 
     await trx.schema.dropIndex("game_created_at_index").on("game").execute();
     await trx.schema.dropIndex("game_name_index").on("game").execute();
     await trx.schema.dropIndex("game_tfgames_id_index").on("game").execute();
-    await trx.schema.dropIndex("game_id_index").on("game").execute();
-
-    await trx.schema.dropTable("remote_game").execute();
     await trx.schema.dropTable("games").execute();
   });
 }
