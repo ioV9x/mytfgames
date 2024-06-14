@@ -20,12 +20,22 @@ describe("Games API", () => {
   });
   it("should parse a viewgame response", () => {
     const response = fs.readFileSync(
-      path.join(import.meta.dirname, "test/viewgame-1145-secretary.html"),
+      path.join(import.meta.dirname, "test/viewgame-1445-secretary.html"),
       "utf8",
     );
 
     const subject = new GamesApiImpl();
-    const result = subject.parseGameDetails(1145, response);
+    const result = subject.parseGameDetails(1445, response);
+    expect(result).toMatchSnapshot();
+  });
+  it("should parse a viewgame response 2", () => {
+    const response = fs.readFileSync(
+      path.join(import.meta.dirname, "test/viewgame-3227-slat.html"),
+      "utf8",
+    );
+
+    const subject = new GamesApiImpl();
+    const result = subject.parseGameDetails(3227, response);
     expect(result).toMatchSnapshot();
   });
 });

@@ -4,17 +4,17 @@ exports[`Games API > should parse a list response 1`] = `
 [
   {
     "id": 314,
-    "lastUpdate": "2013-11-11",
+    "lastUpdate": "2013-11-11T00:00:00Z",
     "name": "The uninvited guest",
   },
   {
     "id": 317,
-    "lastUpdate": "2013-03-13",
+    "lastUpdate": "2013-03-13T00:00:00Z",
     "name": "Cromexx Funhouse for NWN 1",
   },
   {
     "id": 66,
-    "lastUpdate": "2013-01-12",
+    "lastUpdate": "2013-01-12T00:00:00Z",
     "name": "Vampire Fate",
   },
 ]
@@ -32,71 +32,73 @@ exports[`Games API > should parse a viewgame response 1`] = `
       "name": "psy",
     },
   ],
-  "id": 1145,
-  "releaseDate": "2017-10-01",
+  "id": 1445,
+  "lastUpdate": "2024-05-12T00:00:00Z",
+  "name": "Secretary",
+  "releaseDate": "2017-10-01T18:57:00Z",
   "transformationThemes": [
     {
-      "acronym": "BE",
+      "abbreviation": "BE",
       "id": 4,
       "name": "Breast Enlargement",
     },
     {
-      "acronym": "Grow",
+      "abbreviation": "Grow",
       "id": 7,
       "name": "Growth/Expansion",
     },
     {
-      "acronym": "Invol",
+      "abbreviation": "Invol",
       "id": 8,
       "name": "Involuntary",
     },
     {
-      "acronym": "M2F",
+      "abbreviation": "M2F",
       "id": 9,
       "name": "Male to Female (Genital Changes)",
     },
     {
-      "acronym": "Fem",
+      "abbreviation": "Fem",
       "id": 45,
       "name": "Feminization",
     },
     {
-      "acronym": "Slow",
+      "abbreviation": "Slow",
       "id": 40,
       "name": "Slow Transformation",
     },
     {
-      "acronym": "MC",
+      "abbreviation": "MC",
       "id": 10,
       "name": "Mental Changes",
     },
     {
-      "acronym": "Bimbo",
+      "abbreviation": "Bimbo",
       "id": 15,
       "name": "Bimbo",
     },
     {
-      "acronym": "Herm",
+      "abbreviation": "Herm",
       "id": 16,
       "name": "Hermaphrodite",
     },
     {
-      "acronym": "Corr",
+      "abbreviation": "Corr",
       "id": 39,
       "name": "Corruption",
     },
     {
-      "acronym": "SheM",
+      "abbreviation": "SheM",
       "id": 19,
       "name": "Shemale",
     },
     {
-      "acronym": "Vol",
+      "abbreviation": "Vol",
       "id": 23,
       "name": "Voluntary",
     },
     {
-      "acronym": "Sissy",
+      "abbreviation": "Sissy",
       "id": 44,
       "name": "Sissification",
     },
@@ -131,6 +133,85 @@ exports[`Games API > should parse a viewgame response 1`] = `
         },
       ],
       "version": "1.0.0.5",
+    },
+  ],
+}
+`;
+
+exports[`Games API > should parse a viewgame response 2 1`] = `
+{
+  "authors": [
+    {
+      "id": 160407,
+      "name": "MariaMod",
+    },
+  ],
+  "id": 3227,
+  "lastUpdate": "2024-06-14T00:00:00Z",
+  "name": "S.L.A.T. Foundation",
+  "releaseDate": "2024-03-17T00:00:00Z",
+  "transformationThemes": [
+    {
+      "abbreviation": "BE",
+      "id": 4,
+      "name": "Breast Enlargement",
+    },
+    {
+      "abbreviation": "M2F",
+      "id": 9,
+      "name": "Male to Female (Genital Changes)",
+    },
+    {
+      "abbreviation": "Fem",
+      "id": 45,
+      "name": "Feminization",
+    },
+    {
+      "abbreviation": "MC",
+      "id": 10,
+      "name": "Mental Changes",
+    },
+    {
+      "abbreviation": "Poss",
+      "id": 12,
+      "name": "Possession",
+    },
+    {
+      "abbreviation": "Shrink",
+      "id": 14,
+      "name": "Shrinking",
+    },
+    {
+      "abbreviation": "Corr",
+      "id": 39,
+      "name": "Corruption",
+    },
+    {
+      "abbreviation": "SheM",
+      "id": 19,
+      "name": "Shemale",
+    },
+    {
+      "abbreviation": "Vol",
+      "id": 23,
+      "name": "Voluntary",
+    },
+    {
+      "abbreviation": "Sissy",
+      "id": 44,
+      "name": "Sissification",
+    },
+  ],
+  "versions": [
+    {
+      "downloads": [
+        {
+          "link": "https://MilkyNail.site/slat.zip",
+          "name": "milkynail.site",
+          "note": "Online/Offline version with pics",
+        },
+      ],
+      "version": "All versions",
     },
   ],
 }

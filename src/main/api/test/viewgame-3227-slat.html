@@ -1,0 +1,278 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>
+<head>
+<title>S.L.A.T. Foundation</title>
+<link rel=stylesheet href="includes/template/style.css" type=text/css>
+<link rel=stylesheet href="includes/template/jquery-ui-1.8.21.custom.css" type=text/css>
+<script type="text/javascript" src="includes/template/javascript/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="includes/template/javascript/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="includes/template/javascript/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="includes/template/javascript/ajax.js"></script>
+
+<script type="text/javascript">
+$(function() {
+	$('#searchtext').autocomplete({source:'includes/template/gamelookup.php', minLength:2});
+
+/*	$('#searchbutton').click(function() {
+		window.location = 'index.php?module=search&searchcontent=' +  $('input:text[name=searchtext]').val() 
+	});*/
+});
+</script>
+
+</head>
+
+<body>
+<div class='header' style='width: 100%; height: 128px;'>
+	<div style='display: inline; float: left; width: 25%'><img src='images/site_logo.png'></div>
+
+</div>
+<div class='topmenu'>
+<div class='topmenulinks'><div class='nav'>
+<ul>
+	<li><a href='index.php'><span>Home</span></a></li>
+	<li><a href='/phpbb3/index.php'><span>Community</span></a>
+	<ul>
+		<li><a href='/phpbb3/index.php'>Forum</a></li>
+		<li><a href='/phpbb3/chat/index.php'>Chat</a></li>
+	</ul>
+	</li>
+	<li><a href='http://www.tfgames.site/phpbb3/ucp.php?mode=login&redirect=/'>Login</a></li></ul>
+</div>
+</div>
+<div class='topmenusearch'><form method='post'>Quick Search: <input type='hidden' id='module' name='module' value='search'><input type='text' id='searchcontent' name='searchcontent'><input type='submit' id='searchbutton' class='formtextbox' value='Search'></form></div></div>
+<br>
+<div class='bodyplaceholder'>
+	<div class='bodyplaceholder_left'>
+<script type="text/javascript">
+$(document).ready(function () {
+	$("#tabs").tabs();
+});
+
+function htmlEncode(value){
+  //create a in-memory div, set its inner text(which jQuery automatically encodes)
+  //then grab the encoded contents back out.  The div never exists on the page.
+  return $('<div/>').text(value).html();
+}
+
+function getFlagRsn( reviewid )
+{
+    do {
+        var flagreason=prompt("Why should this review be flagged? This will be shown to everyone.");
+    }
+    while(flagreason.length < 4);
+	
+	$.ajax({
+		 type: "POST",
+		 url: "modules/viewgame/flagreview.php",
+		 data: { id: reviewid, reason: flagreason },
+		 success: function(msg){
+					if (msg.length > 10)
+						$("div#reviews").html(msg);
+				  }
+	});
+}
+
+
+</script>
+
+<div class='viewgamesidecontainer'>
+	<div class='viewgameanothercontainer'>
+		<div class='viewgameheader'>Game Information</div>
+			<div class='viewgameinfocontainer'>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Engine</div>
+					<div class='viewgameitemright'>HTML</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Rating</div>
+					<div class='viewgameitemright'>XXX</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Language</div>
+					<div class='viewgameitemright'>English</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Release Date</div>
+					<div class='viewgameitemright'>03/17/2024</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Last Update</div>
+					<div class='viewgameitemright'>06/14/2024</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Version</div>
+					<div class='viewgameitemright'>1.1.0</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Development</div>
+					<div class='viewgameitemright'>Beta</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Likes</div>
+					<div class='viewgameitemright'>139</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Contest</div>
+					<div class='viewgameitemright'>None</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Orig PC Gender</div>
+					<div class='viewgameitemright'>Male</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Adult Themes</div>
+					<div class='viewgameitemright'><a href='?module=search&adult=33' title='Male/Female'>MF</a> <a href='?module=search&adult=35' title='Male/Male'>MM</a> <a href='?module=search&adult=38' title='Other'>Other</a> </div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>TF Themes</div>
+					<div class='viewgameitemright'><a href='?module=search&transformation=4' title='Breast Enlargement'>BE</a> <a href='?module=search&transformation=9' title='Male to Female (Genital Changes)'>M2F</a> <a href='?module=search&transformation=45' title='Feminization'>Fem</a> <a href='?module=search&transformation=10' title='Mental Changes'>MC</a> <a href='?module=search&transformation=12' title='Possession'>Poss</a> <a href='?module=search&transformation=14' title='Shrinking'>Shrink</a> <a href='?module=search&transformation=39' title='Corruption'>Corr</a> <a href='?module=search&transformation=19' title='Shemale'>SheM</a> <a href='?module=search&transformation=23' title='Voluntary'>Vol</a> <a href='?module=search&transformation=44' title='Sissification'>Sissy</a> </div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Multimedia</div>
+					<div class='viewgameitemright'><a href='?module=search&multimedia=24' title='2-D Graphics'>2-D</a> <a href='?module=search&multimedia=27' title='Drawings'>Draw</a> </div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Discussion/Help</div>
+					<div class='viewgameitemright'><a href='https://tfgames.site/phpbb3/viewtopic.php?t=18888'>Discuss this Game</a></div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Patreon</div>
+					<div class='viewgameitemright'><a href='https://patreon.com/MilkyNail'>Support this Game</a></div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class='viewgameanothercontainer'>
+			<div class='viewgameheader'>Play Online</div>
+			<div class='viewgameinfocontainer' id='play'>
+				<br>
+				<center><form action='https://MilkyNail.site/slat.html' target='_blank'><input type='submit' value='Play Now'></form></center><br>
+				<center><b>Warning</b>: This is hosted outside of TFGS and we cannot confirm its safety or track how many times it has been played. Proceed at your own risk.</center><br>
+			</div>
+		</div>
+		<br>
+		<div class='viewgameanothercontainer'>
+			<div class='viewgameheader'>Downloads</div>
+			<div class='viewgameinfocontainer' id='downloads'>
+			<center>Version: All versions</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://MilkyNail.site/slat.zip' target='_blank'>milkynail.site</a></div>
+				<div class='dlnotes'><img src='images/note.png' title='Online/Offline version with pics'></div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=37815'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			</div>
+		</div>
+	</div>
+<div class='viewgamecontentcontainer'>
+	<div class='viewgamecontenttitle'>
+		S.L.A.T. Foundation	</div>
+	<div class='viewgamecontentauthor'>
+by <a href='https://www.tfgames.site/phpbb3/memberlist.php?mode=viewprofile&u=160407'>MariaMod</a> (<a href='index.php?module=search&author=160407'>2 more by this author</a>)	</div>
+<br>
+<div class='viewgamecontentcontainer_tabs'>
+	<div id='tabs'>
+		<ul>
+			<li><a href='#tabs-1'>Synopsis</a></li>
+			<li><a href='#tabs-2'>Plot</a></li>
+			<li><a href='#tabs-3'>Characters</a></li>
+			<li><a href='#tabs-5'>Changelog</a></li>
+		</ul>
+		<div id='tabs-1' style='overflow: hidden;'>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" title="Poster" src="https://milkynail.site/SLATPics/Poster.gif" alt="Poster" width="420" height="179" /></p>
+<p>&nbsp;</p>
+<p>No one wants to end on a street of a cruel cyber city. But there is always hope!<br />S.L.A.T. Foundation is here to help, boy!&nbsp;Sign these papers and we will cure your depression with drugs, body and brain surgeries. You will like it, promise!<br />How can you repay us for this kindness? With your now-feminine body, of course...</p>
+<p><a href="https://subscribestar.adult/mariamod" target="_blank" data-redactor-span="true">SubscribeStar</a>&nbsp;|&nbsp;<a href="https://patreon.com/MilkyNail" target="_blank" data-redactor-span="true">Patreon</a>&nbsp;|&nbsp;<a href="https://discord.gg/GC37yVQ" target="_blank" data-redactor-span="true">Discord server</a>&nbsp;|&nbsp;<a href="https://milkynail.site/" target="_blank" data-redactor-span="true">Site</a></p>
+<p><a href="https://MilkyNail.site/slat.html" target="_blank">Always up-to date online version</a> | <a href="https://MilkyNail.site/slat.zip">Download Online/Offline version</a></p>		</div>
+		<div id='tabs-2' style='overflow: hidden;'>
+<p>A doomed boy finds out about a corporation that provides "happiness" in exchange for freedom. Becoming slave in a cyberpunk world, he meets a few interesting characters. Yet, it's not easy to not be driven mad in these walls, even with friends...</p>		</div>
+		<div id='tabs-3' style='overflow: hidden;'>
+<p>BruNo - AI of the whole corporate building.<br />Olivia - Sweet personal assistant.<br />Lola - Corporate mechanic. A shitty one..<br />Huge - Security officer and a big asshole.<br />??? - It will visit you in your nightmares~</p>		</div>
+		<div id='tabs-5' style='overflow: hidden;'>
+<p><strong><span style="text-decoration: underline;"><strong>Version&nbsp;1.1.0</strong></span><br />Added:</strong><br /><span>&ndash; Finally added the End Game. When the player reaches 100 points of Darkness, he gets a warning in a dream. If you fall asleep with 100 Darkness for the second time, it will simply &lsquo;take&rsquo; the main character. Yes, he will not wake up, this is the end. Or you can use the autosave and try to change the course of the story. The game will also offer you to give all the money to &ldquo;bribe death&rdquo; and continue playing. If you choose this option, you will not be bothered by the End Game from max Darkness.</span><br /><span>&ndash; Added art for the Brothel Wing location.</span><br /><span>&ndash; Added nipple rings, a new type of piercing.</span><br /><span>&ndash; Added three more new piercing slots: neck, stomach, and clitoris (vagina). These should work with old saves. Note that the clitoris slot is not available if you have a penis. In order to purchase and use clit piercings, you must first get rid of your penis in the Med Bay.</span><br /><span>&ndash; These three new slots are for three new complex (!) piercings. They are more interesting and can be &lsquo;changed&rsquo; in the wardrobe according to the player&rsquo;s preference. This is a purely cosmetic detail, just like the rest of the clothing.</span><br /><span>&ndash; In Lola&rsquo;s hacked computer, in the tab &lsquo;Work n stuff (E:)&rsquo; you can now find an active section &lsquo;Cameras Hugos_Office.cam&rsquo;. Once a day you can spy what Hugo is doing at night. Spoiler: he has an appointment with Olivia. Another spoiler: animation will be added later.</span><br /><strong>Changed:</strong><br /><span>&ndash; Now there will be no version confusion after using save files. I actually implemented this change silently right after releasing v1.0.1.</span><br /><span>&ndash; The Access card cabinet is now working again! If you are a SubscribeStar subscriber, you can log in and the game will automatically provide you with available bonuses in the cheat menu. Unfortunately, the Access card cabinet only works in the game hosted on my site (MilkyNail.site/slat.html). Sorry for the inconvenience, I&rsquo;m still looking for a better solution.</span><br /><span>&ndash; For some reason, half of all Medical Bay passages had &ldquo;Brothel Wing&rdquo; headers. Well, I changed them.</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;"><strong>Version&nbsp;1.0.1</strong></span><br />Added:</strong><br /><span>&ndash; Added animated art for the Dairy Farm.</span><br /><strong>Changed:</strong><br /><span>- Fixed the display of Formal Panties in the wardrobe. They can now be used after purchase.</span><br /><span>- Leveling up while sleeping now works correctly. I must apologize for this bug, it was very stupid...</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;"><strong>Version&nbsp;1.0.0</strong></span><br />Added:</strong><br /><span>&ndash; There is now a hypnotic visor in Lola&rsquo;s Den. It increases the level of Corruption and Darkness.</span><br /><span>&ndash; An art has been added to Lola&rsquo;s Den. It is the only one for both day and night.</span><br /><span>&ndash; There is now a paragraph in Lola&rsquo;s Den that is displayed on your first visit.</span><br /><span>&ndash; You can now &ldquo;practice&rdquo; hacking in Lola&rsquo;s Den, increasing your hacking skill on special simplified 2&times;2 locks.</span><br /><span>&ndash; An old couch has been added to Lola&rsquo;s Den. You can doze on it, sleep fully, dream, and level up. Just like in your Bedroom.</span><br /><span>&ndash; From 8 p.m. to 8 a.m. (when Lola is not in Lola&rsquo;s Den) you can now hack Lola&rsquo;s computer. This lock has a second level of difficulty.</span><br /><span>&ndash; After hacking in, you can use Lola&rsquo;s computer. After browsing through the files, you can find her erotic photos and a small text document.</span><br /><span>&ndash; Added a new location &ndash; Clothing Store.</span><br /><span>&ndash; Added 12 new clothes that you can buy.</span><br /><strong>Changed:</strong><br /><span>&ndash; Created a new way of displaying clothes. It is a table with a picture of the clothes on the main character&rsquo;s body, a name, a description of the item and a &ldquo;Buy&rdquo;/&rdquo;Put on&rdquo; button. It adapts normally to mobile screens.</span></p>
+<p>&nbsp;</p>
+<p><strong><span><span style="text-decoration: underline;"><strong>Version&nbsp;0.9.5</strong></span><br /></span>Added:<br /></strong>- For mobile users, images that did not fit within the screen borders will now be displayed normally. Also made the character images a little smaller.<br /> - Clicking on any menu item (for example, Settings or Changelog) now hides the side menu for mobile users.<br /> - Created the second level of hacking (unfortunately not yet available in game).<br /> - Nightmares now show the current Darkness points.<br /> - Added a chill zone in the Bedroom. There you can watch TV to reduce the level of Darkness and restore some Energy.<br /> - There is now a level progression. The BIO shows the available levels and the current progress by experience. When you reach the desired threshold, a notification will appear in the left menu about the need to sleep. Yes, level progression takes place at night, immediately after nightmares (if any) (also not available for now).<br /> - Added art to the Medical Bay. Day and night versions.<br /> - Working on Lola's Den. It is now available in the Hall after the first night quest with Lola. Aaand it's completely empty for now.<br /> <strong>Changed:</strong> <br /> - After a long and painful search, I finally discovered a bug that was constantly selecting the second cell when milking. And finally fixed this bug.<br /> - For mobile players, the milking mini-game line is now the full width of the screen instead of 50%.<br /> - Fixed 'addclass' bug in hacking passage. Also fixed 'addclass' errors that mobile users kept seeing.<br /> - Found and fixed a problem due to which random images were not showing.</p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;"><strong><span>Version</span><span>&nbsp;0.9.0</span></strong><br /></span><span>Added:</span><br /></strong>&ndash; To the list of phrases and questions that can be found in the process of prostitution I added: 3 simple phrases (now there are 4 of them), added one more line at the end of sex, one more in seduction for a new round, one new phrase for requests to buy snacks and drinks, also added one question each to the list of three qualities (rudeness, intelligence, elegance).<br />&ndash; Added a tip at the end of the prostitution act and it depends on the final attraction points. The maximum you can get is +20 money.<br />&ndash; Added art of the hall in the daytime and at night.<strong><br /><span>Changed:</span><br /></strong>&ndash; I hid the display of milking and prostitution levels in the BIO. They will definitely be back in the game in the future, but for now I decided to focus on the truly core skill &ndash; hacking.<br />&ndash; Now, during prostitution, time is added during the process, 5 minutes at a time, instead of just 1 hour at the end.<br />&ndash; Speaking of snacking during prostitution, it now lasts 15 minutes. And if the guest refuses to buy snacks, he will still continue to receive orgasm points.<br />&ndash; Slightly improved the milking mini-game. Now it should work more stable. I received many complaints about it, but no matter how hard I tried, I couldn&rsquo;t get a single glitch&hellip; So I improved the only thing that could hypothetically interfere.<strong><br /></strong></p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">Version</span><span style="text-decoration: underline;"> 0.8.2</span></strong><br /><strong>Changes:<br /></strong>- Fixed the Options menu. Now you can't open it twice or open another menu item, creating a loop of passages.<br />- Now the Settings menu (don't confuse it with Options. Options is a link at the top of the side menu, Settings is a button at the bottom of it) contains a new switch for mobile users. You can use it to improve display of certain pages (like BIO and Prostitution start).<br />- And yes, I fixed BIO display for mobile users with a few tricks.<br />- I also reduced the font size of room names and descriptions by 20-25% for mobile users.</p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;"><strong><span>Version 0.8.1</span></strong><br /></span><strong>Changes:</strong><br /></strong><span>- Fixed a small error with a nightmare (the one about Lola).</span><br /><span>- Now the game will check for available updates once in a real time day. To check manually, click the "Options" link (at the top of the side menu).</span><br /><span>- Ran ALL text in the game through a grammar checker. Fixed around 30-50 mistakes and typos.</span></p>
+<p><span>&nbsp;</span></p>
+<p><strong><span style="text-decoration: underline;">Version 0.8.0</span></strong><br /><strong>Changes:</strong><br /><span>- The minimum base of the game has been built!</span></p>		</div>
+	</div>
+</div>
+<br>
+<div class='viewgamecontentcontainer_tabs' id='reviews'>
+	<br>
+<div id='40033' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by Hypatia</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: 0.8.0 on 03/18/2024</div><br style='clear: both;'><hr>
+<p>the gameplay could use some refinement. It feels impossible to manage your "darkness" and money is effectively useless since you cannot do anything with it right now except if you have enough corruption, which you accrue at a much slower rate, so you will effectively always have enough money, once you reach the required corruption.</p>
+<p>If more content is added I can see the potential, but as it stands it feels drab and repetitive.</p>
+	</div>
+</div>
+<br>
+<div id='40030' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by bisubsissyslut</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: 0.8.0 on 03/18/2024</div><br style='clear: both;'><hr>
+<p>Needs a proof read and when you become capable of purchases none of them work.&nbsp; They do make you bald and naked though.</p>
+<p>I am going to return to see version 1.0 but if all the transformations are still broken it will be a huge waste of time.</p>
+	</div>
+</div>
+<br>
+<div id='40029' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by John637</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: 0.8.0 on 03/18/2024</div><br style='clear: both;'><hr>
+<p>Interesting gameplay loop with a fun transformation mechanic, it's pretty basic, but can be fun. It has a lot of kinks to iron out, but there is a lot of potential in it. I did find a bug with the dairy farm minigame where the first squeeze is always locked to the second square no matter when you press the button.</p>
+	</div>
+</div>
+<br>
+<div id='40026' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by LurkingOwl</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: 0.8.0 on 03/17/2024</div><br style='clear: both;'><hr>
+<p>Immediately interested. . . but immediately put off.</p>
+<p>GET A PROOF READER.</p>
+<p>The english in this game is. . . not horrendous exactly, but it is so broken and unnatural that it immediately takes you out of it.&nbsp;</p>
+	</div>
+</div>
+<br>
+</div>
+</div>
+	</div>
+	<div class='bodyplaceholder_right'>
+<div class='menuheader'>Find</div>
+<div class='menu'>
+	<ul>
+		<li><a href='?module=search'>Advanced Search</a></li>
+	</ul>
+</div>
+<div class='menuheader'>Browse</div>
+<div class='menu'>
+	<ul>
+		<li><a href='?module=browse&by=engine'>Browse by Game Engine</a></li>
+		<li><a href='?module=browse&by=author'>Browse by Author</a></li>
+		<li><a href='?module=browse&by=adult'>Browse by Adult Theme</a></li>
+		<li><a href='?module=browse&by=transformation'>Browse by Transformation Theme</a></li>
+		<li><a href='?module=browse&by=multimedia'>Browse by Multimedia Theme</a></li>
+		<li><a href='?module=browse&by=rating'>Browse by Content Rating</a></li>
+		<li><a href='?module=browse&by=contest'>Browse by Contest</a></li>
+	</ul>
+</div>
+<div class='menuheader'>Database Statistics</div>
+Total Games: <i>2,187</i><br>Total Contests: <i>32</i><br>Total Reviews: <i>20,885</i><br>Total Engines: <i>33</i><br>Total Adult Themes: <i>10</i><br>Total Transformation Themes: <i>26</i><br>Total Multimedia Themes: <i>10</i><br>Total Online Plays: <i>4,855,083</i><br><br><center>Support TFGS!<br><a href='https://www.patreon.com/lashek' target='_new'><img src='/images/becomeAPatronBanner.png' style='max-width: 90%; max-height: 70px;'></a></center><br>
+<br>
+<center><a href='https://discord.gg/yPrWNP4'><img src='https://discordapp.com/api/guilds/438302782311890964/widget.png?style=banner2' style='max-width: 90%;'></a></center><br>
+</div>
+	</div>
+</div>
+<div class='footer'><center><font color='red'>TFGS IGDB</font> is copyright &copy; 2012-2024 TFGames.Site. All games and content are copyright &copy; their respective authors.</center></div>
+</body>
+</html>

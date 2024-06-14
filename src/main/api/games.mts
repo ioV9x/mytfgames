@@ -2,7 +2,6 @@ import { Cheerio, CheerioAPI, Element, load as cheerioLoad } from "cheerio";
 import { ElementType } from "domelementtype";
 import { net } from "electron/main";
 import { injectable } from "inversify";
-import { Temporal } from "temporal-polyfill";
 
 import { makeServiceIdentifier } from "$main/utils";
 
@@ -26,7 +25,7 @@ export interface RemoteIndexGameInfo {
 export interface RemoteTransformationTheme {
   id: number;
   name: string;
-  acronym: string;
+  abbreviation: string;
 }
 export interface RemoteVersionInfo {
   version: string;
@@ -44,6 +43,14 @@ export interface RemoteAuthorInfo {
 export interface RemoteGameDetails {
   id: number;
   /**
+   * Name of the game.
+   */
+  name: string;
+  /**
+   * Last update date of the game in ISO 8601 format.
+   */
+  lastUpdate: string;
+  /**
    * Release date of the game in ISO 8601 format.
    */
   releaseDate: string;
@@ -54,6 +61,41 @@ export interface RemoteGameDetails {
 
   authors: RemoteAuthorInfo[];
   versions: RemoteVersionInfo[];
+}
+
+// TODO: validate that the timezone used by the website is indeed UTC
+const dateFormatVariants = [
+  // 2021-01-10 => 2021-01-10T00:00:00Z
+  // this is the format usually used on the game search page
+  [/^2\d\d\d-\d\d-\d\d$/, (match: RegExpMatchArray) => match[0] + "T00:00:00Z"],
+  // 01/10/2021 => 2021-01-10T00:00:00Z
+  // this is the format used by the website if the user is not logged in
+  [
+    /^(\d?\d)\/(\d?\d)\/(2\d\d\d)$/,
+    (match: RegExpMatchArray) =>
+      `${match[3]!}-${match[1]!.padStart(2, "0")}-${match[2]!.padStart(2, "0")}T00:00:00Z`,
+  ],
+  // 10 Jan 2021, 00:00 => 2021-01-10T00:00:00Z
+  // this is the format used by the website if the user is logged in
+  [
+    /^\|(\d\d \w+ 2\d\d\d)\|, (\d\d:\d\d)$/,
+    (match: RegExpMatchArray) =>
+      `${new Date(match[1]! + "Z").toISOString().substring(0, 10)}T${match[2]!}:00Z`,
+  ],
+  [
+    /^(\d?\d)-(\d?\d)-(2\d\d\d)$/,
+    (match: RegExpMatchArray) =>
+      `${match[3]!}-${match[2]!.padStart(2, "0")}-${match[1]!.padStart(2, "0")}T00:00:00Z`,
+  ],
+] as const;
+function adaptDate(input: string): string {
+  for (const [regex, replacement] of dateFormatVariants) {
+    const match = regex.exec(input);
+    if (match) {
+      return replacement(match);
+    }
+  }
+  throw new Error(`Could not adapt date: ${input}`);
 }
 
 type PropExtractor = (
@@ -71,37 +113,19 @@ const propExtractors = Object.assign(
       }) satisfies Partial<RemoteIndexGameInfo>,
     "Last Update": ($td: Cheerio<Element>) =>
       ({
-        lastUpdate: $td.text().trim(),
+        lastUpdate: adaptDate($td.text().trim()),
       }) satisfies Partial<RemoteIndexGameInfo>,
   },
 );
 
-const dateFormatVariants = [
-  [/^2\d\d\d-\d\d-\d\d$/, (match: RegExpMatchArray) => match[0]!],
-  [
-    /^(\d?\d)\/(\d?\d)\/(2\d\d\d)$/,
-    (match: RegExpMatchArray) =>
-      `${match[3]!}-${match[1]!.padStart(2, "0")}-${match[2]!.padStart(2, "0")}`,
-  ],
-  [
-    /^(\d?\d)-(\d?\d)-(2\d\d\d)$/,
-    (match: RegExpMatchArray) =>
-      `${match[3]!}-${match[2]!.padStart(2, "0")}-${match[1]!.padStart(2, "0")}`,
-  ],
-] as const;
-function adaptDate(input: string): string {
-  for (const [regex, replacement] of dateFormatVariants) {
-    const match = regex.exec(input);
-    if (match) {
-      return replacement(match);
-    }
-  }
-  throw new Error(`Could not adapt date: ${input}`);
-}
-
 const gameInfoExtractors = Object.assign(
   Object.create(null) as Record<string, PropExtractor | undefined>,
   {
+    "Last Update": ($itemR: Cheerio<Element>) => {
+      return {
+        lastUpdate: adaptDate($itemR.text().trim()),
+      } satisfies Partial<RemoteGameDetails>;
+    },
     "Release Date": ($itemR: Cheerio<Element>) => {
       return {
         releaseDate: adaptDate($itemR.text().trim()),
@@ -116,14 +140,14 @@ const gameInfoExtractors = Object.assign(
               "transformation",
             );
             const name = a.attribs["title"];
-            const acronym =
+            const abbreviation =
               a.firstChild?.type === ElementType.Text
                 ? a.firstChild.data
                 : undefined;
-            if (!id || !name || !acronym) {
+            if (!id || !name || !abbreviation) {
               return;
             }
-            return { id: Number.parseInt(id), name, acronym };
+            return { id: Number.parseInt(id), name, abbreviation };
           })
           .get(),
       } satisfies Partial<RemoteGameDetails>;
@@ -134,6 +158,7 @@ const gameInfoExtractors = Object.assign(
 const GamesApi = makeServiceIdentifier<GamesApi>("games api");
 interface GamesApi {
   getGames(): Promise<RemoteIndexGameInfo[]>;
+  getGameDetails(id: number): Promise<RemoteGameDetails>;
 }
 export { GamesApi };
 
@@ -235,21 +260,29 @@ export class GamesApiImpl {
 
     const versions = this.parseVersionInfo($);
 
+    const name = $(`${viewgameContentSelector} > div.viewgamecontenttitle`)
+      .first()
+      .text()
+      .trim();
+
     const authors = $(
       `${viewgameContentSelector} > div.viewgamecontentauthor > a`,
     )
       .map((_, authorLinkNode) => {
         const profileUrlText = authorLinkNode.attribs["href"];
         const nameNode = authorLinkNode.firstChild;
-        if (!profileUrlText || nameNode?.type !== ElementType.Text) {
-          return;
+        if (
+          !profileUrlText ||
+          nameNode?.type !== ElementType.Text ||
+          !profileUrlText.includes("memberlist.php")
+        ) {
+          return null;
         }
         const profileUrl = new URL(profileUrlText);
         const profileId = profileUrl.searchParams.get("u");
         if (!profileId) {
-          return;
+          return null;
         }
-
         return {
           id: Number.parseInt(profileId),
           name: nameNode.data,
@@ -259,7 +292,7 @@ export class GamesApiImpl {
 
     // TODO: validate that all props are defined
     return Object.assign(
-      { id, authors, versions } satisfies Partial<RemoteGameDetails>,
+      { id, name, authors, versions } satisfies Partial<RemoteGameDetails>,
       ...generalInfoParts,
     ) as RemoteGameDetails;
   }
