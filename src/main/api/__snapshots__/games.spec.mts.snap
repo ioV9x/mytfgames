@@ -19,3 +19,119 @@ exports[`Games API > should parse a list response 1`] = `
   },
 ]
 `;
+
+exports[`Games API > should parse a viewgame response 1`] = `
+{
+  "authors": [
+    {
+      "id": 38045,
+      "name": "Deedee",
+    },
+    {
+      "id": 51960,
+      "name": "psy",
+    },
+  ],
+  "id": 1145,
+  "releaseDate": "2017-10-01",
+  "transformationThemes": [
+    {
+      "acronym": "BE",
+      "id": 4,
+      "name": "Breast Enlargement",
+    },
+    {
+      "acronym": "Grow",
+      "id": 7,
+      "name": "Growth/Expansion",
+    },
+    {
+      "acronym": "Invol",
+      "id": 8,
+      "name": "Involuntary",
+    },
+    {
+      "acronym": "M2F",
+      "id": 9,
+      "name": "Male to Female (Genital Changes)",
+    },
+    {
+      "acronym": "Fem",
+      "id": 45,
+      "name": "Feminization",
+    },
+    {
+      "acronym": "Slow",
+      "id": 40,
+      "name": "Slow Transformation",
+    },
+    {
+      "acronym": "MC",
+      "id": 10,
+      "name": "Mental Changes",
+    },
+    {
+      "acronym": "Bimbo",
+      "id": 15,
+      "name": "Bimbo",
+    },
+    {
+      "acronym": "Herm",
+      "id": 16,
+      "name": "Hermaphrodite",
+    },
+    {
+      "acronym": "Corr",
+      "id": 39,
+      "name": "Corruption",
+    },
+    {
+      "acronym": "SheM",
+      "id": 19,
+      "name": "Shemale",
+    },
+    {
+      "acronym": "Vol",
+      "id": 23,
+      "name": "Voluntary",
+    },
+    {
+      "acronym": "Sissy",
+      "id": 44,
+      "name": "Sissification",
+    },
+  ],
+  "versions": [
+    {
+      "downloads": [
+        {
+          "link": "https://www.mediafire.com/file/hl1azwap3l1xy5x/secretary1013.rar/file",
+          "name": "mediafire.com",
+          "note": "MediaFire",
+        },
+        {
+          "link": "https://mega.nz/file/sOJzXLYT#V00E8-ZClD9Ej9G7Oloavt41F8NJQ_0GQm2ppvdXUxo",
+          "name": "mega.nz",
+          "note": "Mega",
+        },
+      ],
+      "version": "1.0.1.3",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://www.mediafire.com/file/rwlg3u68598r1hb/secretary1005.rar/file",
+          "name": "mediafire.com",
+          "note": "MediaFire",
+        },
+        {
+          "link": "https://mega.nz/file/xbQWjQRD#yxVeWBth7AzAeX03h6GJ6_ptd7j8mEsAdQZb1Mf_UW4",
+          "name": "mega.nz",
+          "note": "Mega",
+        },
+      ],
+      "version": "1.0.0.5",
+    },
+  ],
+}
+`;
