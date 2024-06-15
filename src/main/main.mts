@@ -16,6 +16,7 @@ import { AppModule } from "./app/app.module.mjs";
 import { ConfigurationModule } from "./configuration/configuration.module.mjs";
 import { DatabaseModule } from "./database/database.module.mjs";
 import { GamesModule } from "./games/games.module.mjs";
+import { LogModule } from "./log/log.module.mjs";
 import { PalBrowserModule } from "./pal/browser.module.mjs";
 import { PalIpcModule } from "./pal/Ipc/IpcModule.mjs";
 
@@ -27,6 +28,7 @@ container.load(
   ConfigurationModule,
   DatabaseModule,
   GamesModule,
+  LogModule,
   PalBrowserModule,
   PalIpcModule,
 );
