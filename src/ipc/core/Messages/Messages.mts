@@ -1,6 +1,10 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
+
 export type IpcMessage =
   | RemoteProcedureCallMessage
-  | RemoteProcedureResultMessage;
+  | RemoteProcedureResultMessage
+  | RemoteReduxStoreRegistrationMessage
+  | RemoteReduxActionMessage;
 
 ////////////////////////////////////////////////////////////////////////
 // RPC messages
@@ -26,4 +30,25 @@ export function isRemoteProcedureResultMessage(
   msg: IpcMessage,
 ): msg is RemoteProcedureResultMessage {
   return msg[0] === "rpc:result";
+}
+
+////////////////////////////////////////////////////////////////////////
+// Remote redux actions
+export type RemoteReduxStoreRegistrationMessage = readonly ["rra:register"];
+
+export type RemoteReduxActionMessage = readonly [
+  "rra:action",
+  payload: PayloadAction<unknown>,
+];
+
+export function isRemoteReduxStoreRegistrationMessage(
+  msg: IpcMessage,
+): msg is RemoteReduxStoreRegistrationMessage {
+  return msg[0] === "rra:register";
+}
+
+export function isRemoteReduxActionMessage(
+  msg: IpcMessage,
+): msg is RemoteReduxActionMessage {
+  return msg[0] === "rra:action";
 }

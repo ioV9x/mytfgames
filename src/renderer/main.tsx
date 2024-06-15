@@ -20,7 +20,15 @@ function main(ev: MessageEvent) {
   }
   window.removeEventListener("message", main);
 
-  const endpoint = new BrowserIpcEndpoint(ev.ports[0]!);
+  const port = ev.ports[0];
+  if (port == null) {
+    // eslint-disable-next-line no-console
+    console.error(`Initialization "main-world-port" message had no port.`);
+    document.getElementById("root")!.innerText =
+      'Initialization error: "main-world-port" message had no port.';
+    return;
+  }
+  const endpoint = new BrowserIpcEndpoint(port, store);
   const boundservices = forgeRemoteServiceCollection(endpoint, services);
 
   ReactDOM.createRoot(document.getElementById("root")!).render(

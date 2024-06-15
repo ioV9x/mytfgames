@@ -1,8 +1,11 @@
 import { ContainerModule, injectable } from "inversify";
 
-import { RemoteProcedureServer } from "$ipc/core";
+import {
+  DefaultRemoteReduxActionSender,
+  RemoteProcedureServer,
+} from "$ipc/core";
 
-import { MainIpcServer } from "./index.mjs";
+import { MainIpcServer, RemoteReduxActionSender } from "./index.mjs";
 import {
   MainIpcServer as MainIpcServerImpl,
   RemoteProcedureServerInjectionSymbol,
@@ -12,6 +15,9 @@ export const PalIpcModule = new ContainerModule((bind) => {
   bind<RemoteProcedureServer>(RemoteProcedureServerInjectionSymbol)
     .to(injectable()(RemoteProcedureServer))
     .inSingletonScope();
+  bind(RemoteReduxActionSender)
+    .to(injectable()(DefaultRemoteReduxActionSender))
+    .inRequestScope();
 
   bind(MainIpcServer).to(MainIpcServerImpl).inSingletonScope();
 });
