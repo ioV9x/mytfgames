@@ -9,6 +9,15 @@ export async function up(db: Kysely<any>): Promise<void> {
       .alterTable("remote_game")
       .addColumn("release_date", "text")
       .execute();
+    await trx.schema
+      .alterTable("remote_game")
+      .addColumn("last_crawled", "text")
+      .execute();
+    await trx.schema
+      .createIndex("remote_game_last_crawled_index")
+      .on("remote_game")
+      .column("last_crawled")
+      .execute();
 
     await trx.schema
       .createTable("remote_author")
@@ -139,6 +148,7 @@ export async function down(db: Kysely<any>): Promise<void> {
 
     await trx.schema
       .alterTable("remote_game")
+      .dropColumn("last_crawled")
       .dropColumn("release_date")
       .execute();
   });

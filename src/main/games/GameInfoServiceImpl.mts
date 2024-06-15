@@ -194,6 +194,9 @@ export class GameInfoServiceImpl implements GameInfoService {
     const gameDetails = await this.gamesApi.getGameDetails(id);
 
     await this.db.transaction().execute(async (trx) => {
+      const last_crawled = Temporal.Now.instant().toString({
+        smallestUnit: "second",
+      });
       await trx
         .insertInto("remote_game")
         .values({
@@ -201,12 +204,14 @@ export class GameInfoServiceImpl implements GameInfoService {
           name: gameDetails.name,
           last_update: gameDetails.lastUpdate,
           release_date: gameDetails.releaseDate,
+          last_crawled,
         })
         .onConflict((oc) =>
           oc.column("id").doUpdateSet({
             name: gameDetails.name,
             last_update: gameDetails.lastUpdate,
             release_date: gameDetails.releaseDate,
+            last_crawled,
           }),
         )
         .execute();

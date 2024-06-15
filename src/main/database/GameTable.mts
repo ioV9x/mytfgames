@@ -39,6 +39,10 @@ export interface RemoteGameTable {
    * Creation date as per TFGames.site in ISO 8601 format.
    */
   release_date: string | null;
+  /**
+   * Last crawl date of the game in ISO 8601 format.
+   */
+  last_crawled: string | null;
 }
 
 export interface RemoteAuthorTable {
