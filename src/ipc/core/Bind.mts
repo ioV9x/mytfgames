@@ -1,5 +1,6 @@
 /// <reference types="reflect-metadata/lite" />
 
+import { MessageTransport } from "./Messages/index.mjs";
 import {
   RemoteProcedureDescriptor,
   RemoteProcedureOptions,
@@ -11,7 +12,7 @@ import {
 } from "./RemoteServices/index.mjs";
 
 type ProcedureImplementation<TArgs extends unknown[], TReturn> = (
-  ...args: TArgs
+  ...args: [...TArgs, source: MessageTransport]
 ) => Promise<TReturn> | TReturn;
 
 type RemoteProcedureKeys<TShape extends RemoteServiceShape> = {

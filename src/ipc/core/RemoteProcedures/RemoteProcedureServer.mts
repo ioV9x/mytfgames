@@ -2,7 +2,7 @@ import { IpcMessageEvent, MessageTransport } from "../Messages/index.mjs";
 import { RemoteProcedureOptions } from "./RemoteProcedureDescriptor.mjs";
 
 interface ProcedureInfo extends RemoteProcedureOptions {
-  procedure: (...args: unknown[]) => unknown;
+  procedure: (...args: [...unknown[], source: MessageTransport]) => unknown;
 }
 
 export class RemoteProcedureServer {
@@ -28,7 +28,7 @@ export class RemoteProcedureServer {
     serviceId: string,
     procId: string,
     options: RemoteProcedureOptions,
-    procedure: (...args: unknown[]) => unknown,
+    procedure: (...args: [...unknown[], source: MessageTransport]) => unknown,
   ) {
     const compoundId = this.makeId(serviceId, procId);
     if (this.procedures[compoundId] != null) {
@@ -70,7 +70,7 @@ export class RemoteProcedureServer {
     }
     const procedure = procedureInfo.procedure;
     try {
-      const result = procedure(...args);
+      const result = procedure(...args, target);
       if (
         result != null &&
         typeof result === "object" &&
