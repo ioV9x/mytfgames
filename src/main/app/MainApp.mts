@@ -1,13 +1,11 @@
 import fs from "node:fs";
 
 import { app, session } from "electron/main";
-import installExtension, {
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} from "electron-devtools-installer";
+import installExtension, { REDUX_DEVTOOLS } from "electron-devtools-installer";
 import { inject, injectable } from "inversify";
 
 import { AppConfiguration } from "$main/configuration";
+import { Logger, logger } from "$main/log";
 import {
   type BrowserSession,
   BrowserSessionConfigurer,
@@ -17,6 +15,7 @@ import {
 } from "$main/pal";
 
 import { migrate } from "../database/KyselyDatabaseProvider.mjs";
+import { JobSchedulingService } from "./JobSchedulingService.mjs";
 
 @injectable()
 export class MainApp {
@@ -24,12 +23,17 @@ export class MainApp {
   appWindow: BrowserWindow | undefined;
 
   constructor(
+    @logger("app") public readonly log: Logger,
     @inject(BrowserSessionConfigurer)
     readonly sessionConfigurer: BrowserSessionConfigurer,
     @inject(BrowserWindowFactory) readonly windowFactory: BrowserWindowFactory,
+    @inject(JobSchedulingService)
+    readonly jobSchedulingService: JobSchedulingService,
     @inject(AppConfiguration) readonly configuration: AppConfiguration,
     @inject(MainIpcServer) readonly _ipcServer: unknown,
-  ) {}
+  ) {
+    this.log.info("<===================== My TFGames =====================>");
+  }
 
   async run(): Promise<void> {
     this.setupPaths();
@@ -72,6 +76,12 @@ export class MainApp {
 
   async startRenderer(): Promise<void> {
     await app.whenReady();
+    void this.jobSchedulingService.tick();
+    setInterval(
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      this.jobSchedulingService.tick.bind(this.jobSchedulingService),
+      this.jobSchedulingService.tickInterval.total({ unit: "milliseconds" }),
+    );
     if (!app.isPackaged) {
       await installExtension([REDUX_DEVTOOLS], {
         loadExtensionOptions: {
