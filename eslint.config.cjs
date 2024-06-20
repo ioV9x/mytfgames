@@ -9,6 +9,7 @@ const reactRefresh = require("eslint-plugin-react-refresh");
 module.exports = ts.config(
   {
     ignores: [
+      "_data/",
       "**/.vite/",
       "**/.yarn/",
       "**/out/",
