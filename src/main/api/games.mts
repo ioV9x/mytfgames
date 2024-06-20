@@ -22,7 +22,7 @@ export interface RemoteIndexGameInfo {
   lastUpdate: string;
 }
 
-export interface RemoteTransformationTheme {
+export interface RemoteCategory {
   id: number;
   name: string;
   abbreviation: string;
@@ -55,9 +55,14 @@ export interface RemoteGameDetails {
    */
   releaseDate: string;
   /**
+   * Adult themes of the game.
+   */
+  adultThemes: RemoteCategory[];
+  /**
    * Transformation themes of the game.
    */
-  transformationThemes: RemoteTransformationTheme[];
+  transformationThemes: RemoteCategory[];
+  multimediaThemes: RemoteCategory[];
 
   authors: RemoteAuthorInfo[];
   versions: RemoteVersionInfo[];
@@ -98,11 +103,11 @@ function adaptDate(input: string): string {
   throw new Error(`Could not adapt date: ${input}`);
 }
 
-type PropExtractor = (
+type IndexPropExtractor = (
   $td: Cheerio<Element>,
 ) => Partial<RemoteIndexGameInfo> | undefined;
 const propExtractors = Object.assign(
-  Object.create(null) as Record<string, PropExtractor | undefined>,
+  Object.create(null) as Partial<Record<string, IndexPropExtractor>>,
   {
     Name: ($td: Cheerio<Element>) =>
       ({
@@ -118,8 +123,11 @@ const propExtractors = Object.assign(
   },
 );
 
+type DetailsPropExtractor = (
+  $td: Cheerio<Element>,
+) => Partial<RemoteGameDetails> | undefined;
 const gameInfoExtractors = Object.assign(
-  Object.create(null) as Record<string, PropExtractor | undefined>,
+  Object.create(null) as Partial<Record<string, IndexPropExtractor>>,
   {
     "Last Update": ($itemR: Cheerio<Element>) => {
       return {
@@ -131,29 +139,38 @@ const gameInfoExtractors = Object.assign(
         releaseDate: adaptDate($itemR.text().trim()),
       } satisfies Partial<RemoteGameDetails>;
     },
-    "TF Themes": ($itemR: Cheerio<Element>) => {
-      const $themes = $itemR.find("a");
-      return {
-        transformationThemes: $themes
-          .map((_, a) => {
-            const id = new URLSearchParams(a.attribs["href"]).get(
-              "transformation",
-            );
-            const name = a.attribs["title"];
-            const abbreviation =
-              a.firstChild?.type === ElementType.Text
-                ? a.firstChild.data
-                : undefined;
-            if (!id || !name || !abbreviation) {
-              return;
-            }
-            return { id: Number.parseInt(id), name, abbreviation };
-          })
-          .get(),
-      } satisfies Partial<RemoteGameDetails>;
-    },
+    "Adult Themes": makeCategoryExtractor("adult", "adultThemes"),
+    "TF Themes": makeCategoryExtractor(
+      "transformation",
+      "transformationThemes",
+    ),
+    Multimedia: makeCategoryExtractor("multimedia", "multimediaThemes"),
   },
 );
+function makeCategoryExtractor(
+  remoteKey: string,
+  localKey: "adultThemes" | "transformationThemes" | "multimediaThemes",
+): DetailsPropExtractor {
+  return ($itemR: Cheerio<Element>) => {
+    const $themes = $itemR.find("a");
+    return {
+      [localKey]: $themes
+        .map((_, a) => {
+          const id = new URLSearchParams(a.attribs["href"]).get(remoteKey);
+          const name = a.attribs["title"];
+          const abbreviation =
+            a.firstChild?.type === ElementType.Text
+              ? a.firstChild.data
+              : undefined;
+          if (!id || !name || !abbreviation) {
+            return;
+          }
+          return { id: Number.parseInt(id), name, abbreviation };
+        })
+        .get(),
+    } satisfies Partial<RemoteGameDetails>;
+  };
+}
 
 const GamesApi = makeServiceIdentifier<GamesApi>("games api");
 interface GamesApi {

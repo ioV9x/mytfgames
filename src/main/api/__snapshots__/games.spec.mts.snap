@@ -22,6 +22,43 @@ exports[`Games API > should parse a list response 1`] = `
 
 exports[`Games API > should parse a viewgame response 1`] = `
 {
+  "adultThemes": [
+    {
+      "abbreviation": "MF",
+      "id": 33,
+      "name": "Male/Female",
+    },
+    {
+      "abbreviation": "FF",
+      "id": 34,
+      "name": "Female/Female",
+    },
+    {
+      "abbreviation": "MM",
+      "id": 35,
+      "name": "Male/Male",
+    },
+    {
+      "abbreviation": "F-Self",
+      "id": 37,
+      "name": "Female Masturbation",
+    },
+    {
+      "abbreviation": "M-Self",
+      "id": 36,
+      "name": "Male Masturbation",
+    },
+    {
+      "abbreviation": "Sub",
+      "id": 41,
+      "name": "Submission",
+    },
+    {
+      "abbreviation": "Dom",
+      "id": 42,
+      "name": "Domination",
+    },
+  ],
   "authors": [
     {
       "id": 38045,
@@ -34,6 +71,33 @@ exports[`Games API > should parse a viewgame response 1`] = `
   ],
   "id": 1445,
   "lastUpdate": "2024-05-12T00:00:00Z",
+  "multimediaThemes": [
+    {
+      "abbreviation": "2-D",
+      "id": 24,
+      "name": "2-D Graphics",
+    },
+    {
+      "abbreviation": "Rend",
+      "id": 26,
+      "name": "3-D Renders",
+    },
+    {
+      "abbreviation": "Draw",
+      "id": 27,
+      "name": "Drawings",
+    },
+    {
+      "abbreviation": "SFX",
+      "id": 30,
+      "name": "Sound Effects",
+    },
+    {
+      "abbreviation": "Video",
+      "id": 31,
+      "name": "Video",
+    },
+  ],
   "name": "Secretary",
   "releaseDate": "2017-10-01T18:57:00Z",
   "transformationThemes": [
@@ -140,6 +204,23 @@ exports[`Games API > should parse a viewgame response 1`] = `
 
 exports[`Games API > should parse a viewgame response 2 1`] = `
 {
+  "adultThemes": [
+    {
+      "abbreviation": "MF",
+      "id": 33,
+      "name": "Male/Female",
+    },
+    {
+      "abbreviation": "MM",
+      "id": 35,
+      "name": "Male/Male",
+    },
+    {
+      "abbreviation": "Other",
+      "id": 38,
+      "name": "Other",
+    },
+  ],
   "authors": [
     {
       "id": 160407,
@@ -148,6 +229,18 @@ exports[`Games API > should parse a viewgame response 2 1`] = `
   ],
   "id": 3227,
   "lastUpdate": "2024-06-14T00:00:00Z",
+  "multimediaThemes": [
+    {
+      "abbreviation": "2-D",
+      "id": 24,
+      "name": "2-D Graphics",
+    },
+    {
+      "abbreviation": "Draw",
+      "id": 27,
+      "name": "Drawings",
+    },
+  ],
   "name": "S.L.A.T. Foundation",
   "releaseDate": "2024-03-17T00:00:00Z",
   "transformationThemes": [

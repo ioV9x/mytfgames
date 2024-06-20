@@ -249,14 +249,20 @@ export class GameInfoServiceImpl implements GameInfoService {
         ),
       );
 
-      const categories: Insertable<RemoteCategoryTable>[] = [
-        gameDetails.transformationThemes.map((tft) => ({
-          rid: tft.id,
-          type: CategoryType.Transformation,
-          name: tft.name,
-          abbreviation: tft.abbreviation,
+      const categories: Insertable<RemoteCategoryTable>[] = (
+        [
+          [gameDetails.adultThemes, CategoryType.Adult],
+          [gameDetails.transformationThemes, CategoryType.Transformation],
+          [gameDetails.multimediaThemes, CategoryType.Multimedia],
+        ] as const
+      ).flatMap(([remoteCategories, type]) =>
+        remoteCategories.map((remoteCategory) => ({
+          rid: remoteCategory.id,
+          type,
+          name: remoteCategory.name,
+          abbreviation: remoteCategory.abbreviation,
         })),
-      ].flat();
+      );
 
       const categoryIds = await Promise.all(
         categories.map((category) =>
