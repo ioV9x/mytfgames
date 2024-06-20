@@ -10,7 +10,6 @@ export default function Root() {
   useEffect(() => {
     void (async () => {
       const value = await ipcContext?.user.isLoggedIn();
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       setLoginState(value ? "logged in" : "logged out");
     })();
   }, [ipcContext]);

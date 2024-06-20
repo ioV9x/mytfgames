@@ -18,6 +18,7 @@ import { Link, Route, Router, Switch } from "wouter";
 
 import GameDetails from "../features/games/GameDetails.tsx";
 import Games from "../features/games/Games.tsx";
+import RemoteGameIndex from "../features/remote-games/RemoteGameIndex.tsx";
 import NotFound from "./NotFound.tsx";
 import Root from "./Root.tsx";
 
@@ -43,8 +44,8 @@ function AppWithShell({
           TFGames
         </HeaderName>
         <HeaderNavigation aria-label="My TFGames">
-          <HeaderMenuItem href="/games" as={Link}>
-            Games
+          <HeaderMenuItem href="/remote-games" as={Link}>
+            Online DB
           </HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
@@ -56,8 +57,8 @@ function AppWithShell({
         >
           <SideNavItems>
             <HeaderSideNavItems>
-              <SideNavLink href="/games" as={Link}>
-                Games
+              <SideNavLink href="/remote-games" as={Link}>
+                Online DB
               </SideNavLink>
             </HeaderSideNavItems>
           </SideNavItems>
@@ -73,6 +74,9 @@ function AppWithShell({
           </Route>
           <Route path="/games/:gameId">
             {({ gameId }) => <GameDetails gameId={gameId} />}
+          </Route>
+          <Route path="/remote-games">
+            <RemoteGameIndex />
           </Route>
           <Route>
             <NotFound />

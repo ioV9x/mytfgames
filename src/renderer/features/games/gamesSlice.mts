@@ -1,12 +1,12 @@
 import { createSelector, SerializedError } from "@reduxjs/toolkit";
 
+import { GameInfo, GameInfoService, GameOrderType } from "$ipc/main-renderer";
 import {
-  GameInfo,
-  GameInfoService,
-  GameList,
-  GameOrderType,
-} from "$ipc/main-renderer";
-import { createSliceWithThunks } from "$renderer/utils";
+  createSliceWithThunks,
+  Page,
+  paginationSlice,
+  upsert,
+} from "$renderer/utils";
 
 import { RootState } from "../../app/store.mts";
 
@@ -40,25 +40,6 @@ const initialState = {
   order: {},
   lastError: null,
 } satisfies GamesState as GamesState;
-
-function paginationSlice<T>(
-  { page, pageSize }: { page: number; pageSize: number },
-  items: readonly T[],
-) {
-  const offset = (page - 1) * pageSize;
-  return items.slice(offset, offset + pageSize);
-}
-function upsert<T extends object, TUpdates extends Partial<T>[]>(
-  record: Partial<Record<string, T>>,
-  id: string,
-  ...updates: TUpdates
-) {
-  let current = record[id];
-  if (current == null) {
-    current = record[id] = Object.create(null) as T;
-  }
-  Object.assign(current, ...updates);
-}
 
 export const gamesSlice = createSliceWithThunks({
   name: "games",
@@ -197,9 +178,7 @@ export const { loadGameList, loadGamesByIDs } = gamesSlice.actions;
 
 export const selectGames = (state: RootState) => state.games.entities;
 
-interface GamePaginationSettings {
-  page: number;
-  pageSize: number;
+interface GamePaginationSettings extends Page {
   orderType: GameOrderType;
 }
 const emptyArray: readonly string[] = Object.freeze([]);
