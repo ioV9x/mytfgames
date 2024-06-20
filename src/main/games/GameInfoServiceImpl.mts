@@ -155,11 +155,11 @@ export class GameInfoServiceImpl implements GameInfoService {
     });
   }
 
-  async refreshIndex(): Promise<void> {
+  async refreshIndex(): Promise<number[]> {
     const currentIndex = await this.gamesApi.getGames();
 
-    const updatedIds = await this.db.transaction().execute(async (trx) => {
-      return await Promise.all(
+    const updated = await this.db.transaction().execute(async (trx) => {
+      await Promise.all(
         currentIndex.map(({ id, name, lastUpdate: last_update }) =>
           trx
             .insertInto("remote_game")
@@ -174,20 +174,22 @@ export class GameInfoServiceImpl implements GameInfoService {
                 last_update,
               }),
             )
-            .returning("id as id")
             .executeTakeFirstOrThrow(),
         ),
       );
+      return await trx
+        .selectFrom("remote_game")
+        .select("id")
+        .where((eb) =>
+          eb.or([
+            eb("last_crawled", "is", null),
+            eb("last_crawled", "<", eb.ref("last_update")),
+          ]),
+        )
+        .orderBy("last_update", "desc")
+        .execute();
     });
-
-    for (const { id } of updatedIds.slice(0, 16)) {
-      try {
-        await this.downloadGameInfo(id);
-      } catch (exc) {
-        console.error(`Failed to download game info for game ${id}`, exc);
-        return;
-      }
-    }
+    return updated.map(({ id }) => id);
   }
 
   async downloadGameInfo(id: number): Promise<void> {

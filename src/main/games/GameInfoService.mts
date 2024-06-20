@@ -13,5 +13,6 @@ interface GameInfoService {
   ): Promise<GameList>;
 
   downloadGameInfo(id: number): Promise<void>;
+  refreshIndex(): Promise<number[]>;
 }
 export { GameInfoService };
