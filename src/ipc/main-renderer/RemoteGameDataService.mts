@@ -5,15 +5,16 @@ import {
   makeRemoteServiceDescriptor,
 } from "$ipc/core";
 
+export type RemoteGameId = number;
 export interface RemoteGame {
-  id: number;
+  id: RemoteGameId;
   name: string;
   lastUpdateTimestamp: string;
   lastCrawlTimestamp: string | null;
 }
 
 export interface RemoteGameList {
-  order: number[];
+  order: RemoteGameId[];
   preloaded: RemoteGame[];
 }
 
@@ -32,7 +33,7 @@ export const remoteGameCrawled = createAction(
 );
 
 export const remoteGameIndexUpdated = createAction<
-  Record<RemoteGameOrderType, number[]>
+  Record<RemoteGameOrderType, RemoteGameId[]>
 >("ipc/remote-game/index-updated");
 
 export const RemoteGameDataService = makeRemoteServiceDescriptor(
@@ -40,10 +41,10 @@ export const RemoteGameDataService = makeRemoteServiceDescriptor(
   {
     retrieveOrder: makeRemoteProcedureDescriptor<
       [],
-      Record<RemoteGameOrderType, number[]>
+      Record<RemoteGameOrderType, RemoteGameId[]>
     >(),
     retrieveGamesById: makeRemoteProcedureDescriptor<
-      [ids: number[]],
+      [ids: RemoteGameId[]],
       RemoteGame[]
     >(),
   },

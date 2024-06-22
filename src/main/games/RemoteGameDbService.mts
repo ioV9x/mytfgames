@@ -6,6 +6,7 @@ import { remoteProcedure } from "$ipc/core";
 import {
   RemoteGame,
   RemoteGameDataService,
+  RemoteGameId,
   RemoteGameOrderType,
 } from "$ipc/main-renderer";
 import { AppDatabase, DatabaseProvider } from "$main/database";
@@ -17,7 +18,7 @@ export class RemoteGameDbService {
   ) {}
 
   @remoteProcedure(RemoteGameDataService, "retrieveOrder")
-  async retrieveOrder(): Promise<Record<RemoteGameOrderType, number[]>> {
+  async retrieveOrder(): Promise<Record<RemoteGameOrderType, RemoteGameId[]>> {
     return await this.db.transaction().execute(async (trx) => {
       const partials = await Promise.all(
         Object.values(RemoteGameOrderType).map(async (type) => ({
@@ -26,13 +27,13 @@ export class RemoteGameDbService {
       );
       return Object.assign({}, ...partials) as Record<
         RemoteGameOrderType,
-        number[]
+        RemoteGameId[]
       >;
     });
   }
 
   @remoteProcedure(RemoteGameDataService, "retrieveGamesById")
-  async retrieveGamesById(ids: number[]): Promise<RemoteGame[]> {
+  async retrieveGamesById(ids: RemoteGameId[]): Promise<RemoteGame[]> {
     const chunks = R.chunk(ids, 512);
 
     const chunkResults = await this.db
@@ -61,7 +62,7 @@ export class RemoteGameDbService {
   private retrieveOrderForType(
     trx: Transaction<AppDatabase>,
     type: RemoteGameOrderType,
-  ): Promise<{ id: number }[]> {
+  ): Promise<{ id: RemoteGameId }[]> {
     return trx
       .selectFrom("remote_game")
       .select(["id"])

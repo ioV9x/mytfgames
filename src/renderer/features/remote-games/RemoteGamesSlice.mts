@@ -4,6 +4,7 @@ import {
   RemoteGame as RawRemoteGame,
   remoteGameCrawled,
   RemoteGameDataService,
+  RemoteGameId,
   remoteGameIndexUpdated,
   RemoteGameOrderType,
 } from "$ipc/main-renderer";
@@ -23,12 +24,12 @@ export interface LoadedRemoteGame extends RawRemoteGame {
 
 export type RemoteGame =
   | LoadedRemoteGame
-  | { type: EntityRetrievalState.Loading; id: number }
-  | { type: EntityRetrievalState.Error; id: number; error: string };
+  | { type: EntityRetrievalState.Loading; id: RemoteGameId }
+  | { type: EntityRetrievalState.Error; id: RemoteGameId; error: string };
 
 export interface RemoteGamesState {
-  entities: Partial<Record<number, RemoteGame>>;
-  order: Record<RemoteGameOrderType, number[]> | null;
+  entities: Partial<Record<RemoteGameId, RemoteGame>>;
+  order: Record<RemoteGameOrderType, RemoteGameId[]> | null;
   lastError: SerializedError | null;
 }
 
