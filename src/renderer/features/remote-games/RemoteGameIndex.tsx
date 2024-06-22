@@ -79,7 +79,7 @@ export default function RemoteGameIndex() {
 
   return (
     <>
-      {pagination}
+      {currentPage.pageSize >= 20 && pagination}
       <RemoteGameTable
         remoteGames={remoteGames}
         sortedBy={[currentPage.orderType, currentPage.orderDirection]}
