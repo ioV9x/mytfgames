@@ -17,10 +17,9 @@ import { useEffect } from "react";
 import { Link, Route, Router, Switch } from "wouter";
 
 import GameDetails from "../features/games/GameDetails.tsx";
-import Games from "../features/games/Games.tsx";
+import LocalGameIndex from "../features/local-games/LocalGamesIndex.tsx";
 import RemoteGameIndex from "../features/remote-games/RemoteGameIndex.tsx";
 import NotFound from "./NotFound.tsx";
-import Root from "./Root.tsx";
 
 interface HeaderContainerRenderProps {
   isSideNavExpanded: boolean;
@@ -67,10 +66,10 @@ function AppWithShell({
       <Content id="main-content">
         <Switch>
           <Route path="/">
-            <Root />
+            <LocalGameIndex />
           </Route>
-          <Route path="/games">
-            <Games />
+          <Route path="/local-games">
+            <LocalGameIndex />
           </Route>
           <Route path="/games/:gameId">
             {({ gameId }) => <GameDetails gameId={gameId} />}

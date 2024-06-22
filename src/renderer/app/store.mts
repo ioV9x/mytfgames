@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import gamesReducer from "../features/games/gamesSlice.mts";
+import localGamesReducer from "../features/local-games/LocalGamesSlice.mjs";
 import remoteGamesReducer from "../features/remote-games/RemoteGamesSlice.mjs";
 
 export const store = configureStore({
   reducer: {
     games: gamesReducer,
+    localGames: localGamesReducer,
     remoteGames: remoteGamesReducer,
   },
   devTools: true,
