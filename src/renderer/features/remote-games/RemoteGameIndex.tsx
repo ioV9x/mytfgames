@@ -14,7 +14,9 @@ import { RemoteGameOrderType } from "$ipc/main-renderer";
 import { AppLink } from "$renderer/components";
 import {
   EntityRetrievalState,
+  flipDirection,
   nearestPage,
+  SortDirection,
   useAppDispatch,
   useAppSelector,
 } from "$renderer/utils";
@@ -27,11 +29,6 @@ import {
   RemoteGamePage,
   selectRemoteGamePage,
 } from "./RemoteGamesSlice.mts";
-
-type SortDirection = "ASC" | "DESC";
-function reverseDirection(direction: SortDirection): SortDirection {
-  return direction === "ASC" ? "DESC" : "ASC";
-}
 
 export default function RemoteGameIndex() {
   const ipcContext = useContext(IpcContext);
@@ -131,10 +128,10 @@ const headers: {
 
 interface RemoteGameTableProps {
   readonly remoteGames: (RemoteGame | undefined)[];
-  readonly sortedBy: [RemoteGameOrderType, "ASC" | "DESC"];
+  readonly sortedBy: [RemoteGameOrderType, SortDirection];
   readonly onSortHeaderClicked: (
     type: RemoteGameOrderType,
-    direction: "ASC" | "DESC",
+    direction: SortDirection,
   ) => void;
 }
 function RemoteGameTable({
@@ -149,7 +146,7 @@ function RemoteGameTable({
       return undefined;
     }
     const direction =
-      headerType === sortType ? reverseDirection(sortDirection) : "ASC";
+      headerType === sortType ? flipDirection(sortDirection) : "ASC";
     return onSortHeaderClicked.bind(undefined, headerType, direction);
   }
 

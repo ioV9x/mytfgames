@@ -13,6 +13,7 @@ import {
   EntityRetrievalState,
   Page,
   paginationSlice,
+  SortDirection,
   upsert,
 } from "$renderer/utils";
 
@@ -49,7 +50,7 @@ export const remoteGamesSlice = createSliceWithThunks({
         {
           remoteGames: typeof RemoteGameDataService;
           orderType: RemoteGameOrderType;
-          orderDirection: "ASC" | "DESC";
+          orderDirection: SortDirection;
           page: number;
           pageSize: number;
           force: boolean;
@@ -67,9 +68,8 @@ export const remoteGamesSlice = createSliceWithThunks({
           const selectedOrder = order[arg.orderType];
           const needed = paginationSlice(
             arg,
-            arg.orderDirection === "ASC"
-              ? selectedOrder
-              : selectedOrder.slice().reverse(),
+            selectedOrder,
+            arg.orderDirection,
           );
           const loaded = await arg.remoteGames.retrieveGamesById(needed);
           return loaded;
@@ -78,7 +78,11 @@ export const remoteGamesSlice = createSliceWithThunks({
           pending(state, _action) {
             const order = state.order?.[_action.meta.arg.orderType];
             if (order != null) {
-              for (const id of paginationSlice(_action.meta.arg, order)) {
+              for (const id of paginationSlice(
+                _action.meta.arg,
+                order,
+                _action.meta.arg.orderDirection,
+              )) {
                 if (state.entities[id]?.type !== EntityRetrievalState.Loaded) {
                   state.entities[id] = {
                     type: EntityRetrievalState.Loading,
@@ -110,17 +114,16 @@ export const remoteGamesSlice = createSliceWithThunks({
                 return true;
               }
 
-              return paginationSlice(
-                arg,
-                arg.orderDirection === "ASC" ? order : order.slice().reverse(),
-              ).some((id) => {
-                const game = games.entities[id];
-                return (
-                  game == null ||
-                  (game.type !== EntityRetrievalState.Loading &&
-                    game.type !== EntityRetrievalState.Loaded)
-                );
-              });
+              return paginationSlice(arg, order, arg.orderDirection).some(
+                (id) => {
+                  const game = games.entities[id];
+                  return (
+                    game == null ||
+                    (game.type !== EntityRetrievalState.Loading &&
+                      game.type !== EntityRetrievalState.Loaded)
+                  );
+                },
+              );
             },
           },
         },
@@ -161,7 +164,7 @@ export const selectRemoteGames = (state: RootState) =>
 
 export interface RemoteGamePage extends Page {
   orderType: RemoteGameOrderType;
-  orderDirection: "ASC" | "DESC";
+  orderDirection: SortDirection;
 }
 const emptyArray: readonly [] = Object.freeze([]);
 export const selectRemoteGamePage = createSelector(
@@ -172,10 +175,9 @@ export const selectRemoteGamePage = createSelector(
   (state: RootState, { orderType }: RemoteGamePage) =>
     state.remoteGames.order?.[orderType] ?? emptyArray,
   (entities, page, pageSize, orderDirection, order) =>
-    paginationSlice(
-      { page, pageSize },
-      orderDirection === "ASC" ? order : order.slice().reverse(),
-    ).map((id) => entities[id]),
+    paginationSlice({ page, pageSize }, order, orderDirection).map(
+      (id) => entities[id],
+    ),
 );
 
 export default remoteGamesSlice.reducer;
