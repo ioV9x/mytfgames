@@ -157,6 +157,7 @@ const localGamesSlice = createSliceWithThunks({
               game.remoteGameId = action.meta.arg.game.remoteGameId;
             }
             state.entities[action.payload] = game;
+            state.order = null;
           },
         },
       ),
@@ -173,7 +174,8 @@ const localGamesSlice = createSliceWithThunks({
   },
 });
 
-export const { paginateLocalGameIndex } = localGamesSlice.actions;
+export const { createLocalGame, paginateLocalGameIndex } =
+  localGamesSlice.actions;
 
 export const selectLocalGames = (state: RootState) => state.localGames.entities;
 

@@ -5,6 +5,7 @@ import { ComboBoxProps } from "@carbon/react/lib/components/ComboBox/ComboBox";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 
+import { LocalGameId } from "$ipc/main-renderer";
 import {
   EntityRetrievalState,
   useAppDispatch,
@@ -18,7 +19,7 @@ import {
   selectRemoteGameById,
   selectRemoteGamesById,
 } from "../../remote-games/RemoteGamesSlice.mts";
-import { localGameIndexUpdated } from "../LocalGamesSlice.mts";
+import { createLocalGame } from "../LocalGamesSlice.mts";
 
 export default function NewLocalGame() {
   const dispatch = useAppDispatch();
@@ -48,12 +49,21 @@ export default function NewLocalGame() {
     }
 
     setSubmitted(true);
-    localGames
-      .addGame({ name, remoteGameId: selectedGameId ?? undefined })
-      .then(async (gameId) => {
-        const order = await localGames.retrieveOrder();
-        dispatch(localGameIndexUpdated(order));
-        setLocation(`/local-games/${gameId}`);
+    dispatch(
+      createLocalGame({
+        localGames,
+        game: {
+          name,
+          remoteGameId: selectedGameId ?? undefined,
+        },
+      }),
+    )
+      .then((resolved) => {
+        if (resolved.type === "localGames/createLocalGame/fulfilled") {
+          setLocation(`/local-games/${resolved.payload as LocalGameId}`);
+        } else {
+          throw resolved.payload;
+        }
       })
       .catch((error: unknown) => {
         setSubmitted(false);

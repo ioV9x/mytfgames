@@ -18,11 +18,11 @@
     "better-sqlite3": "^10.0.0"
   },
   "devDependencies": {
-    "@carbon/colors": "^11.22.0",
-    "@carbon/grid": "^11.23.0",
-    "@carbon/icons-react": "^11.42.0",
-    "@carbon/react": "^1.58.0",
-    "@carbon/styles": "^1.58.0",
+    "@carbon/colors": "^11.23.1",
+    "@carbon/grid": "^11.24.1",
+    "@carbon/icons-react": "^11.44.1",
+    "@carbon/react": "^1.60.3",
+    "@carbon/styles": "^1.60.1",
     "@electron-forge/cli": "^7.4.0",
     "@electron-forge/maker-zip": "^7.4.0",
     "@electron-forge/plugin-fuses": "^7.4.0",
