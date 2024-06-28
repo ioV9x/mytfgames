@@ -1,11 +1,13 @@
 import { inject, injectable } from "inversify";
 import { Transaction } from "kysely";
 import * as R from "remeda";
+import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
 
 import { remoteProcedure } from "$ipc/core";
 import {
   LocalGame,
+  LocalGameCreationInfo,
   LocalGameDataService,
   LocalGameId,
   LocalGameOrderType,
@@ -80,5 +82,22 @@ export class LocalGameDbService {
         }
       })
       .execute();
+  }
+
+  @remoteProcedure(LocalGameDataService, "addGame")
+  async addGame(game: LocalGameCreationInfo): Promise<LocalGameId> {
+    const id = uuid.v4(null, Buffer.allocUnsafe(16));
+    await this.db
+      .insertInto("game")
+      .values({
+        id,
+        name: game.name,
+        tfgames_id: game.remoteGameId,
+        created_at: Temporal.Now.instant().toString({
+          smallestUnit: "second",
+        }),
+      })
+      .execute();
+    return uuid.stringify(id);
   }
 }

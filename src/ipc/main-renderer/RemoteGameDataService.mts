@@ -47,5 +47,9 @@ export const RemoteGameDataService = makeRemoteServiceDescriptor(
       [ids: RemoteGameId[]],
       RemoteGame[]
     >(),
+    findGamesByNamePrefix: makeRemoteProcedureDescriptor<
+      [prefix: string],
+      RemoteGameId[]
+    >(),
   },
 );

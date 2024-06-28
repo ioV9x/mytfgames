@@ -40,7 +40,7 @@ const initialState = {
   lastError: null,
 } satisfies RemoteGamesState as RemoteGamesState;
 
-export const remoteGamesSlice = createSliceWithThunks({
+const remoteGamesSlice = createSliceWithThunks({
   name: "remoteGames",
   initialState,
   reducers(create) {
@@ -128,6 +128,49 @@ export const remoteGamesSlice = createSliceWithThunks({
           },
         },
       ),
+      loadRemoteGamesById: create.asyncThunk<
+        RawRemoteGame[],
+        { remoteGames: typeof RemoteGameDataService; ids: RemoteGameId[] }
+      >(
+        async (arg, _thunkApi) => {
+          const games = await arg.remoteGames.retrieveGamesById(arg.ids);
+          if (games.length !== arg.ids.length) {
+            throw new Error(`A requested game was not found`);
+          }
+          return games;
+        },
+        {
+          pending(state, action) {
+            const ids = action.meta.arg.ids;
+            for (const id of ids) {
+              if (state.entities[id]?.type !== EntityRetrievalState.Loaded) {
+                state.entities[id] = {
+                  type: EntityRetrievalState.Loading,
+                  id,
+                };
+              }
+            }
+          },
+          fulfilled(state, action) {
+            const games = action.payload;
+            for (const game of games) {
+              upsert(state.entities, game.id, game, {
+                type: EntityRetrievalState.Loaded,
+              });
+            }
+          },
+          options: {
+            condition(arg, { getState }) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+              const games = (getState() as any).remoteGames as RemoteGamesState;
+              return arg.ids.some(
+                (id) =>
+                  games.entities[id]?.type !== EntityRetrievalState.Loaded,
+              );
+            },
+          },
+        },
+      ),
     };
   },
   extraReducers(builder) {
@@ -157,10 +200,19 @@ export const remoteGamesSlice = createSliceWithThunks({
   },
 });
 
-export const { paginateRemoteGameIndex } = remoteGamesSlice.actions;
+export const { paginateRemoteGameIndex, loadRemoteGamesById } =
+  remoteGamesSlice.actions;
 
 export const selectRemoteGames = (state: RootState) =>
   state.remoteGames.entities;
+
+export const selectRemoteGameById = (state: RootState, id: RemoteGameId) =>
+  state.remoteGames.entities[id];
+export const selectRemoteGamesById = createSelector(
+  selectRemoteGames,
+  (_state: RootState, ids: RemoteGameId[]) => ids,
+  (entities, ids) => ids.map((id) => entities[id]),
+);
 
 export interface RemoteGamePage extends Page {
   orderType: RemoteGameOrderType;

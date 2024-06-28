@@ -6,6 +6,7 @@ import {
 
 import {
   LocalGame as RawLocalGame,
+  LocalGameCreationInfo,
   LocalGameDataService,
   LocalGameId,
   LocalGameOrderType,
@@ -46,7 +47,7 @@ export const localGameIndexUpdated = createAction<
   Record<LocalGameOrderType, LocalGameId[]>
 >("localGames/index-updated");
 
-export const localGamesSlice = createSliceWithThunks({
+const localGamesSlice = createSliceWithThunks({
   name: "localGames",
   initialState,
   reducers(create) {
@@ -131,6 +132,31 @@ export const localGamesSlice = createSliceWithThunks({
                 },
               );
             },
+          },
+        },
+      ),
+      createLocalGame: create.asyncThunk<
+        LocalGameId,
+        {
+          localGames: typeof LocalGameDataService;
+          game: LocalGameCreationInfo;
+        }
+      >(
+        async (arg, _thunkApi) => {
+          const id = await arg.localGames.addGame(arg.game);
+          return id;
+        },
+        {
+          fulfilled(state, action) {
+            const game: LoadedLocalGame = {
+              type: EntityRetrievalState.Loaded,
+              id: action.payload,
+              name: action.meta.arg.game.name,
+            };
+            if (action.meta.arg.game.remoteGameId != null) {
+              game.remoteGameId = action.meta.arg.game.remoteGameId;
+            }
+            state.entities[action.payload] = game;
           },
         },
       ),

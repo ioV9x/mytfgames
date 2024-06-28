@@ -1,14 +1,20 @@
+import { Add as AddIcon } from "@carbon/icons-react";
 import {
+  Button,
   Pagination,
   SkeletonText,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableHeader,
   TableRow,
+  TableToolbar,
+  TableToolbarContent,
 } from "@carbon/react";
 import { useContext, useEffect, useState } from "react";
+import { useLocation } from "wouter";
 
 import { LocalGameOrderType } from "$ipc/main-renderer";
 import { AppLink } from "$renderer/components";
@@ -32,6 +38,7 @@ import {
 
 export default function LocalGameIndex() {
   const ipcContext = useContext(IpcContext);
+  const [_, setLocation] = useLocation();
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = useState<LocalGamePage>({
     page: 1,
@@ -78,7 +85,18 @@ export default function LocalGameIndex() {
   );
 
   return (
-    <>
+    <TableContainer title="Game Library">
+      <TableToolbar>
+        <TableToolbarContent>
+          <Button
+            renderIcon={AddIcon}
+            iconDescription="Add Game"
+            onClick={() => setLocation("/local-games/new")}
+          >
+            Add Game
+          </Button>
+        </TableToolbarContent>
+      </TableToolbar>
       {numItems > currentPage.pageSize &&
         currentPage.pageSize >= 20 &&
         pagination}
@@ -94,7 +112,7 @@ export default function LocalGameIndex() {
         }}
       />
       {numItems > currentPage.pageSize && pagination}
-    </>
+    </TableContainer>
   );
 }
 

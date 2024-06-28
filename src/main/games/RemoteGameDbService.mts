@@ -59,6 +59,16 @@ export class RemoteGameDbService {
     return chunkResults.flat();
   }
 
+  @remoteProcedure(RemoteGameDataService, "findGamesByNamePrefix")
+  async findGameByNamePrefix(prefix: string): Promise<RemoteGameId[]> {
+    const games = await this.db
+      .selectFrom("remote_game")
+      .where("remote_game.name", "like", `${prefix}%`)
+      .select(["remote_game.id"])
+      .execute();
+  return games.map((r) => r.id);
+  }
+
   private retrieveOrderForType(
     trx: Transaction<AppDatabase>,
     type: RemoteGameOrderType,
