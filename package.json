@@ -1,6 +1,7 @@
 {
   "name": "mytfgames",
   "productName": "My TFGames",
+  "license": "AGPL-3.0-or-later",
   "version": "0.0.1",
   "packageManager": "yarn@4.2.2",
   "private": true,
