@@ -20,6 +20,7 @@ export interface RemoteIndexGameInfo {
    * Last update date of the game in ISO 8601 format.
    */
   lastUpdate: string;
+  numLikes: number;
 }
 
 export interface RemoteCategory {
@@ -46,6 +47,7 @@ export interface RemoteGameDetails {
    * Name of the game.
    */
   name: string;
+  numLikes?: number;
   /**
    * Last update date of the game in ISO 8601 format.
    */
@@ -66,6 +68,9 @@ export interface RemoteGameDetails {
 
   authors: RemoteAuthorInfo[];
   versions: RemoteVersionInfo[];
+}
+export interface RemoteGameBlacklisted {
+  id: number;
 }
 
 // TODO: validate that the timezone used by the website is indeed UTC
@@ -120,6 +125,10 @@ const propExtractors = Object.assign(
       ({
         lastUpdate: adaptDate($td.text().trim()),
       }) satisfies Partial<RemoteIndexGameInfo>,
+    Likes: ($td: Cheerio<Element>) =>
+      ({
+        numLikes: Number.parseInt($td.text().trim()),
+      }) satisfies Partial<RemoteIndexGameInfo>,
   },
 );
 
@@ -129,6 +138,10 @@ type DetailsPropExtractor = (
 const gameInfoExtractors = Object.assign(
   Object.create(null) as Partial<Record<string, IndexPropExtractor>>,
   {
+    Likes: ($itemR: Cheerio<Element>) =>
+      ({
+        numLikes: Number.parseInt($itemR.text().trim()),
+      }) satisfies Partial<RemoteGameDetails>,
     "Last Update": ($itemR: Cheerio<Element>) => {
       return {
         lastUpdate: adaptDate($itemR.text().trim()),
@@ -175,7 +188,9 @@ function makeCategoryExtractor(
 const GamesApi = makeServiceIdentifier<GamesApi>("games api");
 interface GamesApi {
   getGames(): Promise<RemoteIndexGameInfo[]>;
-  getGameDetails(id: number): Promise<RemoteGameDetails>;
+  getGameDetails(
+    id: number,
+  ): Promise<RemoteGameDetails | RemoteGameBlacklisted>;
 }
 export { GamesApi };
 
@@ -244,7 +259,9 @@ export class GamesApiImpl {
     return games;
   }
 
-  async getGameDetails(id: number): Promise<RemoteGameDetails> {
+  async getGameDetails(
+    id: number,
+  ): Promise<RemoteGameDetails | RemoteGameBlacklisted> {
     const endpoint = new URL("https://tfgames.site/index.php?module=viewgame");
     endpoint.searchParams.set("id", id.toString());
 
@@ -256,12 +273,22 @@ export class GamesApiImpl {
     return this.parseGameDetails(id, await response.text());
   }
 
-  parseGameDetails(id: number, response: string): RemoteGameDetails {
+  parseGameDetails(
+    id: number,
+    response: string,
+  ): RemoteGameDetails | RemoteGameBlacklisted {
     const $ = cheerioLoad(response);
 
     const $generalInfo = $(
       `${viewgameMetaInfoSelector} div.viewgameinfocontainer:not([id]) > div.viewgameinfo`,
     );
+    if ($generalInfo.length === 0) {
+      if ($(viewgameBodySelector).text().includes("Temporarily Disabled")) {
+        return { id } as RemoteGameBlacklisted;
+      }
+      throw new Error("Game info not found");
+    }
+
     const generalInfoParts = $generalInfo
       .map((_, el) => {
         const $el = $(el);

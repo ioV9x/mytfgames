@@ -6,9 +6,6 @@ import { AppConfigurationTree } from "$main/configuration";
 
 import { AppDatabase, DatabaseProvider } from "./AppDatabase.mjs";
 
-export * from "./AppDatabase.mjs";
-export * from "./GameTable.mjs";
-
 export const DatabaseModule = new ContainerModule((bind) => {
   bind(DatabaseProvider)
     .toDynamicValue((context) => {
@@ -27,6 +24,7 @@ export const DatabaseModule = new ContainerModule((bind) => {
 
       return new Kysely<AppDatabase>({
         dialect,
+        log: ["error"],
       });
     })
     .inSingletonScope();

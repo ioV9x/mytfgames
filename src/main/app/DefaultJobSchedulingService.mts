@@ -94,7 +94,13 @@ class JobScheduleTracker {
       ++this.#semaphore;
 
       const nextJob = this.#waitQueue.shift();
-      if (nextJob !== undefined) {
+      if (nextJob == null) {
+        if (this.#semaphore === this.schedule.maxJobConcurrency) {
+          this.#log.debug(
+            `${this.schedule.scheduleName} has completed all jobs`,
+          );
+        }
+      } else {
         this.continueWith(nextJob);
       }
     }

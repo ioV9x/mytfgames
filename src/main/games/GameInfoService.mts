@@ -1,4 +1,5 @@
 import { GameInfo, GameList, GameOrderType } from "$ipc/main-renderer";
+import { GameId, TfgamesGameId } from "$main/database";
 import { makeServiceIdentifier } from "$main/utils";
 
 const GameInfoService =
@@ -13,6 +14,6 @@ interface GameInfoService {
   ): Promise<GameList>;
 
   downloadGameInfo(id: number): Promise<void>;
-  refreshIndex(): Promise<number[]>;
+  refreshIndex(): Promise<[GameId, TfgamesGameId][]>;
 }
 export { GameInfoService };

@@ -17,7 +17,7 @@ export class RemoteGameSyncSchedule implements JobSchedule {
 
   async checkSchedule(): Promise<Job[]> {
     const needUpdate = await this.gameInfo.refreshIndex();
-    return needUpdate.map((id) => ({
+    return needUpdate.map(([, id]) => ({
       id: `remote-game-info-sync-${id}`,
       run: async () => {
         await this.gameInfo.downloadGameInfo(id);

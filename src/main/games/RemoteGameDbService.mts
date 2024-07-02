@@ -43,13 +43,18 @@ export class RemoteGameDbService {
           await Promise.all(
             chunks.map((c) =>
               trx
-                .selectFrom("remote_game")
-                .where("remote_game.id", "in", c)
+                .selectFrom("game_official_listing")
+                .leftJoin(
+                  "game_official_listing_details",
+                  "game_official_listing_details.game_id",
+                  "game_official_listing.game_id",
+                )
+                .where("game_official_listing.tfgames_game_id", "in", c)
                 .select([
-                  "remote_game.id",
-                  "remote_game.name",
-                  "remote_game.last_update as lastUpdateTimestamp",
-                  "remote_game.last_crawled as lastCrawlTimestamp",
+                  "game_official_listing.tfgames_game_id as id",
+                  "game_official_listing.name",
+                  "game_official_listing.last_update_datetime as lastUpdateTimestamp",
+                  "game_official_listing_details.last_crawl_datetime as lastCrawlTimestamp",
                 ])
                 .execute(),
             ),
@@ -62,11 +67,11 @@ export class RemoteGameDbService {
   @remoteProcedure(RemoteGameDataService, "findGamesByNamePrefix")
   async findGameByNamePrefix(prefix: string): Promise<RemoteGameId[]> {
     const games = await this.db
-      .selectFrom("remote_game")
-      .where("remote_game.name", "like", `${prefix}%`)
-      .select(["remote_game.id"])
+      .selectFrom("game_official_listing")
+      .where("game_official_listing.name", "like", `${prefix}%`)
+      .select(["game_official_listing.tfgames_game_id"])
       .execute();
-  return games.map((r) => r.id);
+    return games.map((r) => r.tfgames_game_id);
   }
 
   private retrieveOrderForType(
@@ -74,18 +79,29 @@ export class RemoteGameDbService {
     type: RemoteGameOrderType,
   ): Promise<{ id: RemoteGameId }[]> {
     return trx
-      .selectFrom("remote_game")
-      .select(["id"])
+      .selectFrom("game_official_listing")
+      .leftJoin(
+        "game_official_listing_details as details",
+        "details.game_id",
+        "game_official_listing.game_id",
+      )
+      .leftJoin(
+        "game_official_blacklist as blacklist",
+        "blacklist.game_id",
+        "game_official_listing.game_id",
+      )
+      .select(["tfgames_game_id as id"])
+      .where("blacklist.game_id", "is", null)
       .orderBy((eb) => {
         switch (type) {
           case RemoteGameOrderType.Id:
-            return eb.ref("id");
+            return eb.ref("tfgames_game_id");
           case RemoteGameOrderType.Name:
             return eb.ref("name");
           case RemoteGameOrderType.LastUpdate:
-            return eb.ref("last_update");
+            return eb.ref("last_update_datetime");
           case RemoteGameOrderType.LastCrawled:
-            return eb.ref("last_crawled");
+            return eb.ref("details.last_crawl_datetime");
         }
       })
       .execute();

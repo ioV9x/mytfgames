@@ -6,16 +6,19 @@ exports[`Games API > should parse a list response 1`] = `
     "id": 314,
     "lastUpdate": "2013-11-11T00:00:00Z",
     "name": "The uninvited guest",
+    "numLikes": 2,
   },
   {
     "id": 317,
     "lastUpdate": "2013-03-13T00:00:00Z",
     "name": "Cromexx Funhouse for NWN 1",
+    "numLikes": 1,
   },
   {
     "id": 66,
     "lastUpdate": "2013-01-12T00:00:00Z",
     "name": "Vampire Fate",
+    "numLikes": 41,
   },
 ]
 `;
@@ -99,6 +102,7 @@ exports[`Games API > should parse a viewgame response 1`] = `
     },
   ],
   "name": "Secretary",
+  "numLikes": 4350,
   "releaseDate": "2017-10-01T18:57:00Z",
   "transformationThemes": [
     {
@@ -242,6 +246,7 @@ exports[`Games API > should parse a viewgame response 2 1`] = `
     },
   ],
   "name": "S.L.A.T. Foundation",
+  "numLikes": 139,
   "releaseDate": "2024-03-17T00:00:00Z",
   "transformationThemes": [
     {

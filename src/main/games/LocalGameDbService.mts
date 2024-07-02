@@ -1,7 +1,6 @@
 import { inject, injectable } from "inversify";
 import { Transaction } from "kysely";
 import * as R from "remeda";
-import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
 
 import { remoteProcedure } from "$ipc/core";
@@ -12,7 +11,7 @@ import {
   LocalGameId,
   LocalGameOrderType,
 } from "$ipc/main-renderer";
-import { AppDatabase, DatabaseProvider } from "$main/database";
+import { AppDatabase, DatabaseProvider, GameId } from "$main/database";
 
 @injectable()
 export class LocalGameDbService {
@@ -52,9 +51,9 @@ export class LocalGameDbService {
           await Promise.all(
             chunks.map((c) =>
               trx
-                .selectFrom("game")
-                .where("game.id", "in", c)
-                .select(["game.id", "game.name"])
+                .selectFrom("game_description")
+                .where("game_id", "in", c)
+                .select(["game_id as id", "name"])
                 .execute(),
             ),
           ),
@@ -71,12 +70,12 @@ export class LocalGameDbService {
     type: LocalGameOrderType,
   ): Promise<{ id: Buffer }[]> {
     return trx
-      .selectFrom("game")
-      .select(["id"])
+      .selectFrom("game_description")
+      .select(["game_id as id"])
       .orderBy((eb) => {
         switch (type) {
           case LocalGameOrderType.Id:
-            return eb.ref("id");
+            return eb.ref("game_id");
           case LocalGameOrderType.Name:
             return eb.ref("name");
         }
@@ -86,18 +85,28 @@ export class LocalGameDbService {
 
   @remoteProcedure(LocalGameDataService, "addGame")
   async addGame(game: LocalGameCreationInfo): Promise<LocalGameId> {
-    const id = uuid.v4(null, Buffer.allocUnsafe(16));
-    await this.db
-      .insertInto("game")
-      .values({
-        id,
-        name: game.name,
-        tfgames_id: game.remoteGameId,
-        created_at: Temporal.Now.instant().toString({
-          smallestUnit: "second",
-        }),
-      })
-      .execute();
-    return uuid.stringify(id);
+    return await this.db.transaction().execute(async (trx) => {
+      let game_id: GameId;
+      if (game.remoteGameId == null) {
+        game_id = uuid.v4(null, Buffer.allocUnsafe(16));
+        await trx.insertInto("game").values({ game_id }).execute();
+      } else {
+        game_id = (
+          await trx
+            .selectFrom("game_official_listing")
+            .select("game_id")
+            .where("tfgames_game_id", "=", game.remoteGameId)
+            .executeTakeFirstOrThrow()
+        ).game_id;
+      }
+      await trx
+        .insertInto("game_description")
+        .values({
+          game_id,
+          name: game.name,
+        })
+        .execute();
+      return uuid.stringify(game_id);
+    });
   }
 }
