@@ -1,5 +1,6 @@
 import {
   createAction,
+  createAsyncThunk,
   createSelector,
   SerializedError,
 } from "@reduxjs/toolkit";
@@ -20,7 +21,9 @@ import {
   upsert,
 } from "$renderer/utils";
 
-import { RootState } from "../../app/store.mts";
+import { AppAsyncThunkConfig, RootState } from "../../app/store.mts";
+
+const sliceName = "localGames";
 
 export interface LoadedLocalGame extends RawLocalGame {
   type: EntityRetrievalState.Loaded;
@@ -45,96 +48,82 @@ const initialState = {
 
 export const localGameIndexUpdated = createAction<
   Record<LocalGameOrderType, LocalGameId[]>
->("localGames/index-updated");
+>(`${sliceName}/indexUpdated`);
+
+export const loadLocalGamesById = createAsyncThunk<
+  RawLocalGame[],
+  {
+    localGames: typeof LocalGameDataService;
+    ids: LocalGameId[];
+    force?: boolean;
+  },
+  AppAsyncThunkConfig
+>(
+  `${sliceName}/loadLocalGamesById`,
+  async (arg, _thunkApi) => {
+    return await arg.localGames.retrieveGamesById(arg.ids);
+  },
+  {
+    condition(arg, { getState }) {
+      if (arg.force) {
+        return true;
+      }
+      const entities = getState().localGames.entities;
+      return someLocalGameNeedsLoading(entities, arg.ids);
+    },
+  },
+);
+
+export const paginateLocalGameIndex = createAsyncThunk<
+  RawLocalGame[],
+  {
+    localGames: typeof LocalGameDataService;
+    orderType: LocalGameOrderType;
+    orderDirection: "ASC" | "DESC";
+    page: number;
+    pageSize: number;
+    force?: boolean;
+  },
+  AppAsyncThunkConfig
+>(
+  `${sliceName}/paginateLocalGameIndex`,
+  async (arg, { getState, dispatch }) => {
+    const games = getState().localGames;
+    let order = games.order;
+    if (arg.force === true || order == null) {
+      order = await arg.localGames.retrieveOrder();
+      dispatch(localGameIndexUpdated(order));
+    }
+    const selectedOrder = order[arg.orderType];
+    const needed = paginationSlice(arg, selectedOrder, arg.orderDirection);
+    return await dispatch(
+      loadLocalGamesById({ localGames: arg.localGames, ids: needed }),
+    ).unwrap();
+  },
+  {
+    condition(arg, { getState }) {
+      const games = getState().localGames;
+      if (arg.force === true || games.lastError != null) {
+        return true;
+      }
+      const order = games.order?.[arg.orderType];
+      if (order == null) {
+        return true;
+      }
+
+      return someLocalGameNeedsLoading(
+        games.entities,
+        paginationSlice(arg, order, arg.orderDirection),
+      );
+    },
+  },
+);
 
 const localGamesSlice = createSliceWithThunks({
   name: "localGames",
   initialState,
   reducers(create) {
     return {
-      paginateLocalGameIndex: create.asyncThunk<
-        RawLocalGame[],
-        {
-          localGames: typeof LocalGameDataService;
-          orderType: LocalGameOrderType;
-          orderDirection: "ASC" | "DESC";
-          page: number;
-          pageSize: number;
-          force: boolean;
-        }
-      >(
-        async (arg, thunkApi) => {
-          const games =
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-            (thunkApi.getState() as any).localGames as LocalGamesState;
-          let order = games.order;
-          if (arg.force || order == null) {
-            order = await arg.localGames.retrieveOrder();
-            thunkApi.dispatch(localGameIndexUpdated(order));
-          }
-          const selectedOrder = order[arg.orderType];
-          const needed = paginationSlice(
-            arg,
-            selectedOrder,
-            arg.orderDirection,
-          );
-          const loaded = await arg.localGames.retrieveGamesById(needed);
-          return loaded;
-        },
-        {
-          pending(state, _action) {
-            const order = state.order?.[_action.meta.arg.orderType];
-            if (order != null) {
-              for (const id of paginationSlice(
-                _action.meta.arg,
-                order,
-                _action.meta.arg.orderDirection,
-              )) {
-                if (state.entities[id]?.type !== EntityRetrievalState.Loaded) {
-                  state.entities[id] = {
-                    type: EntityRetrievalState.Loading,
-                    id,
-                  };
-                }
-              }
-            }
-          },
-          fulfilled(state, action) {
-            for (const game of action.payload) {
-              upsert(state.entities, game.id, game, {
-                type: EntityRetrievalState.Loaded,
-              });
-            }
-          },
-          rejected(state, action) {
-            state.lastError = action.error;
-          },
-          options: {
-            condition(arg, { getState }) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-              const games = (getState() as any).localGames as LocalGamesState;
-              if (arg.force || games.lastError != null) {
-                return true;
-              }
-              const order = games.order?.[arg.orderType];
-              if (order == null) {
-                return true;
-              }
-
-              return paginationSlice(arg, order, arg.orderDirection).some(
-                (id) => {
-                  const game = games.entities[id];
-                  return (
-                    game == null ||
-                    (game.type !== EntityRetrievalState.Loading &&
-                      game.type !== EntityRetrievalState.Loaded)
-                  );
-                },
-              );
-            },
-          },
-        },
-      ),
       createLocalGame: create.asyncThunk<
         LocalGameId,
         {
@@ -171,11 +160,55 @@ const localGamesSlice = createSliceWithThunks({
       }
       Object.assign(state.order, payload);
     });
+
+    // loadLocalGamesById
+    builder.addCase(loadLocalGamesById.pending, (state, { meta }) => {
+      for (const id of meta.arg.ids) {
+        if (state.entities[id]?.type !== EntityRetrievalState.Loaded) {
+          state.entities[id] = {
+            type: EntityRetrievalState.Loading,
+            id,
+          };
+        }
+      }
+    });
+    builder.addCase(
+      loadLocalGamesById.fulfilled,
+      (state, { meta, payload }) => {
+        for (const game of payload) {
+          upsert(state.entities, game.id, game, {
+            type: EntityRetrievalState.Loaded,
+          });
+        }
+        for (const id of meta.arg.ids) {
+          if (state.entities[id]?.type !== EntityRetrievalState.Loaded) {
+            state.entities[id] = {
+              type: EntityRetrievalState.Error,
+              id,
+              error: "Game not found",
+            };
+          }
+        }
+      },
+    );
+    builder.addCase(loadLocalGamesById.rejected, (state, { meta, error }) => {
+      for (const id of meta.arg.ids) {
+        state.entities[id] = {
+          type: EntityRetrievalState.Error,
+          id,
+          error: error.message ?? "Unknown error",
+        };
+      }
+    });
+
+    // paginateLocalGameIndex
+    builder.addCase(paginateLocalGameIndex.rejected, (state, { error }) => {
+      state.lastError = error;
+    });
   },
 });
 
-export const { createLocalGame, paginateLocalGameIndex } =
-  localGamesSlice.actions;
+export const { createLocalGame } = localGamesSlice.actions;
 
 export const selectLocalGames = (state: RootState) => state.localGames.entities;
 
@@ -198,3 +231,17 @@ export const selectLocalGamePage = createSelector(
 );
 
 export default localGamesSlice.reducer;
+
+function someLocalGameNeedsLoading(
+  entities: LocalGamesState["entities"],
+  ids: LocalGameId[],
+): boolean {
+  return ids.some((id) => {
+    const game = entities[id];
+    return (
+      game == null ||
+      (game.type !== EntityRetrievalState.Loading &&
+        game.type !== EntityRetrievalState.Loaded)
+    );
+  });
+}
