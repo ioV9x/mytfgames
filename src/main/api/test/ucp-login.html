@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-gb">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>TFGames.Site - User Control Panel - Login</title>
+
+	<link rel="alternate" type="application/atom+xml" title="Feed - TFGames.Site" href="/phpbb3/app.php/feed">		<link rel="alternate" type="application/atom+xml" title="Feed - All forums" href="/phpbb3/app.php/feed/forums">	<link rel="alternate" type="application/atom+xml" title="Feed - New Topics" href="/phpbb3/app.php/feed/topics">	<link rel="alternate" type="application/atom+xml" title="Feed - Active Topics" href="/phpbb3/app.php/feed/topics_active">			
+
+<!--
+	phpBB style name: prosilver
+	Based on style:   prosilver (this is the default phpBB3 style)
+	Original author:  Tom Beddard ( http://www.subBlue.com/ )
+	Modified by:
+-->
+
+<script>
+	WebFontConfig = {
+		google: {
+			families: ['Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese']
+		}
+	};
+
+	(function(d) {
+		var wf = d.createElement('script'), s = d.scripts[0];
+		wf.src = 'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js';
+		wf.async = true;
+		s.parentNode.insertBefore(wf, s);
+	})(document);
+</script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="./styles/prosilver/theme/stylesheet.css?assets_version=430" rel="stylesheet">
+<link href="./styles/prosilver/theme/en/stylesheet.css?assets_version=430" rel="stylesheet">
+
+
+
+	<link href="./assets/cookieconsent/cookieconsent.min.css?assets_version=430" rel="stylesheet">
+
+<!--[if lte IE 9]>
+	<link href="./styles/prosilver/theme/tweaks.css?assets_version=430" rel="stylesheet">
+<![endif]-->
+
+
+<link href="./ext/Lashek/IGDBIntegration/styles/all/theme/igdb.css?assets_version=430" rel="stylesheet" media="screen">
+<link href="./ext/Lashek/PointSystem/styles/all/theme/pointshop.css?assets_version=430" rel="stylesheet" media="screen">
+<link href="./ext/dm2bf/chatusers/styles/all/theme/custom.css?assets_version=430" rel="stylesheet" media="screen">
+<link href="./ext/rmcgirr83/elonw/styles/all/theme/elonw.css?assets_version=430" rel="stylesheet" media="screen">
+<link href="./ext/phpbb/ads/styles/all/theme/phpbbads.css?assets_version=430" rel="stylesheet" media="screen">
+
+
+
+
+</head>
+<body id="phpbb" class="nojs notouch section-ucp ltr ">
+
+
+<div id="wrap" class="wrap">
+	<a id="top" class="top-anchor" accesskey="t"></a>
+	<div id="page-header">
+		<div class="headerbar" role="banner">
+					<div class="inner">
+
+			<div id="site-description" class="site-description">
+		<a id="logo" class="logo" href="https://tfgames.site/" title="TFGames.Site">
+					<span class="site_logo"></span>
+				</a>
+				<h1>TFGames.Site</h1>
+				<p>Transformation Game Discussion and Development</p>
+				<p class="skiplink"><a href="#start_here">Skip to content</a></p>
+			</div>
+
+									
+			</div>
+					</div>
+				<div class="navbar" role="navigation">
+	<div class="inner">
+
+	<ul id="nav-main" class="nav-main linklist" role="menubar">
+
+		<li id="quick-links" class="quick-links dropdown-container responsive-menu hidden" data-skip-responsive="true">
+			<a href="#" class="dropdown-trigger">
+				<i class="icon fa-bars fa-fw" aria-hidden="true"></i><span>Quick links</span>
+			</a>
+			<div class="dropdown">
+				<div class="pointer"><div class="pointer-inner"></div></div>
+				<ul class="dropdown-contents" role="menu">
+					
+					
+										<li class="separator"></li>
+
+									</ul>
+			</div>
+		</li>
+
+				<li data-skip-responsive="true">
+			<a href="/phpbb3/app.php/help/faq" rel="help" title="Frequently Asked Questions" role="menuitem">
+				<i class="icon fa-question-circle fa-fw" aria-hidden="true"></i><span>FAQ</span>
+			</a>
+		</li>
+			<li class="small-icon icon-profile"><a href="/phpbb3/app.php/shop/viewshop" title="PointShop">PointShop</a></li>	<li class="small-icon icon-chat" data-last-responsive="true"><a href="./chat/" title="Online: (Nick)" target="_blank">Chat [1]</a></li>
+		<li data-last-responsive="true">
+		<a href="/phpbb3/app.php/rules" rel="help" title="View the Rules of this Board" role="menuitem">
+			<i class="icon fa-book fa-fw" aria-hidden="true"></i><span>Rules</span>
+		</a>
+	</li>
+				
+			<li class="rightside"  data-skip-responsive="true">
+			<a href="./ucp.php?mode=login&amp;redirect=/" title="Login" accesskey="x" role="menuitem">
+				<i class="icon fa-power-off fa-fw" aria-hidden="true"></i><span>Login</span>
+			</a>
+		</li>
+					<li class="rightside" data-skip-responsive="true">
+				<a href="./ucp.php?mode=register" role="menuitem">
+					<i class="icon fa-pencil-square-o  fa-fw" aria-hidden="true"></i><span>Register</span>
+				</a>
+			</li>
+						</ul>
+
+	<ul id="nav-breadcrumbs" class="nav-breadcrumbs linklist navlinks" role="menubar">
+				
+		
+		<li class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+
+							<span class="crumb" itemtype="https://schema.org/ListItem" itemprop="itemListElement" itemscope><a itemprop="item" href="https://tfgames.site/" data-navbar-reference="home"><i class="icon fa-home fa-fw" aria-hidden="true"></i><span itemprop="name">TFGames.Site</span></a><meta itemprop="position" content="1" /></span>
+			
+							<span class="crumb" itemtype="https://schema.org/ListItem" itemprop="itemListElement" itemscope><a itemprop="item" href="./index.php" accesskey="h" data-navbar-reference="index"><span itemprop="name">Board index</span></a><meta itemprop="position" content="2" /></span>
+
+			
+					</li>
+
+		
+			</ul>
+
+	</div>
+</div>
+	</div>
+
+		<div style="margin: 10px 0;" data-phpbb-ads-id="12">
+		<div class="panel bg3">
+
+	<center>
+		<a href="https://monstergirlfarmer.com/
+" target="_new"><img src="https://tfgames.site/phpbb3/images/phpbb_ads/62219da4ee866306c2ef1b64e7fc29aa.png" id="advert" class="advert" alt="Play Monster Girl Farmer, a surprisingly wholesome text-based RPG. (Supporting ALL platforms!)
+"><br>
+		Play Monster Girl Farmer, a surprisingly wholesome text-based RPG. (Supporting ALL platforms!)
+</a><br>
+	</center>
+
+</div>
+	</div>
+
+	<a id="start_here" class="anchor"></a>
+	<div id="page-body" class="page-body" role="main">
+		
+			<script>
+		var u_phpbb_ads_click = '\/phpbb3\/app.php\/adsclick\/0';
+	</script>
+		<div id="phpbb-aJHwDeoSqLhW" class="rules" style="display: none;">
+		<div class="inner">
+			<strong>Ad blocker detected:</strong> Our website is made possible by displaying online advertisements to our visitors. Please consider supporting us by disabling your ad blocker on our website.
+		</div>
+	</div>
+
+<form action="./ucp.php?mode=login" method="post" id="login" data-focus="username">
+<div class="panel">
+	<div class="inner">
+
+	<div class="content">
+		<h2 class="login-title">Login</h2>
+
+		<fieldset class="fields1">
+				<dl>
+			<dt><label for="username">Username:</label></dt>
+			<dd><input type="text" tabindex="1" name="username" id="username" size="25" value="" class="inputbox autowidth" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="password">Password:</label></dt>
+			<dd><input type="password" tabindex="2" id="password" name="password" size="25" class="inputbox autowidth" autocomplete="off" /></dd>
+							<dd><a href="/phpbb3/app.php/user/forgot_password">I forgot my password</a></dd>				<dd><a href="./ucp.php?mode=resend_act">Resend activation email</a></dd>					</dl>
+						<dl>
+			<dt>&nbsp;</dt>
+			<dd><label for="autologin"><input type="checkbox" name="autologin" id="autologin" tabindex="4" /> Remember me</label></dd>			<dd><label for="viewonline"><input type="checkbox" name="viewonline" id="viewonline" tabindex="5" /> Hide my online status this session</label></dd>
+		</dl>
+		
+		<input type="hidden" name="redirect" value="./ucp.php?mode=login&amp;redirect=%2F" />
+<input type="hidden" name="creation_time" value="1723120353" />
+<input type="hidden" name="form_token" value="e96feb7a8d63da0370e4ddb56fd045c1160f5413" />
+
+		
+		<dl>
+			<dt>&nbsp;</dt>
+			<dd><input type="hidden" name="sid" value="3a161519b5ff4e2d4a7a1ef35ec65d05" />
+<input type="hidden" name="redirect" value="/" />
+<input type="submit" name="login" tabindex="6" value="Login" class="button1" /></dd>
+		</dl>
+		</fieldset>
+	</div>
+
+		</div>
+</div>
+
+
+	<div class="panel">
+		<div class="inner">
+
+		<div class="content">
+			<h3>Register</h3>
+			<p>In order to login you must be registered. Registering takes only a few moments but gives you increased capabilities. The board administrator may also grant additional permissions to registered users. Before you register please ensure you are familiar with our terms of use and related policies. Please ensure you read any forum rules as you navigate around the board.</p>
+			<p><strong><a href="./ucp.php?mode=terms">Terms of use</a> | <a href="./ucp.php?mode=privacy">Privacy policy</a></strong></p>
+			<hr class="dashed" />
+			<p><a href="./ucp.php?mode=register" class="button2">Register</a></p>
+		</div>
+
+		</div>
+	</div>
+
+</form>
+
+			</div>
+
+<div class="statblock">
+	<center>
+		<a href="http://www.hypnopics-collective.net/"><img src="/images/hypnopicsbanner1.png" style="max-width: 100%;"></a><br>
+		Check out our sister site, the Hypnopics Collective!<br>
+	</center>
+</div>
+
+<div id="page-footer" class="page-footer" role="contentinfo">
+	<div class="navbar" role="navigation">
+	<div class="inner">
+
+	<ul id="nav-footer" class="nav-footer linklist" role="menubar">
+		<li class="breadcrumbs">
+							<span class="crumb"><a href="https://tfgames.site/" data-navbar-reference="home"><i class="icon fa-home fa-fw" aria-hidden="true"></i><span>TFGames.Site</span></a></span>									<span class="crumb"><a href="./index.php" data-navbar-reference="index"><span>Board index</span></a></span>					</li>
+		
+				<li class="rightside">All times are <span title="America/New York">UTC-04:00</span></li>
+							<li class="rightside">
+				<a href="./ucp.php?mode=delete_cookies" data-ajax="true" data-refresh="true" role="menuitem">
+					<i class="icon fa-trash fa-fw" aria-hidden="true"></i><span>Delete cookies</span>
+				</a>
+			</li>
+														</ul>
+
+	</div>
+</div>
+
+	<div class="copyright">
+				<p class="footer-row">
+			<span class="footer-copyright">Powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Limited</span>
+		</p>
+				<p class="footer-row">
+	<span>phpBB Two Factor Authentication &copy; <a href="https://www.phpbbextensions.io/" target="_blank">paul999</a></span>
+</p>
+		<p class="footer-row" role="menu">
+			<a class="footer-link" href="./ucp.php?mode=privacy" title="Privacy" role="menuitem">
+				<span class="footer-link-text">Privacy</span>
+			</a>
+			|
+			<a class="footer-link" href="./ucp.php?mode=terms" title="Terms" role="menuitem">
+				<span class="footer-link-text">Terms</span>
+			</a>
+		</p>
+					</div>
+
+	<div id="darkenwrapper" class="darkenwrapper" data-ajax-error-title="AJAX error" data-ajax-error-text="Something went wrong when processing your request." data-ajax-error-text-abort="User aborted request." data-ajax-error-text-timeout="Your request timed out; please try again." data-ajax-error-text-parsererror="Something went wrong with the request and the server returned an invalid reply.">
+		<div id="darken" class="darken">&nbsp;</div>
+	</div>
+
+	<div id="phpbb_alert" class="phpbb_alert" data-l-err="Error" data-l-timeout-processing-req="Request timed out.">
+		<a href="#" class="alert_close">
+			<i class="icon fa-times-circle fa-fw" aria-hidden="true"></i>
+		</a>
+		<h3 class="alert_title">&nbsp;</h3><p class="alert_text"></p>
+	</div>
+	<div id="phpbb_confirm" class="phpbb_alert">
+		<a href="#" class="alert_close">
+			<i class="icon fa-times-circle fa-fw" aria-hidden="true"></i>
+		</a>
+		<div class="alert_text"></div>
+	</div>
+</div>
+
+</div>
+
+<div>
+	<a id="bottom" class="anchor" accesskey="z"></a>
+	</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('\x3Cscript src="./assets/javascript/jquery-3.6.0.min.js?assets_version=430">\x3C/script>');</script><script src="./assets/javascript/core.js?assets_version=430"></script>
+	<script>
+		(function($){
+			var $fa_cdn = $('head').find('link[rel="stylesheet"]').first(),
+				$span = $('<span class="fa" style="display:none"></span>').appendTo('body');
+			if ($span.css('fontFamily') !== 'FontAwesome' ) {
+				$fa_cdn.after('<link href="./assets/css/font-awesome.min.css" rel="stylesheet">');
+				$fa_cdn.remove();
+			}
+			$span.remove();
+		})(jQuery);
+	</script>
+
+	<script src="./assets/cookieconsent/cookieconsent.min.js?assets_version=430"></script>
+	<script>
+		if (typeof window.cookieconsent === "object") {
+			window.addEventListener("load", function(){
+				window.cookieconsent.initialise({
+					"palette": {
+						"popup": {
+							"background": "#0F538A"
+						},
+						"button": {
+							"background": "#E5E5E5"
+						}
+					},
+					"theme": "classic",
+					"content": {
+						"message": "This\u0020website\u0020uses\u0020cookies\u0020to\u0020ensure\u0020you\u0020get\u0020the\u0020best\u0020experience\u0020on\u0020our\u0020website.",
+						"dismiss": "Got\u0020it\u0021",
+						"link": "Learn\u0020more",
+						"href": "./ucp.php?mode=privacy"
+					}
+				});
+			});
+		}
+	</script>
+
+
+	<script>
+		(function($) {
+			'use strict';
+
+			$(window).on('load', function() {
+				$.get('\/phpbb3\/app.php\/adsview\/12');
+			});
+		})(jQuery);
+	</script>
+
+	<script>
+		var elonw_title = "Opens\u0020in\u0020new\u0020window";
+</script>
+<script>
+(function($) {  // Avoid conflicts with other libraries
+
+'use strict';
+
+	phpbb.addAjaxCallback('reporttosfs', function(data) {
+		if (data.postid !== "undefined") {
+			$('#sfs' + data.postid).hide();
+			phpbb.closeDarkenWrapper(5000);
+		}
+	});
+
+})(jQuery);
+</script>
+<script src="./ext/phpbb/ads/styles/all/template/js/clicks.js?assets_version=430"></script>
+<script src="./styles/prosilver/template/forum_fn.js?assets_version=430"></script>
+<script src="./styles/prosilver/template/ajax.js?assets_version=430"></script>
+<script src="./ext/phpbb/ads/styles/all/template/js/bundle.umd.js?assets_version=430"></script>
+<script src="./ext/rmcgirr83/elonw/styles/all/template/js/elonw.js?assets_version=430"></script>
+
+
+
+
+
+<script>
+	justDetectAdblock.detectAnyAdblocker().then(function(detected) {
+		if (detected) {
+			document.getElementById('phpbb-aJHwDeoSqLhW').style.display='block';
+					}
+	});
+</script>
+
+</body>
+</html>

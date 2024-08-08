@@ -1,0 +1,72 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DefaultUcpApiService > instance > should check login state 1`] = `
+[
+  [
+    "https://tfgames.site/phpbb3/ucp.php?mode=login",
+    {
+      "redirect": "manual",
+      "signal": {
+        "aborted": true,
+        "reason": [AbortError: This operation was aborted],
+      },
+    },
+  ],
+]
+`;
+
+exports[`DefaultUcpApiService > instance > should correctly fill out the login form 1`] = `
+[
+  [
+    "https://tfgames.site/phpbb3/ucp.php?mode=login",
+    {
+      "redirect": "manual",
+      "signal": {
+        "aborted": true,
+        "reason": [AbortError: This operation was aborted],
+      },
+    },
+  ],
+  [
+    "https://tfgames.site/phpbb3/ucp.php?mode=login",
+    {
+      "body": [
+        [
+          "username",
+          "username",
+        ],
+        [
+          "password",
+          "password",
+        ],
+        [
+          "creation_time",
+          "1723120353",
+        ],
+        [
+          "form_token",
+          "e96feb7a8d63da0370e4ddb56fd045c1160f5413",
+        ],
+        [
+          "login",
+          "Login",
+        ],
+        [
+          "redirect",
+          "/",
+        ],
+        [
+          "autologin",
+          "1",
+        ],
+      ],
+      "method": "POST",
+      "redirect": "manual",
+      "signal": {
+        "aborted": true,
+        "reason": [AbortError: This operation was aborted],
+      },
+    },
+  ],
+]
+`;

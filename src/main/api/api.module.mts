@@ -1,11 +1,14 @@
+import { net } from "electron/main";
 import { ContainerModule } from "inversify";
 
-import { IpcServiceProvider } from "$main/pal";
-
+import { DefaultUcpApiService } from "./DefaultUcpApiService.mjs";
 import { GamesApi, GamesApiImpl } from "./games.mjs";
+import { UcpApiService } from "./UcpApiService.mjs";
 
 export const ApiModule = new ContainerModule((bind) => {
   bind(GamesApiImpl).toSelf().inSingletonScope();
   bind(GamesApi).toService(GamesApiImpl);
-  // bind(IpcServiceProvider).toService(GamesApiImpl);
+
+  bind(DefaultUcpApiService).toConstantValue(new DefaultUcpApiService(net));
+  bind(UcpApiService).toService(DefaultUcpApiService);
 });
