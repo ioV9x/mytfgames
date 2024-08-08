@@ -6,6 +6,7 @@ import { net, protocol, type Session } from "electron/main";
 import { inject, injectable } from "inversify";
 
 import { AppConfiguration } from "$main/configuration";
+import { Logger, logger } from "$main/log";
 
 import {
   type BrowserSession,
@@ -25,6 +26,7 @@ export class ElectronBrowserSessionConfigurer
 
   constructor(
     @inject(AppConfiguration) private readonly configuration: AppConfiguration,
+    @logger("ElectronBrowserSessionConfigurer") private readonly log: Logger,
   ) {
     this.rendererAppPath = this.configuration.root.paths.renderer_app;
   }
@@ -49,6 +51,14 @@ export class ElectronBrowserSessionConfigurer
     if (browserSession == null) {
       browserSession = new ElectronBrowserSession(nativeSession);
       sessionWrappers.set(nativeSession, browserSession);
+      if (this.configuration.root.proxy) {
+        // TODO: make configure async
+        nativeSession
+          .setProxy(this.configuration.root.proxy)
+          .catch((err: unknown) => {
+            this.log.error("Failed to set proxy", err);
+          });
+      }
       this.setupProtocols(nativeSession);
     }
     return browserSession;

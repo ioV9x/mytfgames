@@ -1,19 +1,33 @@
-import { type DeepRequired, makeServiceIdentifier } from "$main/utils";
+import { makeServiceIdentifier } from "$main/utils";
 
-export interface MinimalAppConfigurationTree {
+export interface ConfigurationInput {
   readonly paths?: {
     readonly database?: string;
     readonly logs?: string;
     readonly session_data?: string;
     readonly user_data?: string;
   };
+
+  readonly proxy?:
+    | {
+        mode: "direct" | "system" | "auto_detect";
+      }
+    | {
+        mode: "fixed_servers";
+        proxyRules: string;
+        proxyBypassRules?: string;
+      };
 }
 
 const AppConfigurationTree = makeServiceIdentifier<AppConfigurationTree>(
   "app configuration tree",
 );
-type AppConfigurationTree = DeepRequired<MinimalAppConfigurationTree> & {
+type AppConfigurationTree = ConfigurationInput & {
   readonly paths: {
+    readonly database: string;
+    readonly logs: string;
+    readonly session_data: string;
+    readonly user_data: string;
     readonly config_dir: string;
     readonly renderer_app: string;
   };

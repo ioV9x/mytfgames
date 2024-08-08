@@ -10,7 +10,7 @@ import {
   AppConfiguration,
   AppConfigurationLoader,
   AppConfigurationTree,
-  MinimalAppConfigurationTree,
+  ConfigurationInput,
 } from "./AppConfiguration.mjs";
 
 @injectable()
@@ -20,7 +20,7 @@ export class ElectronAppConfiguration implements AppConfiguration {
   ) {}
 }
 
-const appConfigurationSchema: JTDSchemaType<MinimalAppConfigurationTree> = {
+const appConfigurationSchema: JTDSchemaType<ConfigurationInput> = {
   optionalProperties: {
     paths: {
       optionalProperties: {
@@ -35,6 +35,32 @@ const appConfigurationSchema: JTDSchemaType<MinimalAppConfigurationTree> = {
         },
         user_data: {
           type: "string",
+        },
+      },
+    },
+    proxy: {
+      discriminator: "mode",
+      mapping: {
+        direct: {
+          properties: {},
+        },
+        system: {
+          properties: {},
+        },
+        auto_detect: {
+          properties: {},
+        },
+        fixed_servers: {
+          properties: {
+            proxyRules: {
+              type: "string",
+            },
+          },
+          optionalProperties: {
+            proxyBypassRules: {
+              type: "string",
+            },
+          },
         },
       },
     },
@@ -65,7 +91,7 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
     return expanded;
   }
 
-  makeDefaultConfiguration(): MinimalAppConfigurationTree {
+  makeDefaultConfiguration(): ConfigurationInput {
     if (app.isPackaged) {
       return {};
     } else {
@@ -80,9 +106,7 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
     }
   }
 
-  loadConfigurationFileFrom(
-    configurationFilePath: string,
-  ): MinimalAppConfigurationTree {
+  loadConfigurationFileFrom(configurationFilePath: string): ConfigurationInput {
     const configurationFile = fs.readFileSync(configurationFilePath, "utf-8");
     const maybeConfiguration = TOML.parse(configurationFile);
     if (this.validate(maybeConfiguration)) {
@@ -96,16 +120,17 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
 
   expandConfigurationTree(
     configurationFilePath: string,
-    minimal: MinimalAppConfigurationTree,
+    minimal: ConfigurationInput,
   ): AppConfigurationTree {
     return {
+      ...minimal,
       paths: this.expandConfigPathsTree(configurationFilePath, minimal.paths),
     };
   }
 
   private expandConfigPathsTree(
     configurationFilePath: string,
-    minimal: MinimalAppConfigurationTree["paths"] = {},
+    minimal: ConfigurationInput["paths"] = {},
   ): AppConfigurationTree["paths"] {
     const configurationDirectory = path.dirname(configurationFilePath);
     const prefixRegex = /^<([-a-z]+)>(\/+(.+))?$/;
