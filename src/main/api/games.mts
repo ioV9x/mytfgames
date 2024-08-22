@@ -1,5 +1,6 @@
-import { Cheerio, CheerioAPI, Element, load as cheerioLoad } from "cheerio";
+import { Cheerio, CheerioAPI, load as cheerioLoad } from "cheerio";
 import { ElementType } from "domelementtype";
+import { Element } from "domhandler";
 import { net } from "electron/main";
 import { injectable } from "inversify";
 
