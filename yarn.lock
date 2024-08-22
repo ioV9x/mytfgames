@@ -1355,9 +1355,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reduxjs/toolkit@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "@reduxjs/toolkit@npm:2.2.5"
+"@reduxjs/toolkit@npm:^2.2.7":
+  version: 2.2.7
+  resolution: "@reduxjs/toolkit@npm:2.2.7"
   dependencies:
     immer: "npm:^10.0.3"
     redux: "npm:^5.0.1"
@@ -1371,7 +1371,7 @@ __metadata:
       optional: true
     react-redux:
       optional: true
-  checksum: 10c0/be0593bf26852482fb8716b9248531466c6e8782a3114b823ae680fce90267d8c5512a3231cfecc30b17eff81a4604112772b49ad7ca6a3366ddd4f2a838e53c
+  checksum: 10c0/7761a91adac2b5e1d50a8163ba5441480bb86a3a80b7583037c27a88463394b132dd7592862fc2be03aa7ab98a6e1710549889986dc0d3f033c169a3ba2cb02e
   languageName: node
   linkType: hard
 
@@ -5876,7 +5876,7 @@ __metadata:
     "@electron/fuses": "npm:^1.8.0"
     "@eslint/js": "npm:^8.57.0"
     "@ibm/plex": "npm:^6.4.1"
-    "@reduxjs/toolkit": "npm:^2.2.5"
+    "@reduxjs/toolkit": "npm:^2.2.7"
     "@types/better-sqlite3": "npm:^7.6.11"
     "@types/bunyan": "npm:^1"
     "@types/node": "npm:~20.16.1"
