@@ -10,7 +10,7 @@
     "exactOptionalPropertyTypes": false,
     "noEmit": true,
     "jsx": "react-jsx",
-    "lib": ["DOM", "DOM.Iterable"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "paths": {

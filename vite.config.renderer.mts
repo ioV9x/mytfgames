@@ -29,7 +29,7 @@ export default defineConfig((env) => {
           import.meta.dirname,
           "src/ipc/main-renderer/index.mjs",
         ),
-        ...rendererAlias(["components", "utils"]),
+        ...rendererAlias(["components", "ipc", "utils"]),
       },
     },
     clearScreen: false,
