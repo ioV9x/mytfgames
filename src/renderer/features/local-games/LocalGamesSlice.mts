@@ -79,7 +79,7 @@ export const paginateLocalGameIndex = createAsyncThunk<
   {
     localGames: typeof LocalGameDataService;
     orderType: LocalGameOrderType;
-    orderDirection: "ASC" | "DESC";
+    orderDirection: SortDirection;
     page: number;
     pageSize: number;
     force?: boolean;

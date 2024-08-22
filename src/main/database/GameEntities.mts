@@ -19,6 +19,8 @@ export interface GameDescriptionTable {
    * The title of the game assigned by the current user.
    */
   name: string;
+  last_change_datetime: string;
+  last_played_datetime: Generated<string>;
   /**
    * The numerical rating of the game assigned by the current user. [0, 10]
    *

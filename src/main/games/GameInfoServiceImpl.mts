@@ -6,10 +6,10 @@ import * as uuid from "uuid";
 
 import { remoteProcedure } from "$ipc/core";
 import {
-  GameInfo,
-  GameInfoService as GameInfoServiceContract,
-  GameList,
+  Game,
+  GameDataService as GameDataServiceContract,
   GameOrderType,
+  GameSId,
 } from "$ipc/main-renderer";
 import { GamesApi, RemoteCategory, RemoteVersionInfo } from "$main/api";
 import {
@@ -24,168 +24,168 @@ import {
 
 import { GameInfoService } from "./GameInfoService.mjs";
 
-const refreshInterval = Temporal.Duration.from({ minutes: 15 });
-const initialIndexUpdateInstant = Temporal.Instant.fromEpochSeconds(0);
-
 @injectable()
 export class GameInfoServiceImpl implements GameInfoService {
-  private nextIndexUpdate: Temporal.Instant = initialIndexUpdateInstant;
-
   constructor(
     @inject(DatabaseProvider) private readonly db: DatabaseProvider,
     @inject(GamesApi) private readonly gamesApi: GamesApi,
   ) {}
 
-  @remoteProcedure(GameInfoServiceContract, "getGames")
-  async getGames(ids: string[]): Promise<GameInfo[]> {
+  @remoteProcedure(GameDataServiceContract, "retrieveOrder")
+  async retrieveOrder(): Promise<Record<GameOrderType, GameSId[]>> {
+    return await this.db.transaction().execute(async (trx) => {
+      const partials = await Promise.all(
+        Object.values(GameOrderType).map(
+          async (type) =>
+            [
+              type,
+              (await this.retrieveOrderForType(trx, type)).map((r) =>
+                uuid.stringify(r.id),
+              ),
+            ] satisfies [GameOrderType, GameSId[]],
+        ),
+      );
+      return Object.fromEntries(partials) as Record<GameOrderType, GameSId[]>;
+    });
+  }
+
+  private async retrieveOrderForType(
+    trx: AppQueryCreator,
+    type: GameOrderType,
+  ): Promise<{ id: Buffer }[]> {
+    const ids = trx
+      .selectFrom("game")
+      .select(["game.game_id as id"])
+      .leftJoin(
+        "game_description as description",
+        "description.game_id",
+        "game.game_id",
+      )
+      .leftJoin(
+        "game_official_listing as listing",
+        "listing.game_id",
+        "game.game_id",
+      )
+      .leftJoin(
+        "game_official_blacklist as blacklist",
+        "blacklist.game_id",
+        "game.game_id",
+      )
+      .where("blacklist.last_crawl_datetime", "is", null);
+    switch (type) {
+      case GameOrderType.Id:
+        return await ids.orderBy("game.game_id").execute();
+      case GameOrderType.Name:
+        return await ids
+          .orderBy((eb) => eb.fn.coalesce("description.name", "listing.name"))
+          .execute();
+      case GameOrderType.LastUpdate:
+        return await ids
+          .orderBy((eb) =>
+            eb.fn.coalesce(
+              "listing.last_update_datetime",
+              "description.last_change_datetime",
+            ),
+          )
+          .execute();
+    }
+  }
+
+  @remoteProcedure(GameDataServiceContract, "retrieveGamesById")
+  async getGames(ids: string[]): Promise<Game[]> {
     const chunks = R.chunk(ids.map(uuid.parse) as GameId[], 512);
 
-    const chunkResults = await this.db.transaction().execute(
-      async (trx) =>
-        await Promise.all(
-          chunks.map((c) =>
-            trx
-              .selectFrom("game")
-              .leftJoin(
-                "game_official_listing",
-                "game_official_listing.game_id",
-                "game.game_id",
-              )
-              .leftJoin(
-                "game_description",
-                "game_description.game_id",
-                "game.game_id",
-              )
-              .where("game_id", "in", c)
-              .select([
-                "game.game_id",
-                "game_official_listing.tfgames_game_id as tfgamesId",
-                "game_official_listing.last_update_datetime as lastUpdate",
-                (eb) =>
-                  eb.fn
-                    .coalesce(
-                      "game_description.name",
-                      "game_official_listing.name",
-                      sql<string>`'<orphaned>'`,
-                    )
-                    .as("name"),
-              ])
-              .execute(),
+    const chunkResults = await this.db
+      .transaction()
+      .execute(
+        async (trx) =>
+          await Promise.all(
+            chunks.map((c) =>
+              trx
+                .selectFrom("game")
+                .leftJoin(
+                  "game_official_listing as listing",
+                  "listing.game_id",
+                  "game.game_id",
+                )
+                .leftJoin(
+                  "game_description as description",
+                  "description.game_id",
+                  "game.game_id",
+                )
+                .select([
+                  "game.game_id as id",
+                  "description.name as name",
+                  "description.last_change_datetime as lastChange",
+                  "description.last_played_datetime as lastPlayed",
+                  "listing.name as officialName",
+                  "listing.num_likes as numLikes",
+                  "listing.tfgames_game_id as tfgamesId",
+                  "listing.last_update_datetime as lastUpdate",
+                ])
+                .where("game.game_id", "in", c)
+                .execute(),
+            ),
           ),
-        ),
-    );
+      );
 
     return R.pipe(
       chunkResults,
       R.flat(),
       R.map(
-        ({ game_id, lastUpdate, name, tfgamesId }) =>
+        ({
+          id,
+          lastUpdate,
+          name,
+          tfgamesId,
+          lastChange,
+          lastPlayed,
+          officialName,
+          numLikes,
+        }) =>
           ({
-            id: uuid.stringify(game_id),
-            lastUpdate: lastUpdate ?? "<untracked>",
-            tfgamesId: tfgamesId ?? undefined,
-            name,
-          }) satisfies GameInfo,
+            id: uuid.stringify(id),
+            description:
+              name == null
+                ? null
+                : {
+                    name,
+                    lastChangeTimestamp: lastChange!,
+                    lastPlayedTimestamp: lastPlayed!,
+                  },
+            listing:
+              tfgamesId == null
+                ? null
+                : {
+                    tfgamesId,
+                    name: officialName!,
+                    numLikes: numLikes!,
+                    lastUpdateTimestamp: lastUpdate!,
+                  },
+          }) satisfies Game,
       ),
     );
   }
 
-  @remoteProcedure(GameInfoServiceContract, "getGameList")
-  async getGameList(
-    order: GameOrderType,
-    page: number,
-    pageSize: number,
-    force: boolean,
-  ): Promise<GameList> {
-    const now = Temporal.Now.instant();
-    if (force || Temporal.Instant.compare(now, this.nextIndexUpdate) > 0) {
-      this.nextIndexUpdate = now.add(refreshInterval);
-      await this.refreshIndex();
-    }
-
-    const offset = (page - 1) * pageSize;
-    return await this.db.transaction().execute(async (trx) => {
-      const pageContent = await trx
-        .selectFrom("game")
-        .leftJoin(
-          "game_official_listing",
-          "game_official_listing.game_id",
-          "game.game_id",
-        )
-        .leftJoin(
-          "game_description",
-          "game_description.game_id",
-          "game.game_id",
-        )
-        .select([
-          "game.game_id as id",
-          (eb) =>
-            eb.fn
-              .coalesce(
-                "game_description.name",
-                "game_official_listing.name",
-                sql<string>`'!<orphaned>'`,
-              )
-              .as("name"),
-          "game_official_listing.tfgames_game_id as tfgames_id",
-          (eb) =>
-            eb.fn
-              .coalesce(
-                "game_official_listing.last_update_datetime",
-                sql<string>`':<orphaned>'`, // bigger than any ISO 8601 string
-              )
-              .as("last_update"),
-        ])
-        .orderBy(
-          order === GameOrderType.LastUpdate ? "last_update" : "name",
-          order === GameOrderType.LastUpdate ? "desc" : "asc",
-        )
-        .limit(pageSize)
-        .offset(offset)
-        .execute();
-
-      const ordering = await trx
-        .selectFrom("game")
-        .leftJoin(
-          "game_official_listing",
-          "game_official_listing.game_id",
-          "game.game_id",
-        )
-        .leftJoin(
-          "game_description",
-          "game_description.game_id",
-          "game.game_id",
-        )
-        .select("game.game_id")
-        .orderBy(
-          (eb) =>
-            order === GameOrderType.LastUpdate
-              ? eb.fn.coalesce(
-                  "game_official_listing.last_update_datetime",
-                  sql<string>`':<orphaned>'`, // bigger than any ISO 8601 string
-                )
-              : eb.fn.coalesce(
-                  "game_description.name",
-                  "game_official_listing.name",
-                  sql<string>`'!<orphaned>'`,
-                ),
-          order === GameOrderType.LastUpdate ? "desc" : "asc",
-        )
-        .execute();
-
-      return {
-        order: ordering.map(({ game_id }) => uuid.stringify(game_id)),
-        preloaded: pageContent.map(
-          ({ id, tfgames_id, name, last_update }) =>
-            ({
-              id: uuid.stringify(id),
-              lastUpdate: last_update,
-              tfgamesId: tfgames_id ?? undefined,
-              name: name,
-            }) satisfies GameInfo,
-        ),
-      } satisfies GameList;
-    });
+  @remoteProcedure(GameDataServiceContract, "findGamesByNamePrefix")
+  async findGameByNamePrefix(prefix: string): Promise<GameSId[]> {
+    const games = await this.db
+      .selectFrom("game")
+      .leftJoin("game_description", "game_description.game_id", "game.game_id")
+      .leftJoin(
+        "game_official_listing",
+        "game_official_listing.game_id",
+        "game.game_id",
+      )
+      .where((eb) =>
+        eb.or([
+          eb("game_official_listing.name", "like", `${prefix}%`),
+          eb("game_description.name", "like", `${prefix}%`),
+        ]),
+      )
+      .select(["game.game_id"])
+      .execute();
+    return games.map((r) => uuid.stringify(r.game_id));
   }
 
   async refreshIndex(): Promise<[GameId, TfgamesGameId][]> {

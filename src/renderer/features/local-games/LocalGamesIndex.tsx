@@ -44,7 +44,7 @@ export default function LocalGameIndex() {
     page: 1,
     pageSize: 20,
     orderType: LocalGameOrderType.Name,
-    orderDirection: "ASC",
+    orderDirection: SortDirection.Asc,
   });
   useEffect(
     () =>
@@ -156,7 +156,9 @@ function LocalGameTable({
       return undefined;
     }
     const direction =
-      headerType === sortType ? flipDirection(sortDirection) : "ASC";
+      headerType === sortType
+        ? flipDirection(sortDirection)
+        : SortDirection.Asc;
     return onSortHeaderClicked.bind(undefined, headerType, direction);
   }
 

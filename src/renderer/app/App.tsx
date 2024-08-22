@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { Link, Route, Router, Switch } from "wouter";
 
 import GameDetails from "../features/games/GameDetails.tsx";
+import GameIndexPage from "../features/games/GameIndexPage.tsx";
 import NewLocalGame from "../features/local-games/create/CreateLocalGamePage.tsx";
 import LocalGameIndex from "../features/local-games/LocalGamesIndex.tsx";
 import LocalGameViewPage from "../features/local-games/view/LocalGameViewPage.tsx";
@@ -68,7 +69,10 @@ function AppWithShell({
       <Content id="main-content">
         <Switch>
           <Route path="/">
-            <LocalGameIndex />
+            <GameIndexPage />
+          </Route>
+          <Route path="/games">
+            <GameIndexPage />
           </Route>
           <Route path="/local-games">
             <LocalGameIndex />

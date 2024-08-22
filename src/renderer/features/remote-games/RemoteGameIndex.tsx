@@ -37,7 +37,7 @@ export default function RemoteGameIndex() {
     page: 1,
     pageSize: 20,
     orderType: RemoteGameOrderType.LastUpdate,
-    orderDirection: "DESC",
+    orderDirection: SortDirection.Desc,
   });
   useEffect(
     () =>
@@ -146,7 +146,9 @@ function RemoteGameTable({
       return undefined;
     }
     const direction =
-      headerType === sortType ? flipDirection(sortDirection) : "ASC";
+      headerType === sortType
+        ? flipDirection(sortDirection)
+        : SortDirection.Asc;
     return onSortHeaderClicked.bind(undefined, headerType, direction);
   }
 

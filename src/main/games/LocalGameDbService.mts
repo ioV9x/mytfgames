@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { Transaction } from "kysely";
 import * as R from "remeda";
+import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
 
 import { remoteProcedure } from "$ipc/core";
@@ -104,6 +105,9 @@ export class LocalGameDbService {
         .values({
           game_id,
           name: game.name,
+          last_change_datetime: Temporal.Now.instant().toString({
+            smallestUnit: "second",
+          }),
         })
         .execute();
       return uuid.stringify(game_id);

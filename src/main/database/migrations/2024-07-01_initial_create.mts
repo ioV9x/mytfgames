@@ -182,7 +182,7 @@ export async function up(db: Kysely<any>): Promise<void> {
       .modifyEnd(sql`STRICT`)
       .execute();
     await trx.schema
-      .createIndex("___blake3_hash")
+      .createIndex("node_file_____blake3_hash")
       .on("node_file")
       .column("blake3_hash")
       .execute();
@@ -200,6 +200,10 @@ export async function up(db: Kysely<any>): Promise<void> {
       .createTable("game_description")
       .addColumn("game_id", "blob", (col) => col.notNull().primaryKey())
       .addColumn("name", "text", (col) => col.notNull())
+      .addColumn("last_change_datetime", "text", (col) => col.notNull())
+      .addColumn("last_played_datetime", "text", (col) =>
+        col.notNull().defaultTo(""),
+      )
       .addColumn("user_rating", "integer", (col) => col.notNull().defaultTo(-1))
       .addColumn("note", "text", (col) => col.notNull().defaultTo(""))
       .addForeignKeyConstraint(
@@ -210,6 +214,21 @@ export async function up(db: Kysely<any>): Promise<void> {
         (cb) => cb.onDelete("cascade"),
       )
       .modifyEnd(sql`STRICT`)
+      .execute();
+    await trx.schema
+      .createIndex("game_description_____name")
+      .on("game_description")
+      .column("name")
+      .execute();
+    await trx.schema
+      .createIndex("game_description_____last_change_datetime")
+      .on("game_description")
+      .column("last_change_datetime")
+      .execute();
+    await trx.schema
+      .createIndex("game_description_____last_played_datetime")
+      .on("game_description")
+      .column("last_played_datetime")
       .execute();
 
     await trx.schema
@@ -232,7 +251,7 @@ export async function up(db: Kysely<any>): Promise<void> {
       .modifyEnd(sql`STRICT`)
       .execute();
     await trx.schema
-      .createIndex("___game_id")
+      .createIndex("game_tag_____game_id")
       .on("game_tag")
       .column("game_id")
       .execute();
@@ -254,14 +273,19 @@ export async function up(db: Kysely<any>): Promise<void> {
       .modifyEnd(sql`STRICT`)
       .execute();
     await trx.schema
-      .createIndex("___last_update_datetime")
+      .createIndex("game_official_listing_____name")
       .on("game_official_listing")
-      .column("last_update_datetime")
+      .column("name")
       .execute();
     await trx.schema
-      .createIndex("___num_likes")
+      .createIndex("game_official_listing_____num_likes")
       .on("game_official_listing")
       .column("num_likes")
+      .execute();
+    await trx.schema
+      .createIndex("game_official_listing_____last_update_datetime")
+      .on("game_official_listing")
+      .column("last_update_datetime")
       .execute();
 
     await trx.schema
@@ -327,7 +351,7 @@ export async function up(db: Kysely<any>): Promise<void> {
       .modifyEnd(sql`STRICT`)
       .execute();
     await trx.schema
-      .createIndex("___tfgames_profile_id")
+      .createIndex("game_official_tfgames_author_____tfgames_profile_id")
       .on("game_official_tfgames_author")
       .column("tfgames_profile_id")
       .execute();
@@ -497,30 +521,50 @@ export async function down(db: Kysely<any>): Promise<void> {
     await trx.schema.dropTable("game_version_source").execute();
     await trx.schema.dropTable("game_version").execute();
     await trx.schema
-      .dropIndex("___tfgames_profile_id")
+      .dropIndex("game_official_tfgames_author_____tfgames_profile_id")
       .on("game_official_tfgames_author")
       .execute();
     await trx.schema.dropTable("game_official_tfgames_author").execute();
     await trx.schema.dropTable("tfgames_author").execute();
     await trx.schema.dropTable("game_official_listing_details").execute();
     await trx.schema
-      .dropIndex("___num_likes")
+      .dropIndex("game_official_listing_____last_update_datetime")
       .on("game_official_listing")
       .execute();
     await trx.schema
-      .dropIndex("___last_update_datetime")
+      .dropIndex("game_official_listing_____num_likes")
       .on("game_official_listing")
       .execute();
+    await trx.schema
+      .dropIndex("game_official_listing_____name")
+      .on("game_official_listing")
+      .execute();
+    await trx.schema.dropTable("game_official_blacklist").execute();
     await trx.schema.dropTable("game_official_listing").execute();
-    await trx.schema.dropIndex("___game_id").on("game_tag").execute();
+    await trx.schema.dropIndex("game_tag_____game_id").on("game_tag").execute();
     await trx.schema.dropTable("game_tag").execute();
+    await trx.schema
+      .dropIndex("game_description_____last_played_datetime")
+      .on("game_description")
+      .execute();
+    await trx.schema
+      .dropIndex("game_description_____last_update_datetime")
+      .on("game_description")
+      .execute();
+    await trx.schema
+      .dropIndex("game_description_____name")
+      .on("game_description")
+      .execute();
     await trx.schema.dropTable("game_description").execute();
     await trx.schema.dropTable("game").execute();
 
     ////////////////////////////////////////////////////////////////////////////
     // filesystem
     //
-    await trx.schema.dropIndex("___blake3_hash").on("node_file").execute();
+    await trx.schema
+      .dropIndex("node_file_____blake3_hash")
+      .on("node_file")
+      .execute();
     await trx.schema.dropTable("node_file").execute();
     await trx.schema.dropTable("node_file_content").execute();
     await trx.schema.dropTable("node_member").execute();
