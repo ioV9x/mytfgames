@@ -5201,10 +5201,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely@npm:^0.27.3":
-  version: 0.27.3
-  resolution: "kysely@npm:0.27.3"
-  checksum: 10c0/73c730404090744e7b89b1ca6870f1256fc9c0f2d5bcf739238ba293eaed4991d8228f5618e8e27e0f63681e0f3583b8e712919687e815956270ac319786a866
+"kysely@npm:^0.27.4":
+  version: 0.27.4
+  resolution: "kysely@npm:0.27.4"
+  checksum: 10c0/05d223dca3f69778e28511d30cfff485e8e035a43fb01b24f1624b87f850cd6f87e33dcc04e752f7454ac8aed2743d982dabe3be6bc402c63568d020d5b0dd1d
   languageName: node
   linkType: hard
 
@@ -5898,7 +5898,7 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.6"
     eslint-plugin-simple-import-sort: "npm:^12.1.0"
     inversify: "npm:^6.0.2"
-    kysely: "npm:^0.27.3"
+    kysely: "npm:^0.27.4"
     prettier: "npm:3.2.5"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
