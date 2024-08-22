@@ -39,7 +39,7 @@
     "@types/react-dom": "^18",
     "@types/uuid": "^9",
     "@vitejs/plugin-react": "^4.2.1",
-    "ajv": "^8.14.0",
+    "ajv": "^8.17.1",
     "bunyan": "^1.8.15",
     "cheerio": "^1.0.0",
     "domelementtype": "^2.3.0",
