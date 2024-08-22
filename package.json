@@ -69,7 +69,7 @@
     "vite": "^5.2.11",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0",
-    "wouter": "^3.1.3"
+    "wouter": "^3.3.3"
   },
   "resolutions": {
     "@typescript-eslint/typescript-estree@npm:7.9.0": "patch:@typescript-eslint/typescript-estree@npm%3A7.9.0#~/.yarn/patches/@typescript-eslint-typescript-estree-npm-7.9.0-bfd3da0bbb.patch"
