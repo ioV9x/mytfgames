@@ -5897,7 +5897,7 @@ __metadata:
     reflect-metadata: "npm:^0.2.2"
     remeda: "npm:^2.11.0"
     sass: "npm:^1.77.2"
-    smol-toml: "npm:^1.2.0"
+    smol-toml: "npm:^1.3.0"
     temporal-polyfill: "npm:^0.2.5"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.4.5"
@@ -7543,10 +7543,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"smol-toml@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "smol-toml@npm:1.2.0"
-  checksum: 10c0/14df61e5f9cadc56a914f2ed9eb3657859231a976bf616813b46d27ef96b40d9a62165a763e0aa473281060c8c0eacab52869b7e86d84ac5c07df16f5d721875
+"smol-toml@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "smol-toml@npm:1.3.0"
+  checksum: 10c0/442b4d033236ff6dd05bf91d57695fd9070a8221af080a5b2782cb2d9fad8bc31f698c61de5308a351907c1200202ba3ee51d52c5704f5349149e7c374f5fe90
   languageName: node
   linkType: hard
 
