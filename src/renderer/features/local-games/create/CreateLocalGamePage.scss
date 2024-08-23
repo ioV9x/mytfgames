@@ -1,21 +1,21 @@
-@use '@carbon/react/scss/spacing' as *;
-@use '@carbon/react/scss/type' as *;
+@use "@carbon/react/scss/spacing" as *;
+@use "@carbon/react/scss/type" as *;
 
 .local-game-create-page__banner {
-    margin-bottom: $spacing-10;
+  margin-bottom: $spacing-10;
 }
 
 .local-game-create-page__heading h1 {
-    @include type-style('productive-heading-05');
+  @include type-style("productive-heading-05");
 }
 
 .local-game-create-page__form_row {
-    margin-bottom: $spacing-07;
+  margin-bottom: $spacing-07;
 }
 .local-game-create-page__form_row_last {
-    margin-bottom: $spacing-09;
+  margin-bottom: $spacing-09;
 }
 
 .local-game-create-page__button {
-    width: 100%;
+  width: 100%;
 }

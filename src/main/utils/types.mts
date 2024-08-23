@@ -15,4 +15,3 @@ export function isErrnoException(
     typeof error.errno === "number"
   );
 }
-

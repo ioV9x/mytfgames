@@ -177,7 +177,7 @@ function RemoteGameTable({
                 {row == null || row.type !== EntityRetrievalState.Loaded ? (
                   <SkeletonText key={cell.key} />
                 ) : (
-                  cell.render?.(row) ?? row[cell.key]
+                  (cell.render?.(row) ?? row[cell.key])
                 )}
               </TableCell>
             ))}

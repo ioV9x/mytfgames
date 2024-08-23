@@ -26,18 +26,21 @@ export enum LocalGameOrderType {
   Name = "name",
 }
 
-export const LocalGameDataService = makeRemoteServiceDescriptor("local-games:data", {
-  retrieveOrder: makeRemoteProcedureDescriptor<
-    [],
-    Record<LocalGameOrderType, LocalGameId[]>
-  >(),
-  retrieveGamesById: makeRemoteProcedureDescriptor<
-    [ids: LocalGameId[]],
-    LocalGame[]
-  >(),
+export const LocalGameDataService = makeRemoteServiceDescriptor(
+  "local-games:data",
+  {
+    retrieveOrder: makeRemoteProcedureDescriptor<
+      [],
+      Record<LocalGameOrderType, LocalGameId[]>
+    >(),
+    retrieveGamesById: makeRemoteProcedureDescriptor<
+      [ids: LocalGameId[]],
+      LocalGame[]
+    >(),
 
-  addGame: makeRemoteProcedureDescriptor<
-    [game: LocalGameCreationInfo],
-    LocalGameId
-  >(),
-});
+    addGame: makeRemoteProcedureDescriptor<
+      [game: LocalGameCreationInfo],
+      LocalGameId
+    >(),
+  },
+);

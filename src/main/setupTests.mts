@@ -27,4 +27,3 @@ expect.addSnapshotSerializer({
     return val instanceof AbortSignal;
   },
 });
-
