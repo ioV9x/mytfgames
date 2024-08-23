@@ -1,1 +1,4 @@
 .yarn/
+
+# test html files
+**/test/**/*.html
