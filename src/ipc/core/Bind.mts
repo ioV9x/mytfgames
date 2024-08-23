@@ -46,10 +46,10 @@ export function remoteProcedure<
 >(proto: TShape, procId: KS) {
   type BoundProcedureImplementation = ToProcedureImplementation<TShape, KS>;
 
-  return function brpi<
-    T extends Record<K, BoundProcedureImplementation>,
-    K extends string,
-  >(target: T, key: K) {
+  return function brpi<K extends string>(
+    target: Record<K, BoundProcedureImplementation>,
+    key: K,
+  ) {
     if (Reflect.hasMetadata(ProcedureMetadata, target, key)) {
       throw new Error(
         `Duplicate remote procedure binding for ${key} (as ${proto[RemoteServiceId]}:${procId.toString()})`,

@@ -90,7 +90,7 @@ module.exports = ts.config(
         tsconfigRootDir: __dirname,
         // typescript-eslint specific options
         warnOnUnsupportedTypeScriptVersion: true,
-        EXPERIMENTAL_useProjectService: true,
+        projectService: true,
       },
     },
   },

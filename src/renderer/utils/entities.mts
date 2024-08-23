@@ -81,11 +81,11 @@ export function paginationSlice<T>(
   const offset = (page - 1) * pageSize;
   return items.slice(offset, offset + pageSize);
 }
-export function upsert<
-  K extends string | number,
-  T extends object,
-  TUpdates extends Partial<T>[],
->(record: Partial<Record<K, T>>, id: K, ...updates: TUpdates) {
+export function upsert<K extends string | number, T extends object>(
+  record: Partial<Record<K, T>>,
+  id: K,
+  ...updates: Partial<T>[]
+) {
   let current = record[id];
   if (current == null) {
     current = record[id] = Object.create(null) as T;
