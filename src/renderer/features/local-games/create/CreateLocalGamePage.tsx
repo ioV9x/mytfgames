@@ -28,7 +28,7 @@ export default function NewLocalGame() {
 
   const [name, setName] = useState<string>("");
   const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState<string | undefined>(undefined);
+  const [_1, setSubmitError] = useState<string | undefined>(undefined);
 
   const [selectedGameId, setSelectedRemoteGameId] =
     useState<RemoteGameId | null>(null);

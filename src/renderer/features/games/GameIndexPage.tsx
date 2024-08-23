@@ -160,13 +160,13 @@ const GameTableHeaders: {
 ];
 
 interface GameTableProps {
-  items: (LoadedGame | undefined)[];
+  readonly items: readonly (LoadedGame | undefined)[];
 
-  totalItems: number;
-  page: number;
-  pageSize: number;
-  pageSizes: number[];
-  onPageChange(data: { page: number; pageSize: number }): void;
+  readonly totalItems: number;
+  readonly page: number;
+  readonly pageSize: number;
+  readonly pageSizes: number[];
+  readonly onPageChange: (data: { page: number; pageSize: number }) => void;
 
   readonly sortedBy: [GameOrderType, SortDirection];
   readonly onSortHeaderClicked: (data: {

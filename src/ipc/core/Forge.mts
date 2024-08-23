@@ -53,7 +53,7 @@ function forgeRemoteService(
         return endpoint.dispatcher.dispatch(blank[RemoteServiceId], key, args);
       };
       blank[key] = Object.assign(dispatchImpl, {
-        [RemoteProcedureOptions]: blank[key]![RemoteProcedureOptions],
+        [RemoteProcedureOptions]: blank[key][RemoteProcedureOptions],
       });
     }
   }
