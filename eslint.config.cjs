@@ -4,6 +4,7 @@ const js = require("@eslint/js");
 const ts = require("typescript-eslint");
 const prettierConfig = require("eslint-config-prettier");
 const simpleImportSort = require("eslint-plugin-simple-import-sort");
+const reactHooks = require("eslint-plugin-react-hooks");
 const reactRefresh = require("eslint-plugin-react-refresh");
 
 module.exports = ts.config(
@@ -74,9 +75,11 @@ module.exports = ts.config(
   {
     files: ["**/*.tsx"],
     plugins: {
+      "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
     },
     rules: {
+      ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
