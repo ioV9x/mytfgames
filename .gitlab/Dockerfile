@@ -1,5 +1,9 @@
 # syntax=docker/dockerfile:1
-FROM node:20.16-alpine
+FROM node:20.16-slim
 
-RUN apk add --no-cache git python3
+RUN apt-get -qq update && apt-get -qq install \
+    git \
+    python3 \
+    zip \
+    && rm -rf /var/lib/apt/lists/*
 RUN corepack enable yarn

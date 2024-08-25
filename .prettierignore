@@ -1,3 +1,7 @@
+# preformatted document
+CODE_OF_CONDUCT.md
+
+# yarn generated files
 .yarn/
 
 # test html files

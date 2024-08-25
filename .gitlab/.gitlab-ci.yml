@@ -6,10 +6,7 @@ variables:
   ELECTRON_CACHE: "$CI_PROJECT_DIR/.cache/electron"
   YARN_CACHE_FOLDER: "$CI_PROJECT_DIR/.cache/yarn"
 
-# we can't use ggcr.io due to an invalid / wrong TLS certificate
-# we can't use ghcr.io due to not being on the whitelist
-# => some obscure image from dockerhub with both python and node installed 🤬
-image: combos/python_node:3.11_20
+image: $CI_REGISTRY_IMAGE/ci-linux:latest
 
 default:
   interruptible: true
