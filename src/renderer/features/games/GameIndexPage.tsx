@@ -13,7 +13,7 @@ import {
   TableToolbar,
   TableToolbarContent,
 } from "@carbon/react";
-import { useEffect } from "react";
+import { JSX, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
 
 import { GameOrderType, isGameOrderType } from "$ipc/main-renderer";

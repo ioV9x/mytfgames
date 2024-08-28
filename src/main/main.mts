@@ -40,6 +40,8 @@ container.bind(AppConfigurationTree).toConstantValue(configuration);
 // instantiate main app
 const mainAppTypeId = makeServiceIdentifier<MainApp>("main app");
 container.bind(mainAppTypeId).to(MainApp).inSingletonScope();
+// assign to global for debugging
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 const mainApp = (globalThis.main = container.get(mainAppTypeId));
 
 mainApp.run().catch((error: unknown) => {

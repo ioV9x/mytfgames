@@ -115,6 +115,9 @@ export function pluginFullReload(): Plugin {
     closeBundle() {
       for (const server of Object.values(process.viteDevServers ?? {})) {
         // Preload scripts force hot reload.
+        // TODO: Figure out how to adapt the new API.
+        //       Might wait until guidance from electron-forge is available.
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         server.hot.send({ type: "full-reload" });
       }
     },

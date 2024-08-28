@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@carbon/react";
-import { useContext, useEffect, useState } from "react";
+import { JSX, useContext, useEffect, useState } from "react";
 
 import { RemoteGameOrderType } from "$ipc/main-renderer";
 import { AppLink } from "$renderer/components";
