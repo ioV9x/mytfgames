@@ -2,14 +2,10 @@ import { Column, Grid } from "@carbon/react";
 import { useEffect } from "react";
 
 import { GameSId, makeGameDisplayName } from "$ipc/main-renderer";
+import { loadGamesById } from "$renderer/dux/games";
+import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
 import { useIpc } from "$renderer/ipc";
-import {
-  EntityRetrievalState,
-  useAppDispatch,
-  useAppSelector,
-} from "$renderer/utils";
-
-import { loadGamesById } from "./GamesSlice.mjs";
+import { EntityRetrievalState } from "$renderer/utils";
 
 export interface GameViewPageProps {
   gameId: GameSId;

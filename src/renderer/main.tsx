@@ -7,10 +7,10 @@ import { Provider as ReduxProvider } from "react-redux";
 import { forgeRemoteServiceCollection } from "$ipc/core";
 import services from "$ipc/main-renderer";
 
-import App from "./app/App.tsx";
-import { store } from "./app/store.mts";
+import { store } from "./dux/index.mjs";
 import { BrowserIpcEndpoint } from "./ipc/BrowserIpcEndpoint.mts";
 import { IpcContext } from "./ipc/IpcContext.mts";
+import App from "./ui/App.tsx";
 
 window.addEventListener("message", main, { passive: true });
 

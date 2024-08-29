@@ -1,7 +1,7 @@
 import { asyncThunkCreator, buildCreateSlice } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 
-import type { AppDispatch, RootState } from "../app/store.mts";
+import type { AppDispatch, RootState } from "./index.mjs";
 
 export interface ThunkApiConfig {
   state: RootState;

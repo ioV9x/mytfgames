@@ -5,15 +5,11 @@ import { ComboBoxProps } from "@carbon/react/lib/components/ComboBox/ComboBox";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 
-import { LocalGameId } from "$ipc/main-renderer";
-import {
-  EntityRetrievalState,
-  useAppDispatch,
-  useAppSelector,
-} from "$renderer/utils";
+import { LocalGameId, RemoteGameId } from "$ipc/main-renderer";
+import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
+import { IpcContext } from "$renderer/ipc";
+import { EntityRetrievalState } from "$renderer/utils";
 
-import { RemoteGameId } from "../../../../ipc/main-renderer/RemoteGameDataService.mts";
-import { IpcContext } from "../../../ipc/IpcContext.mjs";
 import {
   loadRemoteGamesById,
   selectRemoteGameById,

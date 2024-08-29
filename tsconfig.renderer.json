@@ -14,8 +14,12 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "paths": {
-      "$ipc/*": ["../ipc/*/index.mjs"],
-      "$renderer/*": ["./*/index.mjs"]
+      "$ipc/core": ["../ipc/core/index.mjs"],
+      "$ipc/main-renderer": ["../ipc/main-renderer/index.mjs"],
+      "$renderer/*": ["./*/index.mjs"],
+      "$renderer/components": ["./ui/components.mjs"],
+      "$renderer/dux": ["./dux/index.mjs"],
+      "$renderer/dux/*": ["./dux/*.mjs"]
     }
   },
   "include": [

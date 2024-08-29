@@ -11,16 +11,15 @@ import {
   GameOrderType,
   GameSId,
 } from "$ipc/main-renderer";
+import { AppAsyncThunkConfig, RootState } from "$renderer/dux";
+import { createSliceWithThunks } from "$renderer/dux/utils";
 import {
-  createSliceWithThunks,
   EntityRetrievalState,
   Page,
   paginationSlice,
   SortDirection,
   upsert,
 } from "$renderer/utils";
-
-import { AppAsyncThunkConfig, RootState } from "../../app/store.mts";
 
 const sliceName = "games";
 

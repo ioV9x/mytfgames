@@ -1,8 +1,9 @@
-import path, { join } from "node:path";
+import { join } from "node:path";
 
 import react from "@vitejs/plugin-react";
 import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 import { pluginExposeRenderer } from "./vite.base.config.mjs";
 
@@ -19,28 +20,16 @@ export default defineConfig((env) => {
     build: {
       outDir: join(root, `.vite`, name),
     },
-    plugins: [react({}), pluginExposeRenderer(name)],
+    plugins: [
+      react({}),
+      pluginExposeRenderer(name),
+      tsconfigPaths({
+        projects: ["../../tsconfig.renderer.json"],
+      }),
+    ],
     resolve: {
       preserveSymlinks: true,
-      // ts-config-paths doesn't seem to be working with react (or root?) 🤷‍♀️
-      alias: {
-        "$ipc/core": path.join(import.meta.dirname, "src/ipc/core/index.mjs"),
-        "$ipc/main-renderer": path.join(
-          import.meta.dirname,
-          "src/ipc/main-renderer/index.mjs",
-        ),
-        ...rendererAlias(["components", "ipc", "utils"]),
-      },
     },
     clearScreen: false,
   } as UserConfig;
 });
-
-function rendererAlias(names: string[]) {
-  return Object.fromEntries(
-    names.map((name) => [
-      `$renderer/${name}`,
-      path.join(import.meta.dirname, `src/renderer/${name}/index.mjs`),
-    ]),
-  );
-}

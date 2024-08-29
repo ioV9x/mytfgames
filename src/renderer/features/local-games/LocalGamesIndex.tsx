@@ -18,13 +18,12 @@ import { useLocation } from "wouter";
 
 import { LocalGameOrderType } from "$ipc/main-renderer";
 import { AppLink } from "$renderer/components";
+import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
 import {
   EntityRetrievalState,
   flipDirection,
   nearestPage,
   SortDirection,
-  useAppDispatch,
-  useAppSelector,
 } from "$renderer/utils";
 
 import { IpcContext } from "../../ipc/IpcContext.mjs";

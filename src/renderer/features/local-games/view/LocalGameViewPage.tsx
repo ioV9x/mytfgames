@@ -2,13 +2,10 @@ import { Grid } from "@carbon/react";
 import { useContext, useEffect } from "react";
 
 import { LocalGameId } from "$ipc/main-renderer";
-import {
-  EntityRetrievalState,
-  useAppDispatch,
-  useAppSelector,
-} from "$renderer/utils";
+import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
+import { IpcContext } from "$renderer/ipc";
+import { EntityRetrievalState } from "$renderer/utils";
 
-import { IpcContext } from "../../../ipc/IpcContext.mjs";
 import { loadLocalGamesById } from "../LocalGamesSlice.mts";
 
 export interface LocalGameViewProps {

@@ -22,6 +22,12 @@ import {
   makeGameDisplayName,
 } from "$ipc/main-renderer";
 import { AppLink } from "$renderer/components";
+import {
+  LoadedGame,
+  paginateGameIndex,
+  selectGamePage,
+} from "$renderer/dux/games";
+import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
 import { useIpc } from "$renderer/ipc";
 import {
   EntityRetrievalState,
@@ -29,15 +35,7 @@ import {
   nearestPage,
   paginationSettingsFromQuery,
   SortDirection,
-  useAppDispatch,
-  useAppSelector,
 } from "$renderer/utils";
-
-import {
-  LoadedGame,
-  paginateGameIndex,
-  selectGamePage,
-} from "./GamesSlice.mts";
 
 export default function GameIndexPage() {
   const ipcContext = useIpc();

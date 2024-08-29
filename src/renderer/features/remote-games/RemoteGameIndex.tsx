@@ -12,13 +12,12 @@ import { JSX, useContext, useEffect, useState } from "react";
 
 import { RemoteGameOrderType } from "$ipc/main-renderer";
 import { AppLink } from "$renderer/components";
+import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
 import {
   EntityRetrievalState,
   flipDirection,
   nearestPage,
   SortDirection,
-  useAppDispatch,
-  useAppSelector,
 } from "$renderer/utils";
 
 import { IpcContext } from "../../ipc/IpcContext.mjs";

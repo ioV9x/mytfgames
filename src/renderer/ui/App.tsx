@@ -16,13 +16,13 @@ import {
 import { useEffect } from "react";
 import { Link, Route, Router, Switch } from "wouter";
 
-import GameIndexPage from "../features/games/GameIndexPage.tsx";
-import GameViewPage from "../features/games/GameViewPage.tsx";
 import NewLocalGame from "../features/local-games/create/CreateLocalGamePage.tsx";
 import LocalGameIndex from "../features/local-games/LocalGamesIndex.tsx";
 import LocalGameViewPage from "../features/local-games/view/LocalGameViewPage.tsx";
 import RemoteGameIndex from "../features/remote-games/RemoteGameIndex.tsx";
 import NotFound from "./NotFound.tsx";
+import GameViewPage from "./routes/games/game/GamePage.tsx";
+import GameIndexPage from "./routes/games/GamesPage.tsx";
 
 interface HeaderContainerRenderProps {
   isSideNavExpanded: boolean;

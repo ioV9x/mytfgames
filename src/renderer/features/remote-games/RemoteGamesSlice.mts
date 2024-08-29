@@ -8,8 +8,9 @@ import {
   remoteGameIndexUpdated,
   RemoteGameOrderType,
 } from "$ipc/main-renderer";
+import { RootState } from "$renderer/dux";
+import { createSliceWithThunks } from "$renderer/dux/utils";
 import {
-  createSliceWithThunks,
   EntityRetrievalState,
   Page,
   paginationSlice,
@@ -17,7 +18,6 @@ import {
   upsert,
 } from "$renderer/utils";
 
-import { RootState } from "../../app/store.mts";
 
 export interface LoadedRemoteGame extends RawRemoteGame {
   type: EntityRetrievalState.Loaded;
