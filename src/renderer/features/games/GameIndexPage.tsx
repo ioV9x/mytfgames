@@ -16,7 +16,11 @@ import {
 import { JSX, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
 
-import { GameOrderType, isGameOrderType } from "$ipc/main-renderer";
+import {
+  GameOrderType,
+  isGameOrderType,
+  makeGameDisplayName,
+} from "$ipc/main-renderer";
 import { AppLink } from "$renderer/components";
 import { useIpc } from "$renderer/ipc";
 import {
@@ -137,12 +141,7 @@ const GameTableHeaders: {
     header: "Name",
     order: GameOrderType.Name,
     render(game) {
-      let name: JSX.Element | string | undefined = game.description?.name;
-      if (name == null) {
-        name = game.listing?.name ?? <i>N/A</i>;
-      } else if (game.listing?.name != null) {
-        name = `${name} (${game.listing.name})`;
-      }
+      const name = makeGameDisplayName(game) ?? <i>N/A</i>;
       return <AppLink href={`/games/${game.id}`}>{name}</AppLink>;
     },
   },

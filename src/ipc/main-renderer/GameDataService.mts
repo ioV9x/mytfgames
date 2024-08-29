@@ -22,6 +22,16 @@ export interface Game {
   };
 }
 
+export function makeGameDisplayName(game: Game): string | undefined {
+  if (game.description?.name == null) {
+    return game.listing?.name;
+  } else if (game.listing?.name == null) {
+    return game.description.name;
+  } else {
+    return `${game.description.name} (${game.listing.name})`;
+  }
+}
+
 export interface GameList {
   order: GameSId[];
   preloaded: Game[];
