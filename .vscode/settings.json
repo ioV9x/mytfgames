@@ -6,7 +6,6 @@
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsserver.experimental.useVsCodeWatcher": true,
-  "eslint.nodePath": ".yarn/sdks",
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
