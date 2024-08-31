@@ -1,0 +1,40 @@
+@use "@carbon/react/scss/spacing" as *;
+@use "@carbon/react/scss/theme" as *;
+@use "@carbon/react/scss/type" as *;
+
+.games-game-view__header {
+  background-color: $layer;
+  padding: $spacing-05;
+  padding-bottom: $spacing-10;
+}
+
+.games-game-view__header h1 {
+  @include type-style("heading-04");
+}
+
+.games-game-view__content {
+  padding: $spacing-05;
+}
+
+.games-game-view__content-description {
+  padding-bottom: $spacing-05;
+}
+.games-game-view__content-listing {
+  padding-bottom: $spacing-05;
+}
+
+.games-game-view__content-prop-list {
+  margin-bottom: $spacing-05;
+}
+.games-game-view__content-prop-list i {
+  font-style: italic
+}
+
+.games-game-view__content h2 {
+  @include type-style("heading-03");
+  padding-bottom: $spacing-05;
+}
+.games-game-view__content h3 {
+  @include type-style("heading-02");
+  padding-bottom: $spacing-04;
+}
