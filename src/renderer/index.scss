@@ -1,9 +1,25 @@
 @use "@carbon/react" with (
   $font-path: "@ibm/plex"
 );
-@use "@carbon/styles/scss/theme";
-@use "@carbon/styles/scss/themes";
+@use '@carbon/themes/scss/themes' as *;
+@use '@carbon/themes';
 
+:root[data-carbon-theme="white"] {
+  @include themes.theme($white);
+}
+
+:root[data-carbon-theme="g10"] {
+  @include themes.theme($g10);
+}
 :root[data-carbon-theme="g90"] {
-  @include theme.theme(themes.$g90);
+  @include themes.theme($g90);
+}
+:root[data-carbon-theme="g100"] {
+  @include themes.theme($g90);
+}
+
+.cds--content {
+  margin-top: 3rem;
+  padding: 0;
+  //  background: var(--cds-background);
 }
