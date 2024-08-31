@@ -14,15 +14,15 @@ import {
   SkipToContent,
 } from "@carbon/react";
 import { useEffect } from "react";
-import { Link, Route, Router, Switch } from "wouter";
+import { Link, Redirect, Route, Router, Switch } from "wouter";
 
 import NewLocalGame from "../features/local-games/create/CreateLocalGamePage.tsx";
 import LocalGameIndex from "../features/local-games/LocalGamesIndex.tsx";
 import LocalGameViewPage from "../features/local-games/view/LocalGameViewPage.tsx";
 import RemoteGameIndex from "../features/remote-games/RemoteGameIndex.tsx";
 import NotFound from "./NotFound.tsx";
-import GameViewPage from "./routes/games/game/GamePage.tsx";
-import GameIndexPage from "./routes/games/GamesPage.tsx";
+import GamePage from "./routes/games/game/GamePage.tsx";
+import GamesPage from "./routes/games/GamesPage.tsx";
 
 interface HeaderContainerRenderProps {
   isSideNavExpanded: boolean;
@@ -69,13 +69,13 @@ function AppWithShell({
       <Content id="main-content">
         <Switch>
           <Route path="/">
-            <GameIndexPage />
+            <Redirect to="/games" />
           </Route>
           <Route path="/games">
-            <GameIndexPage />
+            <GamesPage />
           </Route>
           <Route path="/games/:gameId">
-            {({ gameId }) => <GameViewPage gameId={gameId} />}
+            {({ gameId }) => <GamePage gameId={gameId} />}
           </Route>
           <Route path="/local-games">
             <LocalGameIndex />
