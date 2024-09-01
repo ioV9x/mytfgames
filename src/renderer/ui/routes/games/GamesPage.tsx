@@ -1,3 +1,5 @@
+import "./GamesPage.scss";
+
 import { Add as AddIcon } from "@carbon/icons-react";
 import {
   Button,
@@ -74,7 +76,7 @@ export default function GameIndexPage() {
   );
 
   return (
-    <TableContainer title="Game Index">
+    <TableContainer title="Game Index" className="games__content">
       <TableToolbar>
         <TableToolbarContent>
           <Button
