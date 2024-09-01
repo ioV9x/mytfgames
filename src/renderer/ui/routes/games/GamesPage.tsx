@@ -150,6 +150,13 @@ const GameTableHeaders: {
     },
   },
   {
+    key: "numLikes",
+    header: "Likes",
+    render(game) {
+      return game.listing?.numLikes.toString() ?? <i>N/A</i>;
+    },
+  },
+  {
     key: "lastUpdateTimestamp",
     header: "Last Update",
     order: GameOrderType.LastUpdate,
