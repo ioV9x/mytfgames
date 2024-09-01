@@ -45,7 +45,11 @@ export default function GameIndexPage() {
   const [_, setLocation] = useLocation();
   const query = new URLSearchParams(useSearch());
 
-  const { page, pageSize, sort } = paginationSettingsFromQuery(query);
+  const { page, pageSize, sort } = paginationSettingsFromQuery(query, {
+    page: 1,
+    pageSize: 20,
+    sort: SortDirection.Desc,
+  });
   const orderType = orderFromQuery(query);
 
   useEffect(() => {
