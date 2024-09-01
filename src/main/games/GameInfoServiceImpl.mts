@@ -118,6 +118,8 @@ export class GameInfoServiceImpl implements GameInfoService {
                   "description.name as name",
                   "description.last_change_datetime as lastChange",
                   "description.last_played_datetime as lastPlayed",
+                  "description.note as note",
+                  "description.user_rating as userRating",
                   "listing.name as officialName",
                   "listing.num_likes as numLikes",
                   "listing.tfgames_game_id as tfgamesId",
@@ -135,13 +137,15 @@ export class GameInfoServiceImpl implements GameInfoService {
       R.map(
         ({
           id,
-          lastUpdate,
-          name,
-          tfgamesId,
           lastChange,
           lastPlayed,
-          officialName,
+          lastUpdate,
+          name,
+          note,
           numLikes,
+          officialName,
+          tfgamesId,
+          userRating,
         }) =>
           ({
             id: uuid.stringify(id),
@@ -152,6 +156,8 @@ export class GameInfoServiceImpl implements GameInfoService {
                     name,
                     lastChangeTimestamp: lastChange!,
                     lastPlayedTimestamp: lastPlayed!,
+                    user_rating: userRating!,
+                    note: note!,
                   },
             listing:
               tfgamesId == null

@@ -13,6 +13,8 @@ export interface Game {
     name: string;
     lastChangeTimestamp: string;
     lastPlayedTimestamp: string;
+    user_rating: number;
+    note: string;
   };
   listing: null | {
     tfgamesId: number;
