@@ -48,6 +48,9 @@ module.exports = ts.config(
         "error",
         { ignoreVoid: true },
       ],
+      // not compatible with specifying void return types via generics
+      // see also https://github.com/typescript-eslint/typescript-eslint/issues/8113
+      "@typescript-eslint/no-invalid-void-type": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
