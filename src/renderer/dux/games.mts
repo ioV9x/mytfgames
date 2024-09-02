@@ -7,6 +7,7 @@ import {
 
 import {
   Game as RawGame,
+  gameCrawled,
   GameDataService,
   GameOrderType,
   GameSId,
@@ -172,6 +173,13 @@ const GamesSlice = createSliceWithThunks({
     // paginateGameIndex
     builder.addCase(paginateGameIndex.rejected, (state, { error }) => {
       state.lastError = error;
+    });
+
+    // gameCrawled
+    builder.addCase(gameCrawled, (state, { payload }) => {
+      upsert(state.entities, payload.id, payload, {
+        type: EntityRetrievalState.Loaded,
+      });
     });
   },
 });
