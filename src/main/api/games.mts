@@ -6,6 +6,8 @@ import { injectable } from "inversify";
 
 import { makeServiceIdentifier } from "$main/utils";
 
+import { adaptApiTimestamp } from "./TimeUtils.mjs";
+
 const idRegex = /&id=(\d+)/;
 
 export interface RemoteIndexGameInfo {
@@ -74,41 +76,6 @@ export interface RemoteGameBlacklisted {
   id: number;
 }
 
-// TODO: validate that the timezone used by the website is indeed UTC
-const dateFormatVariants = [
-  // 2021-01-10 => 2021-01-10T00:00:00Z
-  // this is the format usually used on the game search page
-  [/^2\d\d\d-\d\d-\d\d$/, (match: RegExpMatchArray) => match[0] + "T00:00:00Z"],
-  // 01/10/2021 => 2021-01-10T00:00:00Z
-  // this is the format used by the website if the user is not logged in
-  [
-    /^(\d?\d)\/(\d?\d)\/(2\d\d\d)$/,
-    (match: RegExpMatchArray) =>
-      `${match[3]!}-${match[1]!.padStart(2, "0")}-${match[2]!.padStart(2, "0")}T00:00:00Z`,
-  ],
-  // 10 Jan 2021, 00:00 => 2021-01-10T00:00:00Z
-  // this is the format used by the website if the user is logged in
-  [
-    /^\|(\d\d \w+ 2\d\d\d)\|, (\d\d:\d\d)$/,
-    (match: RegExpMatchArray) =>
-      `${new Date(match[1]! + "Z").toISOString().substring(0, 10)}T${match[2]!}:00Z`,
-  ],
-  [
-    /^(\d?\d)-(\d?\d)-(2\d\d\d)$/,
-    (match: RegExpMatchArray) =>
-      `${match[3]!}-${match[2]!.padStart(2, "0")}-${match[1]!.padStart(2, "0")}T00:00:00Z`,
-  ],
-] as const;
-function adaptDate(input: string): string {
-  for (const [regex, replacement] of dateFormatVariants) {
-    const match = regex.exec(input);
-    if (match) {
-      return replacement(match);
-    }
-  }
-  throw new Error(`Could not adapt date: ${input}`);
-}
-
 type IndexPropExtractor = (
   $td: Cheerio<Element>,
 ) => Partial<RemoteIndexGameInfo> | undefined;
@@ -124,7 +91,7 @@ const propExtractors = Object.assign(
       }) satisfies Partial<RemoteIndexGameInfo>,
     "Last Update": ($td: Cheerio<Element>) =>
       ({
-        lastUpdate: adaptDate($td.text().trim()),
+        lastUpdate: adaptApiTimestamp($td.text().trim()),
       }) satisfies Partial<RemoteIndexGameInfo>,
     Likes: ($td: Cheerio<Element>) =>
       ({
@@ -145,12 +112,12 @@ const gameInfoExtractors = Object.assign(
       }) satisfies Partial<RemoteGameDetails>,
     "Last Update": ($itemR: Cheerio<Element>) => {
       return {
-        lastUpdate: adaptDate($itemR.text().trim()),
+        lastUpdate: adaptApiTimestamp($itemR.text().trim()),
       } satisfies Partial<RemoteGameDetails>;
     },
     "Release Date": ($itemR: Cheerio<Element>) => {
       return {
-        releaseDate: adaptDate($itemR.text().trim()),
+        releaseDate: adaptApiTimestamp($itemR.text().trim()),
       } satisfies Partial<RemoteGameDetails>;
     },
     "Adult Themes": makeCategoryExtractor("adult", "adultThemes"),

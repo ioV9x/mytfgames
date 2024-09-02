@@ -103,7 +103,7 @@ exports[`Games API > should parse a viewgame response 1`] = `
   ],
   "name": "Secretary",
   "numLikes": 4350,
-  "releaseDate": "2017-10-01T18:57:00Z",
+  "releaseDate": "2017-10-01T22:57:00Z",
   "transformationThemes": [
     {
       "abbreviation": "BE",
