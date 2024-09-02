@@ -16,10 +16,6 @@ import {
 import { useEffect } from "react";
 import { Link, Redirect, Route, Router, Switch } from "wouter";
 
-import NewLocalGame from "../features/local-games/create/CreateLocalGamePage.tsx";
-import LocalGameIndex from "../features/local-games/LocalGamesIndex.tsx";
-import LocalGameViewPage from "../features/local-games/view/LocalGameViewPage.tsx";
-import RemoteGameIndex from "../features/remote-games/RemoteGameIndex.tsx";
 import NotFound from "./NotFound.tsx";
 import GamePage from "./routes/games/game/GamePage.tsx";
 import GamesPage from "./routes/games/GamesPage.tsx";
@@ -46,8 +42,8 @@ function AppWithShell({
           TFGames
         </HeaderName>
         <HeaderNavigation aria-label="My TFGames">
-          <HeaderMenuItem href="/remote-games" as={Link}>
-            Online DB
+          <HeaderMenuItem href="/games" as={Link}>
+            Game Index
           </HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
@@ -59,8 +55,8 @@ function AppWithShell({
         >
           <SideNavItems>
             <HeaderSideNavItems>
-              <SideNavLink href="/remote-games" as={Link}>
-                Online DB
+              <SideNavLink href="/games" as={Link}>
+                Game Index
               </SideNavLink>
             </HeaderSideNavItems>
           </SideNavItems>
@@ -76,18 +72,6 @@ function AppWithShell({
           </Route>
           <Route path="/games/:gameId">
             {({ gameId }) => <GamePage gameId={gameId} />}
-          </Route>
-          <Route path="/local-games">
-            <LocalGameIndex />
-          </Route>
-          <Route path="/local-games/new">
-            <NewLocalGame />
-          </Route>
-          <Route path="/local-games/:gameId">
-            {({ gameId }) => <LocalGameViewPage gameId={gameId} />}
-          </Route>
-          <Route path="/remote-games">
-            <RemoteGameIndex />
           </Route>
           <Route>
             <NotFound />

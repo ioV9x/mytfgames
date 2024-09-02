@@ -1,8 +1,8 @@
 @use "@carbon/react" with (
   $font-path: "@ibm/plex"
 );
-@use '@carbon/themes/scss/themes' as *;
-@use '@carbon/themes';
+@use "@carbon/themes/scss/themes" as *;
+@use "@carbon/themes";
 
 :root[data-carbon-theme="white"] {
   @include themes.theme($white);
