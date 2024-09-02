@@ -7,6 +7,7 @@ import * as uuid from "uuid";
 import { remoteProcedure } from "$ipc/core";
 import {
   Game,
+  gameCrawled,
   GameDataService as GameDataServiceContract,
   GameOrderType,
   GameSId,
@@ -21,6 +22,7 @@ import {
   TfgamesGameId,
   WellKnownTagCategory,
 } from "$main/database";
+import { RemoteReduxActionSender } from "$main/pal";
 
 import { GameInfoService } from "./GameInfoService.mjs";
 
@@ -29,6 +31,8 @@ export class GameInfoServiceImpl implements GameInfoService {
   constructor(
     @inject(DatabaseProvider) private readonly db: DatabaseProvider,
     @inject(GamesApi) private readonly gamesApi: GamesApi,
+    @inject(RemoteReduxActionSender)
+    private readonly remoteRedux: RemoteReduxActionSender,
   ) {}
 
   @remoteProcedure(GameDataServiceContract, "retrieveOrder")
@@ -156,7 +160,7 @@ export class GameInfoServiceImpl implements GameInfoService {
                     name,
                     lastChangeTimestamp: lastChange!,
                     lastPlayedTimestamp: lastPlayed!,
-                    user_rating: userRating!,
+                    userRating: userRating!,
                     note: note!,
                   },
             listing:
@@ -192,6 +196,66 @@ export class GameInfoServiceImpl implements GameInfoService {
       .select(["game.game_id"])
       .execute();
     return games.map((r) => uuid.stringify(r.game_id));
+  }
+
+  @remoteProcedure(GameDataServiceContract, "updateGameDescription")
+  async updateGameDescription(
+    id: GameSId,
+    description: {
+      name: string;
+      userRating: number;
+      note: string;
+    },
+  ): Promise<void> {
+    const game_id = uuid.parse(id) as GameId;
+    const last_change_datetime = Temporal.Now.instant().toString({
+      smallestUnit: "second",
+    });
+    const game = await this.db.transaction().execute(async (trx) => {
+      const updatedDescription = await trx
+        .insertInto("game_description")
+        .values({
+          game_id,
+          name: description.name,
+          user_rating: description.userRating,
+          note: description.note,
+          last_change_datetime,
+        })
+        .onConflict((oc) =>
+          oc.doUpdateSet({
+            last_change_datetime,
+            name: description.name,
+            user_rating: description.userRating,
+            note: description.note,
+          }),
+        )
+        .returning([
+          "name",
+          "last_change_datetime as lastChangeTimestamp",
+          "last_played_datetime as lastPlayedTimestamp",
+          "user_rating as userRating",
+          "note",
+        ])
+        .executeTakeFirstOrThrow();
+
+      const listing = await trx
+        .selectFrom("game_official_listing")
+        .where("game_id", "=", game_id)
+        .select([
+          "tfgames_game_id as tfgamesId",
+          "name",
+          "num_likes as numLikes",
+          "last_update_datetime as lastUpdateTimestamp",
+        ])
+        .executeTakeFirst();
+
+      return {
+        id,
+        description: updatedDescription,
+        listing: listing ?? null,
+      };
+    });
+    this.remoteRedux.dispatch(gameCrawled(game));
   }
 
   async refreshIndex(): Promise<[GameId, TfgamesGameId][]> {
@@ -258,7 +322,7 @@ export class GameInfoServiceImpl implements GameInfoService {
   async downloadGameInfo(tfgamesGameId: TfgamesGameId): Promise<void> {
     const gameDetails = await this.gamesApi.getGameDetails(tfgamesGameId);
 
-    await this.db.transaction().execute(async (trx) => {
+    const game = await this.db.transaction().execute(async (trx) => {
       const lastCrawled = Temporal.Now.instant().toString({
         smallestUnit: "second",
       });
@@ -362,7 +426,41 @@ export class GameInfoServiceImpl implements GameInfoService {
       ]);
 
       await this.mergeVersions(trx, game_id, gameDetails.versions);
+
+      return {
+        id: uuid.stringify(game_id),
+        description: await this.getDescrpition(trx, game_id),
+        listing: {
+          tfgamesId: tfgamesGameId,
+          name: gameDetails.name,
+          numLikes: gameDetails.numLikes ?? 0,
+          lastUpdateTimestamp: gameDetails.lastUpdate,
+        },
+      };
     });
+
+    if (game != null) {
+      this.remoteRedux.dispatch(gameCrawled(game));
+    }
+  }
+
+  private async getDescrpition(
+    qc: AppQueryCreator & QueryExecutorProvider,
+    game_id: GameId,
+  ): Promise<Game["description"] | null> {
+    return (
+      (await qc
+        .selectFrom("game_description")
+        .where("game_id", "=", game_id)
+        .select([
+          "name",
+          "last_change_datetime as lastChangeTimestamp",
+          "last_played_datetime as lastPlayedTimestamp",
+          "user_rating as userRating",
+          "note",
+        ])
+        .executeTakeFirst()) ?? null
+    );
   }
 
   private async mergeTags(

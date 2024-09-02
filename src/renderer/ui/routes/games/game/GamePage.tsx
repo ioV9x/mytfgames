@@ -1,14 +1,21 @@
 import "./GamePage.scss";
 
 import {
+  Button,
   Column,
+  Form,
   Grid,
+  Modal,
+  Stack,
   StructuredListBody,
   StructuredListCell,
   StructuredListRow,
   StructuredListWrapper,
+  TextArea,
+  TextInput,
 } from "@carbon/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 
 import { GameSId, makeGameDisplayName } from "$ipc/main-renderer";
 import { Game, LoadedGame, loadGamesById } from "$renderer/dux/games";
@@ -69,8 +76,15 @@ function GameViewLoaded({ game }: GameViewLoadedProps) {
     <>
       <section className={`${classNs}__header`}>
         <Grid>
-          <Column sm="100%">
+          <Column sm="100%" md={10} lg={14}>
             <h1>{makeGameDisplayName(game)}</h1>
+          </Column>
+          <Column sm="100%" md={2}>
+            <EditGameDescriptionButton
+              gameId={game.id}
+              listing={game.listing}
+              description={game.description}
+            />
           </Column>
         </Grid>
       </section>
@@ -121,10 +135,10 @@ function GameDescription({ description }: GameDescriptionProps) {
       key: "user_rating",
       label: "User Rating",
       value:
-        description.user_rating < 0 ? (
+        description.userRating < 0 ? (
           <i>Unrated</i>
         ) : (
-          description.user_rating.toString()
+          description.userRating.toString()
         ),
     },
   ];
@@ -205,5 +219,86 @@ function GameViewError({ gameId, error }: GameViewErrorProps) {
         Error while loading {gameId}: {errorToString(error)}
       </Column>
     </Grid>
+  );
+}
+
+interface EditGameDescriptionButtonProps {
+  gameId: GameSId;
+  description: LoadedGame["description"];
+  listing?: LoadedGame["listing"];
+}
+function EditGameDescriptionButton({
+  gameId,
+  description,
+  listing,
+}: EditGameDescriptionButtonProps) {
+  const ipc = useIpc();
+  const [open, setOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [name, setName] = useState(description?.name ?? listing?.name ?? "");
+  const [note, setNote] = useState(description?.note ?? "");
+
+  const submit = async () => {
+    setSubmitting(true);
+    try {
+      await ipc.games.updateGameDescription(gameId, {
+        name,
+        userRating: -1,
+        note,
+      });
+      setOpen(false);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      {typeof document === "undefined"
+        ? null
+        : ReactDOM.createPortal(
+            <Modal
+              open={open}
+              aria-disabled={submitting}
+              onRequestClose={() => setOpen(false)}
+              onRequestSubmit={() => void submit()}
+              modalHeading="Edit Game Description"
+              secondaryButtonText="Cancel"
+              primaryButtonText="Update"
+              primaryButtonDisabled={name === ""}
+            >
+              <Form>
+                <Stack gap={6}>
+                  <TextInput
+                    id="name"
+                    labelText="Name (required)"
+                    required={true}
+                    value={name}
+                    onChange={(ev) => setName(ev.target.value)}
+                    placeholder="Example: Secretary"
+                    helperText="This is the name of the game as you know it"
+                    invalid={name === ""}
+                    invalidText="This field is required"
+                    disabled={submitting}
+                  />
+                  <TextArea
+                    id="note"
+                    labelText="Note"
+                    required={false}
+                    value={note}
+                    onChange={(ev) => setNote(ev.target.value)}
+                    placeholder="Didn't like the game, because…"
+                    disabled={submitting}
+                  />
+                </Stack>
+              </Form>
+            </Modal>,
+            document.body,
+          )}
+      <Button kind="primary" onClick={() => setOpen(true)}>
+        Edit
+      </Button>
+    </>
   );
 }

@@ -13,7 +13,7 @@ export interface Game {
     name: string;
     lastChangeTimestamp: string;
     lastPlayedTimestamp: string;
-    user_rating: number;
+    userRating: number;
     note: string;
   };
   listing: null | {
@@ -28,6 +28,8 @@ export function makeGameDisplayName(game: Game): string | undefined {
   if (game.description?.name == null) {
     return game.listing?.name;
   } else if (game.listing?.name == null) {
+    return game.description.name;
+  } else if (game.description.name === game.listing.name) {
     return game.description.name;
   } else {
     return `${game.description.name} (${game.listing.name})`;
@@ -74,5 +76,16 @@ export const GameDataService = makeRemoteServiceDescriptor("games:data", {
   findGamesByNamePrefix: makeRemoteProcedureDescriptor<
     [prefix: string],
     GameSId[]
+  >(),
+  updateGameDescription: makeRemoteProcedureDescriptor<
+    [
+      id: GameSId,
+      description: {
+        name: string;
+        userRating: number;
+        note: string;
+      },
+    ],
+    void
   >(),
 });

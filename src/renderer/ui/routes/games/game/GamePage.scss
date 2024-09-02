@@ -5,7 +5,7 @@
 .games-game-view__header {
   background-color: $layer;
   padding: $spacing-05;
-  padding-bottom: $spacing-10;
+  min-height: $spacing-10;
 }
 
 .games-game-view__header h1 {

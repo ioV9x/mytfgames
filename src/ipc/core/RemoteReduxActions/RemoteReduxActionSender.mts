@@ -1,8 +1,12 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
-
 import { MessageTransport } from "../Messages/index.mjs";
 
-type UnknownPayloadAction = PayloadAction<unknown, string, unknown, unknown>;
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type UnknownPayloadAction = {
+  type: string;
+  payload: unknown;
+  meta?: unknown;
+  error?: unknown;
+};
 export interface RemoteReduxActionSender {
   dispatch(action: UnknownPayloadAction): void;
   dispatchTo(target: MessageTransport, action: UnknownPayloadAction): void;
