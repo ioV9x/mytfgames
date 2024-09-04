@@ -3,12 +3,12 @@ import { Temporal } from "temporal-polyfill";
 
 import { Job, JobSchedule } from "$main/pal";
 
-import { GameInfoService } from "./GameInfoService.mjs";
+import { GameDataService } from "./GameDataService.mjs";
 
 @injectable()
 export class GameListingSyncSchedule implements JobSchedule {
   constructor(
-    @inject(GameInfoService) private readonly gameInfo: GameInfoService,
+    @inject(GameDataService) private readonly gameInfo: GameDataService,
   ) {}
   readonly scheduleName = "game-listing-sync";
   readonly scheduleCheckInterval = Temporal.Duration.from({ minutes: 15 });

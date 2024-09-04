@@ -24,10 +24,10 @@ import {
 } from "$main/database";
 import { RemoteReduxActionSender } from "$main/pal";
 
-import { GameInfoService } from "./GameInfoService.mjs";
+import { GameDataService } from "./GameDataService.mjs";
 
 @injectable()
-export class GameInfoServiceImpl implements GameInfoService {
+export class DefaultGameDataService implements GameDataService {
   constructor(
     @inject(DatabaseProvider) private readonly db: DatabaseProvider,
     @inject(GamesApi) private readonly gamesApi: GamesApi,

@@ -1,1 +1,1 @@
-export * from "./GameInfoService.mjs";
+export * from "./GameDataService.mjs";
