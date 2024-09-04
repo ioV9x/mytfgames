@@ -6,11 +6,11 @@ import { Job, JobSchedule } from "$main/pal";
 import { GameInfoService } from "./GameInfoService.mjs";
 
 @injectable()
-export class RemoteGameSyncSchedule implements JobSchedule {
+export class GameListingSyncSchedule implements JobSchedule {
   constructor(
     @inject(GameInfoService) private readonly gameInfo: GameInfoService,
   ) {}
-  readonly scheduleName = "remote-game-sync";
+  readonly scheduleName = "game-listing-sync";
   readonly scheduleCheckInterval = Temporal.Duration.from({ minutes: 15 });
   readonly runOnStart = true;
   readonly maxJobConcurrency = 8;
@@ -18,7 +18,7 @@ export class RemoteGameSyncSchedule implements JobSchedule {
   async checkSchedule(): Promise<Job[]> {
     const needUpdate = await this.gameInfo.refreshIndex();
     return needUpdate.map(([, id]) => ({
-      id: `remote-game-info-sync-${id}`,
+      id: `game-listing-sync-${id}`,
       run: async () => {
         await this.gameInfo.downloadGameInfo(id);
       },
