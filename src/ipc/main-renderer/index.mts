@@ -11,5 +11,5 @@ export * from "./UserService.mjs";
 export default makeRemoteServiceCollectionDescriptor({
   user: UserService,
   games: GameDataService,
-  versions: GameVersionService,
+  gameVersions: GameVersionService,
 });

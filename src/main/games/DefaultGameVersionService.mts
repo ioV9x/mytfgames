@@ -28,6 +28,7 @@ export class DefaultGameVersionService {
             .selectFrom("game_version")
             .select(["version", "note"])
             .where("game_id", "=", id)
+            .orderBy("version", "desc")
             .execute(),
           trx
             .selectFrom("game_version_source")

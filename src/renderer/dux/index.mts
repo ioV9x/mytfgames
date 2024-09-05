@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
+import gameVersionsReducer from "./game-versions.mjs";
 import gamesReducer from "./games.mjs";
 
 export const store = configureStore({
   reducer: {
     games: gamesReducer,
+    gameVersions: gameVersionsReducer,
   },
   devTools: true,
 });
