@@ -1,0 +1,673 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>
+<head>
+<title>Disruption</title>
+<link rel=stylesheet href="includes/template/style.css" type=text/css>
+<link rel=stylesheet href="includes/template/jquery-ui-1.8.21.custom.css" type=text/css>
+<script type="text/javascript" src="includes/template/javascript/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="includes/template/javascript/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="includes/template/javascript/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="includes/template/javascript/ajax.js"></script>
+
+<script type="text/javascript">
+$(function() {
+	$('#searchtext').autocomplete({source:'includes/template/gamelookup.php', minLength:2});
+
+/*	$('#searchbutton').click(function() {
+		window.location = 'index.php?module=search&searchcontent=' +  $('input:text[name=searchtext]').val()
+	});*/
+});
+</script>
+
+</head>
+
+<body>
+<div class='header' style='width: 100%; height: 128px;'>
+	<div style='display: inline; float: left; width: 25%'><img src='images/site_logo.png'></div>
+
+</div>
+<div class='topmenu'>
+<div class='topmenulinks'><div class='nav'>
+<ul>
+	<li><a href='index.php'><span>Home</span></a></li>
+	<li><a href='/phpbb3/index.php'><span>Community</span></a>
+	<ul>
+		<li><a href='/phpbb3/index.php'>Forum</a></li>
+		<li><a href='/phpbb3/chat/index.php'>Chat</a></li>
+	</ul>
+	</li>
+	<li><a href='http://www.tfgames.site/phpbb3/ucp.php?mode=login&redirect=/'>Login</a></li></ul>
+</div>
+</div>
+<div class='topmenusearch'><form method='post'>Quick Search: <input type='hidden' id='module' name='module' value='search'><input type='text' id='searchcontent' name='searchcontent'><input type='submit' id='searchbutton' class='formtextbox' value='Search'></form></div></div>
+<br>
+<div class='bodyplaceholder'>
+	<div class='bodyplaceholder_left'>
+<script type="text/javascript">
+$(document).ready(function () {
+	$("#tabs").tabs();
+});
+
+function htmlEncode(value){
+  //create a in-memory div, set its inner text(which jQuery automatically encodes)
+  //then grab the encoded contents back out.  The div never exists on the page.
+  return $('<div/>').text(value).html();
+}
+
+function getFlagRsn( reviewid )
+{
+    do {
+        var flagreason=prompt("Why should this review be flagged? This will be shown to everyone.");
+    }
+    while(flagreason.length < 4);
+
+	$.ajax({
+		 type: "POST",
+		 url: "modules/viewgame/flagreview.php",
+		 data: { id: reviewid, reason: flagreason },
+		 success: function(msg){
+					if (msg.length > 10)
+						$("div#reviews").html(msg);
+				  }
+	});
+}
+
+
+</script>
+
+<div class='viewgamesidecontainer'>
+	<div class='viewgameanothercontainer'>
+		<div class='viewgameheader'>Game Information</div>
+			<div class='viewgameinfocontainer'>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Engine</div>
+					<div class='viewgameitemright'>HTML</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Rating</div>
+					<div class='viewgameitemright'>XXX</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Language</div>
+					<div class='viewgameitemright'>English</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Release Date</div>
+					<div class='viewgameitemright'>10/19/2023</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Last Update</div>
+					<div class='viewgameitemright'>09/02/2024</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Version</div>
+					<div class='viewgameitemright'>v0.25 dev release</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Development</div>
+					<div class='viewgameitemright'>Alpha</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Likes</div>
+					<div class='viewgameitemright'>287</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Contest</div>
+					<div class='viewgameitemright'>None</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Orig PC Gender</div>
+					<div class='viewgameitemright'>Male</div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Adult Themes</div>
+					<div class='viewgameitemright'><a href='?module=search&adult=33' title='Male/Female'>MF</a> <a href='?module=search&adult=35' title='Male/Male'>MM</a> <a href='?module=search&adult=36' title='Male Masturbation'>M-Self</a> <a href='?module=search&adult=41' title='Submission'>Sub</a> <a href='?module=search&adult=42' title='Domination'>Dom</a> <a href='?module=search&adult=38' title='Other'>Other</a> </div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>TF Themes</div>
+					<div class='viewgameitemright'><a href='?module=search&transformation=8' title='Involuntary'>Invol</a> <a href='?module=search&transformation=45' title='Feminization'>Fem</a> <a href='?module=search&transformation=47' title='Masculinization'>Masc</a> <a href='?module=search&transformation=10' title='Mental Changes'>MC</a> <a href='?module=search&transformation=39' title='Corruption'>Corr</a> <a href='?module=search&transformation=19' title='Shemale'>SheM</a> <a href='?module=search&transformation=44' title='Sissification'>Sissy</a> </div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Multimedia</div>
+					<div class='viewgameitemright'><a href='?module=search&multimedia=29' title='Photographs'>Photo</a> <a href='?module=search&multimedia=31' title='Video'>Video</a> </div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Discussion/Help</div>
+					<div class='viewgameitemright'><a href='https://tfgames.site/phpbb3/viewtopic.php?t=18443'>Discuss this Game</a></div>
+				</div>
+				<div class='viewgameinfo'>
+					<div class='viewgameitemleft'>Patreon</div>
+					<div class='viewgameitemright'><a href='https://www.patreon.com/gaabycoding'>Support this Game</a></div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class='viewgameanothercontainer'>
+			<div class='viewgameheader'>Play Online</div>
+			<div class='viewgameinfocontainer' id='play'>
+				<br>
+				<center><form action='https://gamcore.com/games/disruption' target='_blank'><input type='submit' value='Play Now'></form></center><br>
+				<center><b>Warning</b>: This is hosted outside of TFGS and we cannot confirm its safety or track how many times it has been played. Proceed at your own risk.</center><br>
+			</div>
+		</div>
+		<br>
+		<div class='viewgameanothercontainer'>
+			<div class='viewgameheader'>Downloads</div>
+			<div class='viewgameinfocontainer' id='downloads'>
+			<center>Version: v0.25 dev release</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://www.patreon.com/posts/v0-25-dev-is-out-111279497' target='_blank'>patreon.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=39617'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.24 disrupted</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://www.patreon.com/posts/v0-24-is-out-for-111152028' target='_blank'>patreon.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=39590'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.23 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/vE6YmZgr' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=39525'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.22 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/HScXQ2h3' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=39413'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.21 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/tu83EWCq' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=39280'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.20 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/c2yKuh2m' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=39116'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.19 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://gofile.io/d/Mp5lhQ' target='_blank'>gofile.io</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=38961'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.18 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://gofile.io/d/X1OnBZ' target='_blank'>gofile.io</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=38811'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.17 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/USgAJ4Mz' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=38682'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.16 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/mws67nYP' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=38528'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.15 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/wdcoBNc5' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=38359'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.14 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/53YSge2F' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=38180'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.13 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/AyH2HA2F' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=38019'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.12 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/a9SY1g4V' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=37889'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.11 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/8xfPiaPK' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=37642'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.10 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/VV3o6QnU' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=37486'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: v0.9 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://mega.nz/file/NvEmRRyA#KF_RE_aeXy6UZBAXFwpzS6SgATh_7HQ1mOgJjYV-514' target='_blank'>mega.nz</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=37348'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: 0.8 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/D6erAHFW' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=37181'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: 0.7 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://mega.nz/file/o6d23ZTQ#uKMEgIuqml_5F0ZuA9zJOL0CUlh4CMcWasXPHpeaJGk' target='_blank'>mega.nz</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=37037'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: 0.6.1 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/iu7JbfJh' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=36852'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: 0.6 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/W7cPtgE5' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=36837'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: 0.5 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/cja5U3UA' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=36695'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: 0.4 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/kz7btn5h' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=36691'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: 0.3 public</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/BmbcgsoA' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=36397'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			<center>Version: 0.2</center>
+			<div class='dlcontainer'>
+				<div class='dldeadlink'> 				</div>				<div class='dldeadlink'> </div>
+				<div class='dltext'><a href='https://pixeldrain.com/u/PKffqkvV' target='_blank'>pixeldrain.com</a></div>
+				<div class='dlnotes'> </div>
+				<div class='dlreportdeadlink'><a class='ajax' href='modules/viewgame/fixdead.php?id=36282'><img border=0 src='images/check.png' title='Report this link as valid'></a></div>
+			</div><br>
+			</div>
+		</div>
+	</div>
+<div class='viewgamecontentcontainer'>
+	<div class='viewgamecontenttitle'>
+		Disruption	</div>
+	<div class='viewgamecontentauthor'>
+by <a href='https://www.tfgames.site/phpbb3/memberlist.php?mode=viewprofile&u=142702'>gabysissy</a>	</div>
+<br>
+<div class='viewgamecontentcontainer_tabs'>
+	<div id='tabs'>
+		<ul>
+			<li><a href='#tabs-1'>Synopsis</a></li>
+			<li><a href='#tabs-4'>Walkthrough</a></li>
+			<li><a href='#tabs-5'>Changelog</a></li>
+		</ul>
+		<div id='tabs-1' style='overflow: hidden;'>
+<p style="text-align: center;">&nbsp;</p>
+<p><img src="https://i.imgur.com/X2D5qPv.png" alt="Disruption Logo" width="876" height="219" /></p>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;"><span style="font-family: 'arial black', 'avant garde'; font-size: large;"><strong>Public version: 0.23 (24/08/2024)</strong></span></p>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;"><span style="font-family: 'arial black', 'avant garde'; font-size: large;"><strong>Patreon version: 0.24&nbsp;<strong>(24/08/2024)</strong></strong></span></p>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;"><span style="font-family: 'arial black', 'avant garde'; font-size: large;"><strong>Dev release version: v0.25 (02/09/2024)</strong></span></p>
+<p style="text-align: center;"><strong><span style="font-size: large;"><span style="font-family: 'arial black', 'avant garde'; color: #800080;">&nbsp;</span></span></strong></p>
+<p style="text-align: center;"><strong><span style="font-size: large;"><span style="font-family: 'arial black', 'avant garde'; color: #800080;">Disruption</span> <span style="font-family: 'courier new', courier;">passes on the beautiful city of Budapest, indulge in this story of strong emotions as you cruise through many experiences, whether you want it to be dominant or submissive is entirely up to you</span></span></strong><br /><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;">Imagine this as your second life, as your explosion of what you really want to be, will you be bent or bend&nbsp;</span></strong><strong><span style="font-size: large;">others? Discover yourself in Disruption.</span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;">&nbsp;</span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;">Hey hope you enjoy this game, this is my first attempt at an HTML game but I put alot of effort in it, all feedback is greatly appreciated!</span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;"><span style="color: #0000ff;"><a title="Discord" href="https://discord.gg/4EaX7cZ5VV"><span style="color: #0000ff;">&nbsp;Discord</span></a></span><a title="Discord" href="https://discord.gg/4EaX7cZ5VV"><br /></a></span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;">Beware that the latest update comes two weeks before on&nbsp;<span style="color: #0000ff;"><span style="text-decoration: underline; color: #0000ff;">Patreon!</span>&nbsp;<span style="color: #000000;">for Sponsors, Ultimate Disruption and Completely Disrupted members, the dev release comes out as soon as it is made for Sponsors and Ultimate Disruption members, so if you wish to play the newest update ASAP, consider supporting me there!</span><br /></span></span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;"><span style="text-decoration: underline;">&nbsp;</span></span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;"><span style="text-decoration: underline;">Patreon tiers</span></span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;"><span style="text-decoration: underline;">Ultimate Disruption and Sponsor -&gt; Access to dev release</span></span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;"><span style="text-decoration: underline;">Completely Disrupted -&gt; Two weeks early access</span></span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;"><span style="text-decoration: underline;">Disrupted -&gt; One week early access ater Completely Disrupted</span></span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;"><span style="text-decoration: underline;">Supporter -&gt; Just to help the project going!</span></span></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'courier new', courier;"><strong><span style="font-size: large;"><span style="text-decoration: underline;">&nbsp;</span></span></strong></span></p>		</div>
+		<div id='tabs-4' style='overflow: hidden;'>
+<p>In game walkthrough!</p>		</div>
+		<div id='tabs-5' style='overflow: hidden;'>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.25&nbsp;</strong></span></span></p>
+<p>&nbsp;</p>
+<p>Hello my friends welcome to v0.25! This update focuses on fixing some bugs and trying to improve on the Tips button to make it easier to guide the game, I will be trying to improve it continuously! On the sub path there's a really big quest with the teacher that envolves 3-4 events, a new work sub event and a sponsor event with the sister! On the dom path we keep going hard on the dad dom events, new feminization and masculine event and also a new sister event since it has been a while, more details down below!</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; General improvements from last version;<br />&bull; Fixed a bug in the inventory regarding the mom's bbc dildo not showing!<br />&bull; Improved the Tips button by adding a warning when you have work events to play so you don't go wandering around;<br />&bull; Fixed a bug in the tips button regarding the masculine dad route, it wasn't showing the end of content message!<br />&bull; New work sub event with the manager, he gives you a cup of coffee and you go out of control.. you can try to resist or submit to him;<br />&bull; New sponsor event involving watersports with the sister, optional!<br />&bull; Teacher quest to buy a ballgag to prepare for a big event..<br />&bull; Teacher event if you take more than one day to buy the ballgag and go to detention.. CBT event!<br />&bull; Sub event when you buy the ballgag.. you encounter someone familiar and you can have fun with her..<br />&bull; Teacher sub pegging event after ballgag bought.. if you submit to her you get pegged however if you resist.. you get a hard CBT event;<br />&bull; Dad gay dom fem event aiding his feminization with a pair of panties from your sister.. you set up everything!<br />&bull; Dad gay dom masculine event where your dad tries to get back to be the dominant one but gets punished and turnt on him<br />&bull; Sis dom event testing her limits.. you go really hard on her and not surprisingly she enjoys submitting to you.. even though she is a brat.</p>
+<p>&nbsp;</p>
+<p>That is all for this update, hope you all enjoy, any questions hit me up!</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.24</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p>&nbsp;</p>
+<p>Hello my friends welcome to v0.24! This update brings out some big events in the sub path that some people were probably waiting for and in the dom path it continues what was picked up on v0.23! It also fixed some things on the game itself and added new features. I tried to do a balanced update for both paths so hopefully you all enjoy! Any questions hit me up, details down below</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; General improvements from last version;<br />&bull; Fixed the spacing in the Tips button;<br />&bull; Added a warning when you achieve the maximum stat in your stats for the current version!<br />&bull; Changed the image on the sidebar to when you're wearing chastity it shows you are chastity caged;<br />&bull; Sister sub event where you finally lose your anal virginity with her! She uses her strap-on on you increasing your feminization stat, you're finally able to go outside without any underwear!<br />&bull; New sub event showing your body transformations after your increasal of feminization! Your lost of anal virginity makes your body react to the pills you've been taking, change of images everywhere!<br />&bull; New BNWO sub event with you show Mr.Jackson your QOS girlfriend, you set up a meeting between and get rewarded with some actions from him!<br />&bull; New school reactions to your new sissy schoolgirl outfit! You decide if you want to be more humiliated or not.. Some people will take action in the future from watching you..<br />&bull; New dad gay dom event with the continual of the feminization path on him.. you start taking action on him and corrupting him!<br />&bull; New dom event with you meeting the headmaster of the school.. it seems you two have alot in common and come to a deal to help your teacher<br />&bull; New best friend dom event continuing her storyline, you decide if you want to have sex with her and cheat on your girlfriend.. or leave her and stop it.</p>
+<p>&nbsp;</p>
+<p>That is all for this update, hope you all enjoy, any questions hit me up!</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.23</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p>&nbsp;</p>
+<p>Hello my friends welcome to v0.23! This update is slightly tilted towards the dom path but brings some interesting stuff to the sub path that I've been wanting to add and develop.. as for the dom path it's majorly a continuation from ongoing storylines aswell as decisions you have to make to go to branches in the current storylines, more details down below!</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; General improvements from last version;<br />&bull; Fixed a bug in the transwoman car event in the cvity where you could get stuck;<br />&bull; Fixed the buttons on the wardrobe to not overlap the clothes;<br />&bull; New teacher task continuing her storyline and your feminization, she sends you to get a package from Happy Girls with a new uniform for you.. it's about time you have your own sissy uniform! You have to wear it aswell as your new name she picked for you..!<br />&bull; New teacher detention event with her reaction to your sissy schoolgirl uniform where she humiliates and uses you.. she also confirms your desire to accept the name she chose for you.. you now have a girly name!<br />&bull; New girlfriend sub event tied to the BNWO events.. she is the first woman of your life who gets the QOS tattoo.. and you pay for it all and get humiliated in the process;<br />&bull; New dad gay dom event where you have to choose between keeping him manly and make him submit to you or feminize him and make him your sissy in the future..!<br />&bull; New teacher dom event with continuation from last event.. someone took a picture of your public enjoyments together.. what consequences will come from that? <br />&bull; New mom dom event continuing her storyline.. she's getting bolder and bolder, she even stopped wearing panties so you visit her in the kitchen<br />&bull; New repetitive event in the basement with your mother where she's doing laundry without panties.. you can choose to punish her for teasing you or just leave her alone.</p>
+<p>&nbsp;</p>
+<p>That is all for this update, hope you all enjoy, any questions hit me up!</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.22</strong></span></span></p>
+<p>&nbsp;</p>
+<p><span>Hello my friends welcome to v0.22! This updates focuses entirely on the sub route so if you're dom fam stick around for v0.23 which will be tilted towards the dom path! This update mainly develops some of the recent storylines that were started like the BNWO and Master storyline aswell as continuing the mom storyline with the involvement of the dad.. also new events at work and with your girlfriend! More details down below! Any questions hit me up anywhere you want!</span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; Grammar corrections from last version;</span></span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; Overall improvements from v0.21;</span></span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; Fixed a bug in the sidebar where the red bra wouldn't show up!</span></span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; New BNWO sub event. You dive deep into the BNWO and ask Mr Jackson a few questions.. you get a quest from it aswell, time to work for the BNWO.</span></span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; New mom and dad event where they speak with you about what you've been doing with your father behind your mother's back.. will it bring you three closer? Or rip it apart?</span></span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; Two new master sub events with anal training and giving up more control of your life to him;</span></span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; New work sub event with Mistress Ruby.. she comes visit you and shows you her stable of sissies.. she has taken a liking into you.. you also find a familiar face there;</span></span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; New girlfriend femdom event where she cements her position in your relationship, domming you.</span></span></p>
+<p>&nbsp;</p>
+<p><span><span style="text-decoration: underline;">&bull; Updated the trans woman masturbating in the car when you go to the city.. you can now interact more with her if you wish to help her;</span></span></p>
+<p>&nbsp;</p>
+<p><span>That is all for this update, hope you all enjoy, any questions hit me up!</span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.21</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p>&nbsp;</p>
+<p>Hello my friends welcome to v0.21! This update once again focuses on both paths but slightly towards the sub path! When it comes to the dom path it is a little focused on the gay dad dom events but also a new teacher event. In the sub path we got continuation of the new storylines and also development on the best friend storyline if you have resisted the bully! Exact details down below. I hope you enjoy this update and if you have any feedback or questions feel free to hit me up anywhere, cheers!</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; Overall improvements from v0.20;<br />&bull; Changed the dad color to a soft green to make it easier to read;<br />&bull; Changed the color of the dom events to make it easier to see;<br />&bull; Fixed a bug from the last BNWO Event that would make it keep retriggering after it was done;<br />&bull; Fixed a bug in the Tips that would show a mom event even thought it was already played;<br />&bull; Two dad dom gay event continuing the new storyline!<br />&bull; New teacher dom event.. you take her out to the public.. but in public there could be consequences in the future!<br />&bull; New sub event with your bestfriend and your bully, if you chose to defy him in the past now he will show the consequences of your actions.. will you keep resisting or let your loved ones suffer?<br />&bull; New BNWO sub event continuing the storyline.. time for some research;<br />&bull; Two new master email sub event with the option of leaving the storyline if you wish.. stat is now maximized to 10 and you get a repeatable event to increase it!<br />&bull; New random BNWO sub event with a black lady in the mall in the Evening if you chose to stay in the BNWO storyline!</p>
+<p>&nbsp;</p>
+<p>That is all for this update, hope you all enjoy, any questions hit me up!</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.20</strong></span></span></p>
+<p>&nbsp;</p>
+<p>Hello my friends welcome to v0.20! This updates focuses on both paths but a little bit more on the dom path since it has been neglected for a while and last update was fully sub focused, that obviously doesn't mean sub path was neglected now as there is spicy and new content there! We have two new storylines on the sub path, one that is optional as it's not everyones cup of tea, also continuation of the mom sub events with her taking you out.. As for the dom path there's continuation of her dom corruption, continuation of the teacher corruption and a new dom gay storyline with your dad that is optional, you'll be able to start dominating your hunk dad! Two new events in that storyline, more specific details down below, any questions feel free to hit me up! Enjoy!</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; Overall improvements from v0.19;<br />&bull; New sub event storyline in your computer where you receive anonymous email from someone that entitles himself as "Master" and tries to corrupt you.. if you keep watching his content you'll fall into his hands.. you don't want that do you?<br />&bull; New stat in the Stats related to the new storyline with the Master, if you re-watch the email the anonymous Master sent you.. you'll be corrupted and eventually be owned by him..<br />&bull; New BBC event storyline in your school hallway picking off from the last teacher event with Mr.Jackson.. the BNWO is something that is starting to appear around your school, do you want to find out more about it.. or not? Up to you.<br />&bull; New mom sub event where she takes you out if you are oral level 3 (MAX).. she wants to reward you for your hard work in the park;<br />&bull; New mom dom event that happens automatically when you go to sleep.. your mother is getting more and more dependant on you..<br />&bull; New optional dom gay storyline with your dad.. it seems your dad is having some weird attitudes when it comes to you.. is he attracted by you? <br />&bull; New teacher detention dom event when you go to school.. she tries to go back to the old ways but you're not having it.<br />&bull; New random dom gay event in the living room with your dad if you chose to keep the storyline active, it will trigger alone when you enter the living room</p>
+<p>&nbsp;</p>
+<p>That is all for this update, hope you all enjoy, any questions hit me up!</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.19</strong></span></span></p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; Improvements from v0.18;<br />&bull; Fixed a bug where if you broke with up your girlfriend you'd get no end of content message.. ever.<br />&bull; New best friend sub event with the ability to branch out from that path.. you either submit.. or be broken by the bully;<br />&bull; New teacher detention event with a new male character that works in an organization named BNWO.. if you are oral level 3 your teacher wants to show you your place in society.. you either submit and learn or you'll be punished, you choose!<br />&bull; New sponsor event requested by Lucyshaw with the teacher, it involves watersports and ashtray femdom, totally optional if you are not into that!<br />&bull; New work option in the sub path.. your manager shows you a new place in the story where you can make money.. you'll just have to whore yourself, you can opt out of it!<br />&bull; New dad sub event.. you decide to tease him this time around to change things up..<br />&bull; Continuation of the random park event with the naked guy in the bench.. you are more submissive so you can go further..</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.18</strong></span></span></p>
+<p>&nbsp;</p>
+<div><span>&bull; Grammar corrections from last version;</span></div>
+<p>&nbsp;</p>
+<div><span>&bull; Improvements from v0.17;</span></div>
+<p>&nbsp;</p>
+<div><span>&bull; The new weekend sub events if you have oral and anal level two! Time to hit the beach again!</span></div>
+<p>&nbsp;</p>
+<div><span>&bull; New girlfriend sub event with femdom content where she shows you your place.. she's the superior one;</span></div>
+<p>&nbsp;</p>
+<div><span>&bull; Continuation of the oral training with addition of LEVEL 3, new dildo and events!</span></div>
+<p>&nbsp;</p>
+<div><span>&bull; Sister sub event with her watching your progress while she dominates you.. it's coming closer and closer to her using you completely..</span></div>
+<p>&nbsp;</p>
+<div><span>&bull; Big beach saturday event in the dom path;</span></div>
+<p>&nbsp;</p>
+<div><span>&bull; Continuation of the mom dom storyline with a confrontation;</span></div>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.17</strong></span></span></p>
+<p>&nbsp;</p>
+<p><br />New content:</p>
+<p>&nbsp;</p>
+<p>&bull; Heavy update on character costumization in the sub path, 25 new pieces of clothing added on the stores in the Mall for you to buy and make combos! There's more professional clothing, girly clothing and slutty clothing which you'll be able to buy depending on where you are at the story! More clothing will be added and reactions to clothing will also be added!<br />&bull; Continuation of the mom oral training with the level up event to LVL 2 and instructions for new training! You're going one step further in your throat level!<br />&bull; New dad sub event at 100 EXP of oral skill.. he catches you training your slutty throat and that enrages him.. he has to unleash somewhere..<br />&bull; New work sub event with a trans character, she took a liking to you..</p>
+<p>&nbsp;</p>
+<p>Bugfixing:</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; Improvements from v0.16;<br />&bull; Fixed the fatigue not resetting when sleeping;<br />&bull; Added another back button on top of every wardrobe section to make it easier to go back;<br />&bull; Made it impossible to wear a dress and jeans/skirts/shorts etc at the same time as it doesn't make sense..</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.16</strong></span></span></p>
+<p>&nbsp;</p>
+<p>Hello my friends! Welcome to v0.16! This update brings a new mechanic on the sub route where you actually have to train yourself and grind to get new events! Anal and oral training! Plenty of new scenes in those trainings (19) and other main story scenes like therapist and receptionist duo, a new quest from your sister, events with the mother and also a new teacher sub scene requested by a Sponsor with specific kinks, public humiliation and ashtray humiliation and other scenes aswell! For the dom content we have new mom and teacher dom events! All details in specific down below, any questions hit me up hope you enjoy v0.16!</p>
+<p>&nbsp;</p>
+<p>New content:</p>
+<p>&nbsp;</p>
+<p>&bull; Teacher sub event requested by sponsor Lucy shaw.. you go on a walk with her in the park and she has no ashtray.. guess you'll do;<br />&bull; Sister quest to buy anal lube to start anal training;<br />&bull; Three new stats! Anal Skill, Oral Skill and Fatigue! More information about them when you play through the game!<br />&bull; Start of daily anal training from your sister, three leveling up scenes and 15 scenes in the middle, you start at Level 1 and can get up to Level 3!<br />&bull; Start of oral daily training from your mother, similar to oral training, 4 scenes!<br />&bull; Therapist and receptionist duo sub event when you reach the maximum of oral skill, train to get it!<br />&bull; New mom dom event continuing her corruption..<br />&bull; New teacher and classmate duo dom event teasing her in public;</p>
+<p>&nbsp;</p>
+<p>Bugfixing:</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; General improvements from last version;<br />&bull; Changed the link color for the repetitive peek the dad in the parents bedroom;<br />&bull; Changed the sister middle finger gif to a png in the sister buying panties scene, it was causing some people to get stuck;</p>
+<p>&nbsp;</p>
+<p><br />That is all for this update, hope you all enjoy, any questions hit me up!</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.15</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p>&nbsp;</p>
+<p>Bugfixing:</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections from last version;<br />&bull; General improvements from last version;<br />&bull; Changed the way the first weekend events trigger, they trigger sooner now when you achieve fem stat 1 or masc stat 1;<br />&bull; Changed the fem stat 5 weekend event to trigger in the morning instead of the evening;<br />&bull; Decreased the chances of the random event in upstairs hall, they were a little bit annoying, now they will be less recurrent!<br />&bull; Changed the color of each bedroom to fit its character.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><br />New content:<br />&bull; New dad sub event if you are in chastity!<br />&bull; New mom sub event with continuation of her storyline.. she will be helping you more from now on as a parent should in a gentle way!<br />&bull; New sis sub event involving you being her cuckold.. finally you get some action aswell!<br />&bull; Added the male prostitute to the brothel, 8 new events there both sub and dom! Be careful if you are in chastity and go there though!<br />&bull; Continuation of the classmate storyline with the addition of your teacher to the equation.. now you two will work together<br />&bull; Continution of the mom dom storyline, she seems more and more on edge about you..<br />&bull; New dom random encounter when you go to the city center</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.14</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p>&nbsp;</p>
+<p><span>Bugfixing:</span></p>
+<p>&nbsp;</p>
+<p>&bull; Overall optimization from v0.13 update;</p>
+<p>&nbsp;</p>
+<p>&bull; Grammar corrections;</p>
+<p>&nbsp;</p>
+<p>&bull; Fixed a bug in the tutorial where you'd go to a non-existant passage in the park;</p>
+<p>&nbsp;</p>
+<p>&bull; Fixed a bug in the gloryhole dom path where you'd get stuck if you finished the current storyline content;</p>
+<p>&nbsp;</p>
+<p><span>New content:</span></p>
+<p>&nbsp;</p>
+<p>&bull; Two new work sub events with two characters that have appeared in the past..!</p>
+<p>&nbsp;</p>
+<p>&bull; New optional romantic homosexual sub path if you chose to break up with your girlfriend in past scenes.. It is with a guy who gave you his number before.. If you proceed you'll change your orientation to Bisexual!</p>
+<p>&nbsp;</p>
+<p>&bull; New teacher sub event. She finally uses the strap on your greedy mouth!</p>
+<p>&nbsp;</p>
+<p>&bull; New location in the Redlight District, the Brothel! Ten new unique scenes there depending if you are in chastity or not, more to be added, you can get dom events there aswell, female whore only for now.</p>
+<p>&nbsp;</p>
+<p>&bull; New school sub event with your bestfriend and your bully.. she gets dragged again, and you spy.</p>
+<p>&nbsp;</p>
+<p>&bull; You can now peek on your dad at night when he sleeps if your feminization is above two.. perhaps you are suprised with your dads tool!</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.13</strong></span></span></p>
+<p>&nbsp;</p>
+<p>Hello there! Welcome to v0.13. This update focuses mainly on the continuation of some sub and dom path storylines, specifics down below. Also reduced massively the size of the game as it was getting pretty big converting the gifs to mp4, fixed some weird bugs and added a new button, also special mention to the first Sponsor, you can see who it is on your sidebar! Thank you all for the continued support, hope you enjoy this update, any questions feel free to hit me up anywhere, feedback greatly appreciated, details of the update down below!</p>
+<p>&nbsp;</p>
+<p>Bugfixing:</p>
+<p>&nbsp;</p>
+<p>&bull; Overall optimization from v0.12 update;<br />&bull; Grammar corrections;<br />&bull; Fixed a bug where you would get a weekend sub event even if you were in the dom path;<br />&bull; Changed the daily tasks color in the tips menu and in the link event to fit the color of the teacher, so players don't mix up main path events with daily tasks;<br />&bull; Changed all the gifs to mp4s to reduce the size of the game;</p>
+<p>&nbsp;</p>
+<p><br />New content:<br />&bull; New changelog button on the sidebar that allows you to see your current version changelog and the one ahead if you are playing a public version so you know what is coming in the next version!<br />&bull; Two new weekend sub events with a scene written by nutluck!<br />&bull; New sub sis event, continuing her storyline;<br />&bull; New girlfriend bbc cuckold event, continuing her storyline, she's getting kinkier and kinkier, degrading you to a mere cuckold;<br />&bull; New watersports/cuckold event scene with your sister requested by the new sponsor Lucyshaw! It is optional and you will be warned, you can skip it if you want!<br />&bull; New dom mom event continuing her storyline, you are starting to get control of her with the help of your sister;<br />&bull; New dom event with the classmate, you use what you have to blackmail her and get her under your control;<br />&bull; New dom event with the best friend, trans content, you are confused of what you really want, perhaps a secret is in order..</p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>&nbsp;</strong></span></span></p>
+<p><span style="text-decoration: underline;"><span style="font-size: medium;"><strong>v0.12</strong></span></span></p>
+<p>Hey there my friends! Welcome to v0.12! This updates is a mix of both sub and dom events, last update the dom path was pretty neglected so I started new dom paths and also continued the ones existing, when it comes to sub content there's the continuation of the chastity events with reactions from the teacher and continuation of the mom sub event, more details down below, hope you all enjoy this update as I've tried to expand in both paths and I'm trying to create an interesting story when it comes to the dom path, enjoy! Any questions feel free to contact me anywhere and I'll most likely be available to help!</p>
+<p>Bugfixing:</p>
+<p>&bull; Overall optimization from v0.11 update;<br />&bull; Grammar corrections;<br />&bull; Changed the position of the back button in the wardrobe to help mobile players play the game better without it breaking the game;</p>
+<p><br />New content:<br />&bull; New teacher sub event with her reaction to you being in chastity in her class!<br />&bull; New mom sub event with the continuation of her caring femdom storyline, she will continue to slowly turn you into her servant maid..<br />&bull; New sub best friend event, you ask her how she gets release when in chastity.. you need help!<br />&bull; Continuation of the sub school bathroom gloryhole bbc event, now you can suck him off..!<br />&bull; New dom best friend event with the continuation of the storyline.. you cant get her out of your mind since last time..<br />&bull; Addition of the gloryhole in the dom path.. there's a naughty student who gets off sucking her school mates off.. you who is though..?<br />&bull; Start of the dom storyline with your classmate Sasha.. she's such a mean bitch however she has a dirty secret..<br />&bull; Continuation of the mom dom event storyline with a little help from your submissive sister..</p>
+<p><span style="text-decoration: underline; font-size: medium;"><strong>v0.11</strong></span></p>
+<p>Hello there! Welcome to v0.11! Hope everyone's doing well! This update focuses entirely on new sub content, so if you are a dom fan I apologize! v0.12 will have new dom content I promise! After a while finally you can increase your feminization stat to 7! There will be a major plot point that will happen in this update that is important for every sissy! If you know you know..! Also I felt like the mom storyline was a little left behind so her story was advanced to fit the rest of the characters, she will start working with the therapist and the teacher to feminize you gently! There's alot more that was added, plenty new scenes, dad reactions, sister reactions, sister events and a special watersports scene, optional of course, that was requested by an Ultimate Disruption member! Hope you all enjoy this update, any questions hit me up!</p>
+<p>Bugfixing:</p>
+<p>&bull; Overall optimization from v0.10 update;<br />&bull; Grammar corrections;<br />&bull; Optimized the tips button to separate things better;<br />&bull; Fixed a bug where if you increased the feminization stat beyond what you could it'd break the game;</p>
+<p><br />New content:<br />&bull; Two new mom sub events, advancing her story, she will now start feminizing you at home with the help of the teacher and the therapist.. she's gentle though, she loves you!<br />&bull; One teacher and mom sub event where you see your mothers POV;<br />&bull; Two new repetitive tasks in the weekend evening suggested by your mom.. you will clean your house in a sissy maid outfit..!<br />&bull; Sister and dad reactions to you cleaning your house in the sissy maid outfit.. they will humiliate you pretty bad..<br />&bull; New sister sub event with the introduction of chastity, increasing your feminization stat to max 7!<br />&bull; Adjusted the checking yourself button on the bathroom if you have the chastity on;<br />&bull; Removed the option to masturbate if you watch porn and have the chastity on.. you will have to find some other way in the future to cum..<br />&bull; Small event in the bathroom the first time you head there with the chastity on;<br />&bull; New therapist event involving the receptionist and the therapist.. they want to further change you..<br />&bull; New work event if you go to work with chastity on;<br />&bull; Watersports scene with the dad in the shower at night requested by Ultimate Disruption member slydmc! Entirely optional and you can skip it, feel free to suggest your own scenes if you are an Ultimate Disruption member like he did!</p>
+<p>Hello there my friends! Welcome to v0.10! It is crazy to think I've already updated this game ten times, it has been a very enjoyable journey and I am very happy developing this game, I admit it could be better but I'm enjoying the process of learning, anyways, this updates focuses mostly on the continuation of the sub main stories, reworking some old scenes and starting plot points on the dom path, more details down below, also.. new porn! Hope you enjoy this update and if you have any questions feel free to hit me up, as always, feedback is greatly appreciated and I'll be always around here! Thank you everyone for the support, some of you have been leaving positive messages on discord and patreon and in private and I appreciate them very much, thank you!</p>
+<p><br />Bugfixing:</p>
+<p>&bull; Overall optimization from v0.9 update.<br />&bull; Fixed a bug where you'd get the GF Cuck MSG event even when you chose to end her cuck storyline.<br />&bull; Fixed a bug where while in the dom path you'd get alot of the teacher sub detention events.<br />&bull; Fixed a bug where you'd get a sub sunday event in the dom path<br />&bull; Fixed a bug in the Sunday Dom Event, you go out with your girlfriend, not your mother!<br />&bull; Changed the colors of the tasks on the tips button to distinguish better</p>
+<p>New content:<br />&bull;Reworked all the therapy sessions, now they are cut off into topics and gradually increase the intensity of content, making for a more gradual and enjoyable hypno sessions;<br />&bull; New therapy session with a new breakthrough pill and something else.. also.. your therapist gets physical with you..!<br />&bull; Continuation of the girlfriend cuck storyline with a new cuck event, you go out for lunch again!<br />&bull; New teacher event in detention where she orders you to buy a new sex toy!<br />&bull; Two new teacher tasks, one related to the toy you bought!<br />&bull; New dom teacher detention event with the start of her storyline in the dom path<br />&bull; New best friend dom event with the start of her storyline, trans content warning, you can decide there to end the sexual content between the Player and Trans bestfriend if you wish!<br />&bull; New porn added, Femdom porn and Maledom porn, for sub and dom path respectively!<br />&bull; Added a new clock button on the sidebar to skip time anywhere you are.<br />&bull; Added an option to skip the weekend if you don't wanna play through the weekend events over and over again<br />&bull; Added a waiting warning on the tips to show when you can trigger a new main story event, usually you have to wait three days to get a new event, you can check it on your tips button!</p>
+<p>That is all, hope you enjoy this update, see you in v0.11!</p>
+<p>v0.9</p>
+<p>This update focuses entirely on rehauling the way the scenes will trigger from now on in the main story and addition of ALOT of scenes to the Sex Shop, 13 in total over the course of 26 days of working! Hopefully you all enjoy the writing made in these scenes, feedback is greatly appreciated and more details will be added down here in the changelog, this was really fun to make and hope you enjoy these scenes!</p>
+<p><br />Bugfixing:</p>
+<p>&bull; Fixed the wrong name on a scene where it was supposed the be the bestfriend and not the girlfriend, sorry!<br />&bull; Fixed a bug where the male underwear would stay on after the sister removed your underwear completely;<br />&bull; Changed the way you go to work;<br />&bull; Completely changed the way the scenes will trigger to make the game flow from now on;<br />&bull; Fixed a bug where the uniform preset wasnt working;</p>
+<p>&nbsp;</p>
+<p>New content:<br />&bull; New character added, a costumer named Mistress Ruby, there will be two scenes with her, hope you enjoy dominatrixes..!<br />&bull; Six new general scenes in the sex shop that you get as you work gradually in the beginning, you need to work 14 days to get every general event, they have dom and sub options and then as you grow your feminization or masculinization stat, you get more sub or dom focused events.<br />&bull; Six sub/fem focused scenes in the sex shop with characters like the best friend, Mistress Ruby, manager etc..<br />&bull; One masculinity focused event in the sex shop, unfortunately that is where the game is in terms of max masc, so it will be the only one with that focus for now!<br />&bull; 13 SCENES added overall in the sex shop over the course of 26 days!</p>
+<p><br />That is all for this update, hope you all enjoy, any questions hit me up!</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span><span>&nbsp;</span></span></p>
+<p>v0.8</p>
+<p><br />Bugfixing:</p>
+<p>&bull; Fixed a small bug in the mom cooking scene in the kitchen;<br />&bull; Changed the name of all locations to be more aesthetic when moving through them in the map;<br />&bull; Fixed a small bug in the first teacher detention event;<br />&bull; Fixed the best friend events in the school hallway;<br />&bull; Fixed the whole of the inventory, it was overall scuffed and badly done;<br />&bull; Finally fixed the major bug that was making it impossible to go to feminization stat 5, now things should go smooth!<br />&bull; Changed the way teacher events trigger to further prevent bugging, hopefully!<br />&bull; Changed the third sunday event to be a mom sub event instead, the event may repeat if you have seen it before!</p>
+<p><br />New content:<br />&bull; New sister event with complete removal of male underwear from your wardrobe and feminization stat increasal to 6!<br />&bull; Two new locations were added! The Redlight District and the Sex Shop!<br />&bull; Made a new small event that should trigger almost in the beginning of the game that suggests you should find a job!<br />&bull; You can now apply to work in the Sex Shop and work there every evening!<br />&bull; Introduction of your co-worker in the Sex Shop... I wonder who it is;<br />&bull; With the addition of the new locations, there's a very hot random new event in the Redlight District at night.. be careful!<br />&bull; New scene when you enter the Sex Shop for the first time with introduction of a new male character, the Sex Shop Manager!<br />&bull; New spicy event with the teacher, she will make you buy your first own toy in the Sex Shop!<br />&bull; New daily task after you buy your toy like you teacher ordered you to do;<br />&bull; New scene with the dad in the new daily task, hope you dad lovers like this one;<br />&bull; Two new random triggering events in the upstairs hall with the sister;<br />&bull; New random triggering event with the dad in the upstairs hall;<br />&bull; New random triggering event with the teacher in the school hallway with the best friend;<br />&bull; New Sunday event!<br />&bull; Updated the random sub event in the bus, you can go further with the random guy now;<br />&bull; Updated the night event in the park, you can now go further with the Interracial couple;</p>
+<p><br />That is all for this update, I really enjoyed developing this one for some reason, I spent alot of long hours just developing it trying to make the game feel overall better, hope you enjoy it, if you need anything from me I'll be active everywhere really paying attention, kisses!</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span>&nbsp;</span></p>
+<p><span>v0.7&nbsp;</span></p>
+<p>Bugfixing:</p>
+<p>&bull; Fixed the phone in the introduction, reworked;<br />&bull; Now after the intro your start on Tuesday;<br />&bull; Now instead of going to your Room after classes, you'll always go back to the School Hallway, makes more sense;<br />&bull; You can now play the event where you go to lunch with your girlfriend in the sub path through talking with her in the School Campus;<br />&bull; Fixed being unable to go back to where you were when you had an event on in the school campus with your girlfriend;<br />&bull; Now you cannot steal panties and bras if the person you are stealing from is in the room you are in, no more stealing under their noses;<br />&bull; Corrected alot of the grammar in the game with the help of the great AWolfe! Thank you!<br />&bull; Added the back button on phone events;<br />&bull; Reworked Whatsapp completely in terms of design, it was ugly and not functional;<br />&bull; Fixed a bug where if you didn't watch the POV of the GF in her NTR event, you'd not be able to trigger feminization stat 5.</p>
+<p><br />New content:<br />&bull; First event with your best friend, dominant and submissive options, up to you!<br />&bull; Added new options in the submissive detention where your classmate Sasha makes her first appearance, now you have choices..<br />&bull; Continued the submissive main story with a special message from your beloved girl friend..<br />&bull; Added Cuckold and SPH related dreams after the events;<br />&bull; Fifth phone message cuck related on Monday;<br />&bull; Continuation of the dominant storyline with a new sister event that makes you increase your Masculinity stat to 1;<br />&bull; Added Dominant Dreams after you get Masculinity 1;<br />&bull; Two new weekend Dominant events;</p>
+<p><span>&nbsp;</span></p>
+<p><span>v0.6</span></p>
+<p><span>Bugfixing:</span><br /><span>&bull; Overall improvement of game quality and mechanics.</span><br /><br /><span>New content:<br />&bull; Feminization stat max is now 5 with an event in the bathroom!<br />&bull; You can put makeup on and off with feminization stat 5!<br />&bull; New sub event with the mom in the bathroom, it seems she's very supportive of your changes!<br />&bull; New Sunday Weekend Event involving the classmate and your mom.. your mom really wants to aid you in your feminization!<br />&bull; New shop added in the Mall! Happy Girls clothing, it will be the main feminine clothing shop, as of now it only has one dress that you will need for the main story.. more to be added;<br />&bull; New detention event with the teacher, she wants to feminize you even further to help your progress..<br />&bull; New game mechanic with the teacher and detention.. now you have daily tasks that you must do for your teacher..!<br />&bull; New sub event with your Dad.. it seems he's not very supportive of you using makeup.. be careful if you have makeup on and walk outside of your room..!<br />&bull; New sub event with your girlfriend.. you will confront her about what you saw last time you went out for lunch.. it's up to you if you want to change your relationship and stay with her.. or end it;</span><br /><br /><span>That is all for v0.6! The game mechanic that was added is very basic right now but as updates keep going I'll change it and develop it even more.. hope you enjoy this update and if you have any questions, hit me up in discord or patreon, thank you all for the support!</span></p>		</div>
+	</div>
+</div>
+<br>
+<div class='viewgamecontentcontainer_tabs' id='reviews'>
+	<br>
+<div id='40608' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by WehTeheFf</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: v0.24 patreon on 08/30/2024</div><br style='clear: both;'><hr>
+<p>Overall feels pretty similar to games like Perverted Education. Which is not a bad thing.</p>
+<p>Unfortunately there's a few things that prevent me from enjoying the sub-content much:</p>
+<ol>
+<li>There's too many niche fetishes that I'd have to enjoy in order to enjoy the game. Incest doesn't do much for me (especially when almost all the NPCs are just abusive assholes), I can't stand the whole BNWO bullshit (black dicks are fine, but the whole "you're a sissy so you must be into BBC" thing is just racist and stupid). Yes, there are content toggles, but the non-toggleable content is often still very kink-specific.</li>
+<li>Many of the events/scenes don't make much sense when repeated. For me this resulted in a lot of tedious skipping. Maybe it would help to make variations of them that are a bit shorter and written in a way that makes them more fitting as repeating events/scenes.</li>
+<li>The pacing of the different aspects of feminization/sissification feels a bit off sometimes. E.g. chastity is introduced rather late instead of using it as leverage to force MC into accepting other stuff. Not necessarily a bad thing, but to me the overall transformation felt a bit odd due to this.</li>
+</ol>
+<p>Most of this is just personal taste, so maybe it's just not the right game for me to enjoy :)</p>
+	</div>
+</div>
+<br>
+<div id='40188' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by Salisria</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: v0.19 dev release on 06/10/2024</div><br style='clear: both;'><hr>
+<p>v0.16 review</p>
+<p>The game has decent visuals, but there's one thing I don't understand. For the life of me, I can't understand why the author has bothered to have separate characteristics for the masculine/feminine and dominant/submissive axes. There's no apparent way in the game to be simultaneously dominant and feminine or submissive and masculine.</p>
+<p>A major flaw I perceive in the current version of the game is the BBC content that's part of the submissive path. It strikes me as needlessly stereotypical and not something I'd expect as part of a game allegedly set in Budapest. If a game is set in a particular real place, I expect the demographics of the game to match the setting.</p>
+<p>The ashtray content was a definite minus for me. Not only do I find smoking utterly unsexy, but having my character be an ashtray just doesn't fit what I want out of a game. The dom path remains somewhat interesting but not enough for me to follow it on every release cycle.</p>
+<p>It's nice that the author has added ways to block certain kinks. However, it's fairly clear that the author is both focusing upon the sub path and has a different version of subbiness than I do. I'll probably give it another go once more dom content is added, but for now, I only updated my review because the author addressed my desire that kinks be selectable.</p>
+	</div>
+</div>
+<br>
+<div id='40332' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by maytch</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: v0.18 patreon on 06/04/2024</div><br style='clear: both;'><hr>
+<p>Played v0.16. I vaguely recall playing this a long time ago. This now feels like a near complete game, and calling it 'only' v0.16 (or 18 for the patreon version) is an undersell. Great game.</p>
+	</div>
+</div>
+<br>
+<div id='40266' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by najika4097</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: v0.17 patreon on 05/18/2024</div><br style='clear: both;'><hr>
+<p>This game lacks any sort of nuance or feeling. MC is a pushover that somehow manages to get several women to own him.</p>
+	</div>
+</div>
+<br>
+<div id='40168' class='reviewcontainer'>
+	<div class='reviewcontent'>
+<div style='float: left;'>Review by user210</div><br style='clear: both;'>
+<div style='float: left;'>Version reviewed: v0.15 patreon on 04/21/2024</div><br style='clear: both;'><hr>
+<p>Very good game, but lacks content. It does not mean that there is no content, but there are various paths so content gets saturated. For example if patreon users vote on sub content you will not get dom one for some time. And honestly, both paths are fine but Sub path is more sexy. Still a game which can be enjoyed in either of paths. Complete version of this one will be something very close to legendary HTML games like Company and Secretary.</p>
+<p>Edit: I was wrong here. It may not be very close, but somewhere far. This game focuses too much on events, while more events are always good things, here it creates an issue, lack of customization. There is only 1 dress to purchase and use. There are no feminine shoes you can buy, hairstyles are locked in, basically while transformation is there, you have very limited control over the character itself once you pick up either of the two core path. Customaization is very essential aspect, I thought that other feminine products will be there when you become a complete sissy, but I was wrong.</p>
+<p>And also, Dev please work on Optional Homosexual Boyfriend. I don't like Remy at all. It is one thing wanting a cuck but she sees MC as a wallet, I can get no respect but she has no love too. She is so pathetic that even black men refused to breed her when she begged for it claiming that they want to be away from this psycho. Make that guy not only a side person but someone of a master for sissy MC.&nbsp;&nbsp;</p>
+	</div>
+</div>
+<br>
+</div>
+</div>
+	</div>
+	<div class='bodyplaceholder_right'>
+<div class='menuheader'>Find</div>
+<div class='menu'>
+	<ul>
+		<li><a href='?module=search'>Advanced Search</a></li>
+	</ul>
+</div>
+<div class='menuheader'>Browse</div>
+<div class='menu'>
+	<ul>
+		<li><a href='?module=browse&by=engine'>Browse by Game Engine</a></li>
+		<li><a href='?module=browse&by=author'>Browse by Author</a></li>
+		<li><a href='?module=browse&by=adult'>Browse by Adult Theme</a></li>
+		<li><a href='?module=browse&by=transformation'>Browse by Transformation Theme</a></li>
+		<li><a href='?module=browse&by=multimedia'>Browse by Multimedia Theme</a></li>
+		<li><a href='?module=browse&by=rating'>Browse by Content Rating</a></li>
+		<li><a href='?module=browse&by=contest'>Browse by Contest</a></li>
+	</ul>
+</div>
+<div class='menuheader'>Database Statistics</div>
+Total Games: <i>2,210</i><br>Total Contests: <i>32</i><br>Total Reviews: <i>21,110</i><br>Total Engines: <i>33</i><br>Total Adult Themes: <i>10</i><br>Total Transformation Themes: <i>26</i><br>Total Multimedia Themes: <i>10</i><br>Total Online Plays: <i>4,928,097</i><br><br><center>Support TFGS!<br><a href='https://www.patreon.com/lashek' target='_new'><img src='/images/becomeAPatronBanner.png' style='max-width: 90%; max-height: 70px;'></a></center><br>
+<br>
+<center><a href='https://discord.gg/yPrWNP4'><img src='https://discordapp.com/api/guilds/438302782311890964/widget.png?style=banner2' style='max-width: 90%;'></a></center><br>
+</div>
+	</div>
+</div>
+<div class='footer'><center><font color='red'>TFGS IGDB</font> is copyright &copy; 2012-2024 TFGames.Site. All games and content are copyright &copy; their respective authors.</center></div>
+</body>
+</html>
