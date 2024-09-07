@@ -7,22 +7,22 @@
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.ipc.json"
+      "path": "./src/ipc/tsconfig.json"
     },
     {
-      "path": "./tsconfig.main.json"
+      "path": "./src/main/tsconfig.json"
     },
     {
-      "path": "./tsconfig.preload.json"
+      "path": "./src/preload/tsconfig.json"
     },
     {
-      "path": "./tsconfig.renderer.json"
+      "path": "./src/renderer/tsconfig.json"
+    },
+    {
+      "path": "./src/worker/tsconfig.json"
     },
     {
       "path": "./tsconfig.tools.json"
-    },
-    {
-      "path": "./tsconfig.worker.json"
     }
   ]
 }

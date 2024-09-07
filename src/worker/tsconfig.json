@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../out/dist/worker",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false
+  },
+  "include": ["./**/*.mts"]
+}

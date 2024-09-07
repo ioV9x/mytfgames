@@ -1,4 +1,4 @@
-import "index.scss";
+import "./GameVersionList.scss";
 
 import { ListItem, UnorderedList } from "@carbon/react";
 

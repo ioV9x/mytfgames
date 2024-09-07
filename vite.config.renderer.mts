@@ -24,7 +24,7 @@ export default defineConfig((env) => {
       react({}),
       pluginExposeRenderer(name),
       tsconfigPaths({
-        projects: ["../../tsconfig.renderer.json"],
+        projects: ["./tsconfig.json"],
       }),
     ],
     resolve: {
