@@ -39,5 +39,7 @@
 }
 .games-game-view__content h3 {
   @include type-style("heading-02");
-  padding-bottom: $spacing-04;
+}
+.games-game-view__content h4 {
+  @include type-style("heading-01");
 }

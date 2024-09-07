@@ -1,0 +1,14 @@
+@use "@carbon/react/scss/spacing" as *;
+
+.games-game-version-list h3 {
+  display: inline;
+}
+.games-game-version-list h4 {
+  padding-bottom: $spacing-02;
+}
+.games-game-version-list p {
+  padding-bottom: $spacing-04;
+}
+.games-game-version-list i {
+  font-style: italic;
+}
