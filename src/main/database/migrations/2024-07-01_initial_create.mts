@@ -40,6 +40,7 @@ export async function up(db: Kysely<any>): Promise<void> {
         ["tag_category"],
         "tag_category",
         ["tag_category"],
+        (cb) => cb.onUpdate("cascade").onDelete("cascade"),
       )
       .addUniqueConstraint("u__tag_category__tag_name", [
         "tag_category",
@@ -59,7 +60,7 @@ export async function up(db: Kysely<any>): Promise<void> {
         ["tag_category", "tag"],
         "tag",
         ["tag_category", "tag"],
-        (cb) => cb.onDelete("cascade"),
+        (cb) => cb.onUpdate("cascade").onDelete("cascade"),
       )
       .modifyEnd(sql`STRICT`)
       .execute();
@@ -347,6 +348,7 @@ export async function up(db: Kysely<any>): Promise<void> {
         ["tfgames_profile_id"],
         "tfgames_author",
         ["tfgames_profile_id"],
+        (cb) => cb.onDelete("cascade"),
       )
       .modifyEnd(sql`STRICT`)
       .execute();
