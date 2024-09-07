@@ -343,7 +343,7 @@ export class GamesApiImpl {
         const $el = $(el);
         const linkNodes = $el.find("div.dltext > a").get();
         const noteNodes = $el.find("div.dlnotes > img").get();
-        if (linkNodes.length !== 1 || noteNodes.length !== 1) {
+        if (linkNodes.length !== 1) {
           continue;
         }
         const linkTextNode = linkNodes[0]!.firstChild;
@@ -352,8 +352,9 @@ export class GamesApiImpl {
         }
         const name = linkTextNode.data.trim();
         const link = linkNodes[0]!.attribs["href"];
-        const note = noteNodes[0]!.attribs["title"];
-        if (!link || !note) {
+        const note =
+          noteNodes.length !== 1 ? "" : noteNodes[0]!.attribs["title"];
+        if (!link || note == null) {
           continue;
         }
 

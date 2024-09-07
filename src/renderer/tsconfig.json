@@ -1,10 +1,8 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": "./src/renderer",
-    "rootDir": "src/renderer",
-    "outDir": "out/dist/renderer",
+    "outDir": "../../out/dist/renderer",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "exactOptionalPropertyTypes": false,
@@ -22,15 +20,10 @@
       "$renderer/dux/*": ["./dux/*.mjs"]
     }
   },
-  "include": [
-    "src/renderer/**/*.mts",
-    "src/renderer/**/*.tsx",
-    "src/renderer/**/*.svg",
-    "src/renderer/**/*.json"
-  ],
+  "include": ["./**/*.mts", "./**/*.tsx", "./**/*.svg", "./**/*.json"],
   "references": [
     {
-      "path": "./tsconfig.ipc.json"
+      "path": "../ipc/tsconfig.json"
     }
   ]
 }

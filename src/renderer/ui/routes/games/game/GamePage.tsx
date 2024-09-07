@@ -17,7 +17,11 @@ import {
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
-import { GameSId, makeGameDisplayName } from "$ipc/main-renderer";
+import { GameSId, GameVersion, makeGameDisplayName } from "$ipc/main-renderer";
+import {
+  loadGameVersionsForGame,
+  selectGameVersionsForGame,
+} from "$renderer/dux/game-versions";
 import { Game, LoadedGame, loadGamesById } from "$renderer/dux/games";
 import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
 import { useIpc } from "$renderer/ipc";
@@ -27,15 +31,20 @@ import {
   formatGameTimestamp,
 } from "$renderer/utils";
 
+import { GameVersionList } from "./-components/GameVersionList";
+
 const classNs = "games-game-view";
 
 export interface GamePageProps {
   gameId: GameSId;
 }
 export default function GamePage({ gameId }: GamePageProps) {
-  const { games } = useIpc();
+  const { games, gameVersions } = useIpc();
   const dispatch = useAppDispatch();
   const game = useAppSelector((state) => state.games.entities[gameId]);
+  const versions = useAppSelector((state) =>
+    selectGameVersionsForGame(state, { gameId }),
+  );
 
   useEffect(() => {
     if (game?.type !== EntityRetrievalState.Loaded) {
@@ -46,32 +55,43 @@ export default function GamePage({ gameId }: GamePageProps) {
         }),
       );
     }
-  }, [dispatch, game, gameId, games]);
+    if (versions == null) {
+      void dispatch(
+        loadGameVersionsForGame({
+          gameId,
+          gameVersions: gameVersions,
+        }),
+      );
+    }
+  }, [dispatch, game, gameId, games, gameVersions, versions]);
 
   return (
     <GameView
       game={game ?? { type: EntityRetrievalState.Loading, id: gameId }}
+      versions={versions ?? []}
     />
   );
 }
 
 export interface GameViewProps {
   game: Game;
+  versions: GameVersion[];
 }
-export function GameView({ game }: GameViewProps) {
+export function GameView({ game, versions }: GameViewProps) {
   if (game.type === EntityRetrievalState.Loading) {
     return <GameViewLoading gameId={game.id} />;
   } else if (game.type === EntityRetrievalState.Error) {
     return <GameViewError gameId={game.id} error={game.error} />;
   }
 
-  return <GameViewLoaded game={game} />;
+  return <GameViewLoaded game={game} versions={versions} />;
 }
 
 interface GameViewLoadedProps {
   game: LoadedGame;
+  versions: GameVersion[];
 }
-function GameViewLoaded({ game }: GameViewLoadedProps) {
+function GameViewLoaded({ game, versions }: GameViewLoadedProps) {
   return (
     <>
       <section className={`${classNs}__header`}>
@@ -105,6 +125,10 @@ function GameViewLoaded({ game }: GameViewLoadedProps) {
               <GameDescription description={game.description} />
             </Column>
           )}
+          <Column sm={4} md={8} className="games-game-view__content-versions">
+            <h2>Game Versions</h2>
+            <GameVersionList versions={versions} />
+          </Column>
         </Grid>
       </section>
     </>

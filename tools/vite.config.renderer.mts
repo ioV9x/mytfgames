@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import * as path from "node:path";
 
 import react from "@vitejs/plugin-react";
 import type { ConfigEnv, UserConfig } from "vite";
@@ -13,18 +13,19 @@ export default defineConfig((env) => {
   const { root, mode, forgeConfigSelf } = forgeEnv;
   const name = forgeConfigSelf?.name ?? "";
 
+  const defaultedRoot = root ?? path.join(import.meta.dirname, "..");
   return {
-    root: join(root, "src", name),
+    root: path.join(defaultedRoot, "src", name),
     mode,
     base: "./",
     build: {
-      outDir: join(root, `.vite`, name),
+      outDir: path.join(defaultedRoot, `.vite`, name),
     },
     plugins: [
       react({}),
       pluginExposeRenderer(name),
       tsconfigPaths({
-        projects: ["../../tsconfig.renderer.json"],
+        projects: ["./tsconfig.json"],
       }),
     ],
     resolve: {

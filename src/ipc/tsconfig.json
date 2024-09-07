@@ -1,17 +1,15 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": "./src",
-    "rootDir": "src/ipc",
-    "outDir": "out/dist/ipc",
+    "outDir": "../../out/dist/ipc",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "paths": {
-      "$ipc/core": ["ipc/core/index.mjs"]
+      "$ipc/core": ["./core/index.mjs"]
     }
   },
-  "include": ["src/ipc"]
+  "include": ["./**/*.mts"]
 }

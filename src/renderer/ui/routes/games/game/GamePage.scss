@@ -22,6 +22,9 @@
 .games-game-view__content-listing {
   padding-bottom: $spacing-05;
 }
+.games-game-view__content-versions {
+  padding-bottom: $spacing-05;
+}
 
 .games-game-view__content-prop-list {
   margin-bottom: $spacing-05;
@@ -36,5 +39,7 @@
 }
 .games-game-view__content h3 {
   @include type-style("heading-02");
-  padding-bottom: $spacing-04;
+}
+.games-game-view__content h4 {
+  @include type-style("heading-01");
 }

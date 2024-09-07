@@ -38,4 +38,14 @@ describe("Games API", () => {
     const result = subject.parseGameDetails(3227, response);
     expect(result).toMatchSnapshot();
   });
+  it("should parse a viewgame response 3", () => {
+    const response = fs.readFileSync(
+      path.join(import.meta.dirname, "test/viewgame-3120-disruption.html"),
+      "utf8",
+    );
+
+    const subject = new GamesApiImpl();
+    const result = subject.parseGameDetails(3120, response);
+    expect(result).toMatchSnapshot();
+  });
 });

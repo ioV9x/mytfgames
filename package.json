@@ -7,7 +7,7 @@
   "private": true,
   "main": ".vite/build/main.mjs",
   "scripts": {
-    "compile:check": "tsc -b tsconfig.main.json tsconfig.renderer.json tsconfig.worker.json tsconfig.preload.json tsconfig.tools.json",
+    "compile:check": "tsc -b tsconfig.json",
     "forge:make": "electron-forge make",
     "forge:package": "electron-forge package",
     "format": "prettier --write .",

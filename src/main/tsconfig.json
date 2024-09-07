@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../out/dist/main",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "paths": {
+      "$ipc/*": ["../ipc/*/index.mts"],
+      "$main/*": ["./*/index.mts"]
+    }
+  },
+  "include": ["./**/*.mts", "../../forge.env.d.mts"],
+  "references": [
+    {
+      "path": "../ipc/tsconfig.json"
+    }
+  ]
+}

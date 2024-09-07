@@ -314,3 +314,352 @@ exports[`Games API > should parse a viewgame response 2 1`] = `
   ],
 }
 `;
+
+exports[`Games API > should parse a viewgame response 3 1`] = `
+{
+  "adultThemes": [
+    {
+      "abbreviation": "MF",
+      "id": 33,
+      "name": "Male/Female",
+    },
+    {
+      "abbreviation": "MM",
+      "id": 35,
+      "name": "Male/Male",
+    },
+    {
+      "abbreviation": "M-Self",
+      "id": 36,
+      "name": "Male Masturbation",
+    },
+    {
+      "abbreviation": "Sub",
+      "id": 41,
+      "name": "Submission",
+    },
+    {
+      "abbreviation": "Dom",
+      "id": 42,
+      "name": "Domination",
+    },
+    {
+      "abbreviation": "Other",
+      "id": 38,
+      "name": "Other",
+    },
+  ],
+  "authors": [
+    {
+      "id": 142702,
+      "name": "gabysissy",
+    },
+  ],
+  "id": 3120,
+  "lastUpdate": "2024-09-02T00:00:00Z",
+  "multimediaThemes": [
+    {
+      "abbreviation": "Photo",
+      "id": 29,
+      "name": "Photographs",
+    },
+    {
+      "abbreviation": "Video",
+      "id": 31,
+      "name": "Video",
+    },
+  ],
+  "name": "Disruption",
+  "numLikes": 287,
+  "releaseDate": "2023-10-19T00:00:00Z",
+  "transformationThemes": [
+    {
+      "abbreviation": "Invol",
+      "id": 8,
+      "name": "Involuntary",
+    },
+    {
+      "abbreviation": "Fem",
+      "id": 45,
+      "name": "Feminization",
+    },
+    {
+      "abbreviation": "Masc",
+      "id": 47,
+      "name": "Masculinization",
+    },
+    {
+      "abbreviation": "MC",
+      "id": 10,
+      "name": "Mental Changes",
+    },
+    {
+      "abbreviation": "Corr",
+      "id": 39,
+      "name": "Corruption",
+    },
+    {
+      "abbreviation": "SheM",
+      "id": 19,
+      "name": "Shemale",
+    },
+    {
+      "abbreviation": "Sissy",
+      "id": 44,
+      "name": "Sissification",
+    },
+  ],
+  "versions": [
+    {
+      "downloads": [
+        {
+          "link": "https://www.patreon.com/posts/v0-25-dev-is-out-111279497",
+          "name": "patreon.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.25 dev release",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://www.patreon.com/posts/v0-24-is-out-for-111152028",
+          "name": "patreon.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.24 disrupted",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/vE6YmZgr",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.23 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/HScXQ2h3",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.22 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/tu83EWCq",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.21 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/c2yKuh2m",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.20 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://gofile.io/d/Mp5lhQ",
+          "name": "gofile.io",
+          "note": "",
+        },
+      ],
+      "version": "v0.19 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://gofile.io/d/X1OnBZ",
+          "name": "gofile.io",
+          "note": "",
+        },
+      ],
+      "version": "v0.18 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/USgAJ4Mz",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.17 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/mws67nYP",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.16 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/wdcoBNc5",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.15 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/53YSge2F",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.14 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/AyH2HA2F",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.13 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/a9SY1g4V",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.12 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/8xfPiaPK",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.11 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/VV3o6QnU",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "v0.10 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://mega.nz/file/NvEmRRyA#KF_RE_aeXy6UZBAXFwpzS6SgATh_7HQ1mOgJjYV-514",
+          "name": "mega.nz",
+          "note": "",
+        },
+      ],
+      "version": "v0.9 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/D6erAHFW",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "0.8 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://mega.nz/file/o6d23ZTQ#uKMEgIuqml_5F0ZuA9zJOL0CUlh4CMcWasXPHpeaJGk",
+          "name": "mega.nz",
+          "note": "",
+        },
+      ],
+      "version": "0.7 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/iu7JbfJh",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "0.6.1 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/W7cPtgE5",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "0.6 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/cja5U3UA",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "0.5 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/kz7btn5h",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "0.4 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/BmbcgsoA",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "0.3 public",
+    },
+    {
+      "downloads": [
+        {
+          "link": "https://pixeldrain.com/u/PKffqkvV",
+          "name": "pixeldrain.com",
+          "note": "",
+        },
+      ],
+      "version": "0.2",
+    },
+  ],
+}
+`;

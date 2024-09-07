@@ -14,6 +14,7 @@ export default defineConfig((env) => {
   const forgeEnv = env as ConfigEnv<"build">;
   const { forgeConfigSelf } = forgeEnv;
   const define = getBuildDefine(forgeEnv);
+  const buildConfig = getBuildConfig(forgeEnv);
   const config: UserConfig = {
     build: {
       lib:
@@ -30,7 +31,10 @@ export default defineConfig((env) => {
       },
     },
     test: {
+      name: "main",
+      root: buildConfig.root!,
       setupFiles: ["src/main/setupTests.mts"],
+      include: ["src/main/**/*.spec.mts", "src/ipc/**/*.spec.mts"],
     },
     define,
     resolve: {
@@ -39,11 +43,11 @@ export default defineConfig((env) => {
     },
     plugins: [
       tsconfigPaths({
-        projects: ["tsconfig.main.json"],
+        projects: ["src/main/tsconfig.json"],
       }),
       pluginHotRestart(),
     ],
   };
 
-  return mergeConfig(getBuildConfig(forgeEnv), config);
+  return mergeConfig(buildConfig, config);
 });
