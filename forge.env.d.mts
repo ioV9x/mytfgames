@@ -21,7 +21,7 @@ declare module "vite" {
   interface ConfigEnv<
     K extends keyof VitePluginConfig = keyof VitePluginConfig,
   > {
-    root: string;
+    root?: string;
     forgeConfig?: VitePluginConfig;
     forgeConfigSelf?: VitePluginConfig[K][number];
   }

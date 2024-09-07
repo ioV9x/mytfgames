@@ -4,6 +4,16 @@
     "composite": true,
     "noEmit": true
   },
-  "include": ["*.ts", "*.cts", "*.mts", "package.json"],
+  "include": [
+    "*.ts",
+    "*.cts",
+    "*.mts",
+    "package.json",
+    "tools/vitest.config.main.mts",
+    "tools/vite.config.renderer.mts",
+    "tools/vite.config.preload.mts",
+    "tools/vite.config.main.mts",
+    "tools/vite.base.config.mts"
+  ],
   "exclude": ["src/**/*"]
 }
