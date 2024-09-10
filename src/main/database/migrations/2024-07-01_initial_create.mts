@@ -1,6 +1,6 @@
 import { Kysely, sql } from "kysely";
 
-import { sqliteSafeMigration } from "$main/utils";
+import { sqliteSafeMigration } from "$node-libs/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {

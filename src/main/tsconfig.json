@@ -9,6 +9,7 @@
     "emitDecoratorMetadata": false,
     "paths": {
       "$ipc/*": ["../ipc/*/index.mts"],
+      "$node-libs/utils": ["../node-libs/utils/index.mts"],
       "$main/*": ["./*/index.mts"]
     }
   },
@@ -16,6 +17,9 @@
   "references": [
     {
       "path": "../ipc/tsconfig.json"
+    },
+    {
+      "path": "../node-libs/utils/tsconfig.json"
     }
   ]
 }

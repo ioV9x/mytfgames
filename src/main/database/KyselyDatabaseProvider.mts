@@ -10,7 +10,7 @@ import {
   SqliteDialect,
 } from "kysely";
 
-import { isErrnoException } from "$main/utils";
+import { isErrnoException } from "$node-libs/utils";
 
 import { AppDatabase } from "./AppDatabase.mjs";
 

@@ -1,4 +1,4 @@
-import { makeServiceIdentifier } from "$main/utils";
+import { makeServiceIdentifier } from "$node-libs/utils";
 
 export interface ConfigurationInput {
   readonly paths?: {

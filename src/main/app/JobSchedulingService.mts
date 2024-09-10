@@ -1,6 +1,6 @@
 import { Temporal } from "temporal-polyfill";
 
-import { makeServiceIdentifier } from "$main/utils";
+import { makeServiceIdentifier } from "$node-libs/utils";
 
 interface JobSchedulingService {
   readonly tickInterval: Temporal.Duration;

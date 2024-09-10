@@ -9,7 +9,7 @@ import {
   AppConfigurationLoader,
   AppConfigurationTree,
 } from "$main/configuration";
-import { makeServiceIdentifier } from "$main/utils";
+import { makeServiceIdentifier } from "$node-libs/utils";
 
 import { ApiModule } from "./api/api.module.mjs";
 import { AppModule } from "./app/app.module.mjs";
