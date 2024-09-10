@@ -12,7 +12,7 @@ import {
 
 import { isErrnoException } from "$node-libs/utils";
 
-import { AppDatabase } from "./AppDatabase.mjs";
+import { AppDatabase } from "../../node-libs/database/AppDatabase.mjs";
 
 export class ViteMigrationProvider implements MigrationProvider {
   async getMigrations(): Promise<Record<string, Migration>> {

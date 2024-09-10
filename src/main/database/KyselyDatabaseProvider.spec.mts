@@ -2,7 +2,7 @@ import SQLite from "better-sqlite3";
 import { Kysely, Migrator, SqliteDialect } from "kysely";
 import { describe, expect, it } from "vitest";
 
-import { AppDatabase } from "./AppDatabase.mjs";
+import { AppDatabase } from "../../node-libs/database/AppDatabase.mjs";
 import { ViteMigrationProvider } from "./KyselyDatabaseProvider.mjs";
 
 let canRun: boolean;

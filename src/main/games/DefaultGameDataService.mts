@@ -13,6 +13,7 @@ import {
   GameSId,
 } from "$ipc/main-renderer";
 import { GamesApi, RemoteCategory, RemoteVersionInfo } from "$main/api";
+import { RemoteReduxActionSender } from "$main/pal";
 import {
   AppQueryCreator,
   DatabaseProvider,
@@ -21,8 +22,7 @@ import {
   TagTable,
   TfgamesGameId,
   WellKnownTagCategory,
-} from "$main/database";
-import { RemoteReduxActionSender } from "$main/pal";
+} from "$node-libs/database";
 
 import { GameDataService } from "./GameDataService.mjs";
 

@@ -1,4 +1,4 @@
-import { GameId, TfgamesGameId } from "$main/database";
+import { GameId, TfgamesGameId } from "$node-libs/database";
 import { makeServiceIdentifier } from "$node-libs/utils";
 
 const GameDataService =
