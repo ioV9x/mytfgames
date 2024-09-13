@@ -7,7 +7,7 @@ export enum LoginState {
 }
 
 interface UcpApiService {
-  checkLoginState(cancel?: AbortSignal | undefined): Promise<LoginState>;
+  checkLoginState(cancel?: AbortSignal): Promise<LoginState>;
 }
 const UcpApiService = makeServiceIdentifier<UcpApiService>("ucp api service");
 export { UcpApiService };

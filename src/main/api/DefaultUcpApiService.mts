@@ -11,7 +11,7 @@ export class DefaultUcpApiService implements UcpApiService {
     this.#net = _net;
   }
 
-  async checkLoginState(cancel?: AbortSignal | undefined): Promise<LoginState> {
+  async checkLoginState(cancel?: AbortSignal): Promise<LoginState> {
     cancel?.throwIfAborted();
     try {
       const abortController = new AbortController();
@@ -46,7 +46,7 @@ export class DefaultUcpApiService implements UcpApiService {
   async login(
     username: string,
     password: string,
-    cancel?: AbortSignal | undefined,
+    cancel?: AbortSignal,
   ): Promise<LoginState> {
     cancel?.throwIfAborted();
 
