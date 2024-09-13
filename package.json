@@ -18,7 +18,7 @@
     "test": "vitest --typecheck"
   },
   "dependencies": {
-    "better-sqlite3": "^11.2.1"
+    "better-sqlite3": "^11.3.0"
   },
   "devDependencies": {
     "@carbon/colors": "^11.25.0",
