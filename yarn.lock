@@ -5380,7 +5380,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     react-redux: "npm:^9.1.2"
     reflect-metadata: "npm:^0.2.2"
-    remeda: "npm:^2.12.0"
+    remeda: "npm:^2.12.1"
     sass: "npm:1.77.6"
     smol-toml: "npm:^1.3.0"
     temporal-polyfill: "npm:^0.2.5"
@@ -6385,12 +6385,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remeda@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "remeda@npm:2.12.0"
+"remeda@npm:^2.12.1":
+  version: 2.12.1
+  resolution: "remeda@npm:2.12.1"
   dependencies:
-    type-fest: "npm:^4.23.0"
-  checksum: 10c0/89541dd8677d03c771f067a706ef1f76ce2fa4032d35abce6b3c60c23b4a576389cb37b31882e905595eb1fc694e76e2c71eee7304e9f7d3d09edf1014b1b744
+    type-fest: "npm:^4.26.1"
+  checksum: 10c0/e480e04f3114e5de61c88b1f534c0277ffdf7bbad26960f1449af426d3b1e93b3d67655878989ddff923767639c5400e2dba589c647a64e51965e0d60ad077f8
   languageName: node
   linkType: hard
 
@@ -7449,10 +7449,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^4.23.0":
-  version: 4.25.0
-  resolution: "type-fest@npm:4.25.0"
-  checksum: 10c0/1187b30d74e72f4b0b44a3493d2c1c2a9dc46423961c8250bd1535e976c4b8afc3916f6b4b90d7f56ed5b2f36d1645b05c318b4915fe4909a8a66890bda1d68d
+"type-fest@npm:^4.26.1":
+  version: 4.26.1
+  resolution: "type-fest@npm:4.26.1"
+  checksum: 10c0/d2719ff8d380befe8a3c61068f37f28d6fa2849fd140c5d2f0f143099e371da6856aad7c97e56b83329d45bfe504afe9fd936a7cff600cc0d46aa9ffb008d6c6
   languageName: node
   linkType: hard
 
