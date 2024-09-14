@@ -27,5 +27,5 @@ export interface MessageTransport {
 
   addEventListener(...args: IpcEventArgs): void;
 
-  postMessage(message: IpcMessage, transfer?: unknown[] | undefined): void;
+  postMessage(message: IpcMessage, transfer?: unknown[]): void;
 }

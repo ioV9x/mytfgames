@@ -6,7 +6,8 @@ variables:
   ELECTRON_CACHE: "$CI_PROJECT_DIR/.cache/electron"
   YARN_CACHE_FOLDER: "$CI_PROJECT_DIR/.cache/yarn"
 
-image: $CI_REGISTRY_IMAGE/ci-linux:latest
+# the ggcr.io registry is borked, so we use ghcr.io
+image: ghcr.io/iov9x/mytfgames/ci-linux:latest
 
 default:
   interruptible: true
