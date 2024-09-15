@@ -6,5 +6,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false
   },
-  "include": ["./**/*.mts"]
+  "include": ["./**/*.mts"],
+  "exclude": ["vite.config.mts"]
 }

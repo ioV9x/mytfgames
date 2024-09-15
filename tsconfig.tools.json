@@ -4,6 +4,12 @@
     "composite": true,
     "noEmit": true
   },
-  "include": ["*.ts", "*.cts", "*.mts", "package.json", "tools/**/*.mts"],
-  "exclude": ["src/**/*"]
+  "include": [
+    "*.ts",
+    "*.cts",
+    "*.mts",
+    "package.json",
+    "tools/**/*.mts",
+    "src/**/vite.config.mts"
+  ]
 }

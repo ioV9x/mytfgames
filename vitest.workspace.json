@@ -1,1 +1,1 @@
-["tools/vitest.config.main.mts", "tools/vitest.config.node-libs.mts"]
+["tools/vitest.config.*.mts", "src/worker"]

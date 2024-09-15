@@ -92,7 +92,6 @@ module.exports = ts.config(
   {
     languageOptions: {
       parserOptions: {
-        project: "./tsconfig.json",
         tsconfigRootDir: __dirname,
         // typescript-eslint specific options
         warnOnUnsupportedTypeScriptVersion: true,

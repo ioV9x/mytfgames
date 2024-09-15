@@ -19,7 +19,7 @@
       "path": "./src/renderer/tsconfig.json"
     },
     {
-      "path": "./src/worker/tsconfig.json"
+      "path": "./src/worker/tsconfig.worker.json"
     },
     {
       "path": "./tsconfig.tools.json"

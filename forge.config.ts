@@ -28,7 +28,7 @@ const config: ForgeConfig = {
         {
           // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
           entry: "src/worker/worker.mts",
-          config: "tools/vite.config.main.mts",
+          config: "src/worker/vite.config.mts",
         },
       ],
       renderer: [
