@@ -4,7 +4,7 @@ import { Element } from "domhandler";
 import { net } from "electron/main";
 import { injectable } from "inversify";
 
-import { makeServiceIdentifier } from "$node-libs/utils";
+import { makeServiceIdentifier } from "$node-base/utils";
 
 import { adaptApiTimestamp } from "./TimeUtils.mjs";
 

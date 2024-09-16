@@ -1,4 +1,4 @@
-import { makeServiceIdentifier } from "$node-libs/utils";
+import { makeServiceIdentifier } from "$node-base/utils";
 
 export const BrowserWindowTypeId = Symbol("browser window");
 export interface BrowserWindow {

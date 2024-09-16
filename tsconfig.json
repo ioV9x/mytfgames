@@ -10,7 +10,7 @@
       "path": "./src/ipc/tsconfig.json"
     },
     {
-      "path": "./src/main/tsconfig.json"
+      "path": "./src/main/tsconfig.main.json"
     },
     {
       "path": "./src/preload/tsconfig.json"

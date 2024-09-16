@@ -3,7 +3,7 @@ import { ContainerModule } from "inversify";
 import { Kysely, SqliteDialect } from "kysely";
 
 import { AppConfigurationTree } from "$main/configuration";
-import { AppDatabase, DatabaseProvider } from "$node-libs/database";
+import { AppDatabase, DatabaseProvider } from "$node-base/database";
 
 export const DatabaseModule = new ContainerModule((bind) => {
   bind(DatabaseProvider)

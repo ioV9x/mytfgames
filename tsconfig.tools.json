@@ -10,6 +10,7 @@
     "*.mts",
     "package.json",
     "tools/**/*.mts",
-    "src/**/vite.config.mts"
+    "src/**/vite.config.mts",
+    "src/libs/**/vitest.config.mts"
   ]
 }

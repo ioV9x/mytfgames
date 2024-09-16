@@ -4,7 +4,7 @@ import { isPromise } from "util/types";
 
 import { Logger, logger } from "$main/log";
 import { Job, JobSchedule } from "$main/pal";
-import { makeAggregatedError } from "$node-libs/utils";
+import { makeAggregatedError } from "$node-base/utils";
 
 import { JobSchedulingService } from "./JobSchedulingService.mjs";
 

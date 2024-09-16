@@ -8,7 +8,7 @@ import {
   GameVersion,
   GameVersionService as GameVersionServiceContract,
 } from "$ipc/main-renderer";
-import { DatabaseProvider, GameId } from "$node-libs/database";
+import { DatabaseProvider, GameId } from "$node-base/database";
 
 @injectable()
 export class DefaultGameVersionService {

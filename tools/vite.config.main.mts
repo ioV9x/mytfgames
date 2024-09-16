@@ -43,7 +43,7 @@ export default defineConfig((env) => {
     },
     plugins: [
       tsconfigPaths({
-        projects: ["src/main/tsconfig.json"],
+        projects: ["src/main/tsconfig.main.json"],
       }),
       pluginHotRestart(),
     ],

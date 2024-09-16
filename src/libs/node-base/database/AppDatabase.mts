@@ -1,6 +1,6 @@
 import type { Kysely, QueryCreator } from "kysely";
 
-import { makeServiceIdentifier } from "$node-libs/utils";
+import { makeServiceIdentifier } from "$node-base/utils";
 
 import type {
   GameOfficialTfgamesAuthor,

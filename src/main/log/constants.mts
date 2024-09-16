@@ -1,6 +1,6 @@
 import type Logger from "bunyan";
 
-import { makeServiceIdentifier } from "$node-libs/utils";
+import { makeServiceIdentifier } from "$node-base/utils";
 
 export const LogCategoryKey = Symbol("app:log_category");
 

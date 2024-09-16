@@ -1,1 +1,1 @@
-["tools/vitest.config.*.mts", "src/worker"]
+["tools/vitest.config.*.mts", "src/worker", "src/libs/*"]

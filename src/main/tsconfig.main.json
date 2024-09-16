@@ -9,8 +9,8 @@
     "emitDecoratorMetadata": false,
     "paths": {
       "$ipc/*": ["../ipc/*/index.mts"],
-      "$node-libs/*": ["../node-libs/*/index.mts"],
-      "$node-libs/*/module": ["../node-libs/*/module.mts"],
+      "$node-base/*": ["../libs/node-base/*/index.mts"],
+      "$node-base/*/module": ["../libs/node-base/*/module.mts"],
       "$main/*": ["./*/index.mts"]
     }
   },
@@ -20,10 +20,7 @@
       "path": "../ipc/tsconfig.json"
     },
     {
-      "path": "../node-libs/database/tsconfig.json"
-    },
-    {
-      "path": "../node-libs/utils/tsconfig.json"
+      "path": "../libs/node-base/tsconfig.node-base.json"
     }
   ]
 }

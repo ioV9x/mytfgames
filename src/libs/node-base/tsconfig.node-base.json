@@ -2,12 +2,15 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
-    "outDir": "../../../out/dist/libs-node-utils",
+    "outDir": "../../../out/dist/libs-node-base",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
-    "paths": {}
+    "paths": {
+      "$node-base/*": ["./*/index.mts"]
+    }
   },
-  "include": ["./**/*.mts"]
+  "include": ["./**/*.mts"],
+  "exclude": ["vitest.config.mts"]
 }

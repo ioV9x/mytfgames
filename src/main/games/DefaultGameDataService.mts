@@ -22,7 +22,7 @@ import {
   TagTable,
   TfgamesGameId,
   WellKnownTagCategory,
-} from "$node-libs/database";
+} from "$node-base/database";
 
 import { GameDataService } from "./GameDataService.mjs";
 
