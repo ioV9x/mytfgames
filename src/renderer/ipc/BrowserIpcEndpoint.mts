@@ -4,7 +4,7 @@ import {
   IpcEndpoint,
   RemoteProcedureCallDispatcher,
   RemoteReduxActionReceiver,
-} from "$ipc/core";
+} from "$pure-base/ipc";
 
 import { BrowserMessageTransport } from "./BrowserMessageTransport.mts";
 

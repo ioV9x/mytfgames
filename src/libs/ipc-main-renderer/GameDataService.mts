@@ -4,7 +4,7 @@ import * as R from "remeda";
 import {
   makeRemoteProcedureDescriptor,
   makeRemoteServiceDescriptor,
-} from "$ipc/core";
+} from "$pure-base/ipc";
 
 export type GameSId = string;
 export interface Game {

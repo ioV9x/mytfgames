@@ -5,7 +5,7 @@ import {
   DefaultRemoteReduxActionSender,
   registerIpcServices,
   type RemoteProcedureServer,
-} from "$ipc/core";
+} from "$pure-base/ipc";
 
 import { IpcServiceProvider } from "./IpcServiceProvider.mjs";
 import { ElectronMainMessageTransport } from "./MainMessageTransport.mjs";

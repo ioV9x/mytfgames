@@ -8,19 +8,24 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "paths": {
-      "$ipc/*": ["../ipc/*/index.mts"],
+      "$ipc/main-renderer": ["../libs/ipc-main-renderer/index.mts"],
+      "$main/*": ["./*/index.mts"],
       "$node-base/*": ["../libs/node-base/*/index.mts"],
       "$node-base/*/module": ["../libs/node-base/*/module.mts"],
-      "$main/*": ["./*/index.mts"]
+      "$pure-base/*": ["../libs/pure-base/*/index.mts"]
     }
   },
   "include": ["./**/*.mts", "../../forge.env.d.mts"],
+  "exclude": ["vite.config.mts"],
   "references": [
     {
-      "path": "../ipc/tsconfig.json"
+      "path": "../libs/ipc-main-renderer/tsconfig.ipc-main-renderer.json"
     },
     {
       "path": "../libs/node-base/tsconfig.node-base.json"
+    },
+    {
+      "path": "../libs/pure-base/tsconfig.pure-base.json"
     }
   ]
 }

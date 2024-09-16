@@ -1,7 +1,7 @@
 import {
   makeRemoteProcedureDescriptor,
   makeRemoteServiceDescriptor,
-} from "$ipc/core";
+} from "$pure-base/ipc";
 
 export const UserService = makeRemoteServiceDescriptor("user:base", {
   isLoggedIn: makeRemoteProcedureDescriptor<[], boolean>(),

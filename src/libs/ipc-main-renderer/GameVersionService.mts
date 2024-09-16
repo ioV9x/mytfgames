@@ -1,7 +1,7 @@
 import {
   makeRemoteProcedureDescriptor,
   makeRemoteServiceDescriptor,
-} from "$ipc/core";
+} from "$pure-base/ipc";
 
 import { GameSId } from "./GameDataService.mjs";
 

@@ -1,4 +1,4 @@
-import { makeRemoteServiceCollectionDescriptor } from "$ipc/core";
+import { makeRemoteServiceCollectionDescriptor } from "$pure-base/ipc";
 
 import { GameDataService } from "./GameDataService.mjs";
 import { GameVersionService } from "./GameVersionService.mjs";

@@ -1,6 +1,6 @@
 import { MessagePortMain } from "electron/main";
 
-import { IpcEventArgs, IpcMessage, MessageTransport } from "$ipc/core";
+import { IpcEventArgs, IpcMessage, MessageTransport } from "$pure-base/ipc";
 
 export class ElectronMainMessageTransport implements MessageTransport {
   constructor(

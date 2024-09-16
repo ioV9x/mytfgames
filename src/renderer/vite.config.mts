@@ -5,7 +5,7 @@ import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-import { pluginExposeRenderer } from "./vite.base.config.mjs";
+import { pluginExposeRenderer } from "../../tools/vite.base.config.mjs";
 
 // https://vitejs.dev/config
 export default defineConfig((env) => {
@@ -13,9 +13,9 @@ export default defineConfig((env) => {
   const { root, mode, forgeConfigSelf } = forgeEnv;
   const name = forgeConfigSelf?.name ?? "";
 
-  const defaultedRoot = root ?? path.join(import.meta.dirname, "..");
+  const defaultedRoot = root ?? path.join(import.meta.dirname, "../..");
   return {
-    root: path.join(defaultedRoot, "src", name),
+    root: import.meta.dirname,
     mode,
     base: "./",
     build: {
@@ -25,11 +25,17 @@ export default defineConfig((env) => {
       react({}),
       pluginExposeRenderer(name),
       tsconfigPaths({
-        projects: ["./tsconfig.json"],
+        projects: ["./tsconfig.renderer.json"],
       }),
     ],
     resolve: {
       preserveSymlinks: true,
+    },
+    test: {
+      name: "renderer",
+      root: import.meta.dirname,
+      setupFiles: ["setupTests.mts"],
+      include: ["**/*.spec.mts"],
     },
     clearScreen: false,
   } as UserConfig;

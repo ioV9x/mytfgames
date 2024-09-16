@@ -12,8 +12,8 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "paths": {
-      "$ipc/core": ["../ipc/core/index.mjs"],
-      "$ipc/main-renderer": ["../ipc/main-renderer/index.mjs"],
+      "$pure-base/ipc": ["../libs/pure-base/ipc/index.mjs"],
+      "$ipc/main-renderer": ["../libs/ipc-main-renderer/index.mjs"],
       "$renderer/*": ["./*/index.mjs"],
       "$renderer/components": ["./ui/components.mjs"],
       "$renderer/dux": ["./dux/index.mjs"],
@@ -21,9 +21,13 @@
     }
   },
   "include": ["./**/*.mts", "./**/*.tsx", "./**/*.svg", "./**/*.json"],
+  "exclude": ["vite.config.mts"],
   "references": [
     {
-      "path": "../ipc/tsconfig.json"
+      "path": "../libs/ipc-main-renderer/tsconfig.ipc-main-renderer.json"
+    },
+    {
+      "path": "../libs/pure-base/tsconfig.pure-base.json"
     }
   ]
 }

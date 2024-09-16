@@ -1,8 +1,8 @@
 import { net } from "electron/main";
 import { injectable } from "inversify";
 
-import { remoteProcedure } from "$ipc/core";
 import { UserService } from "$ipc/main-renderer";
+import { remoteProcedure } from "$pure-base/ipc";
 
 @injectable()
 export class AccountService {

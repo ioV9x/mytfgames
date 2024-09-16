@@ -4,7 +4,6 @@ import * as R from "remeda";
 import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
 
-import { remoteProcedure } from "$ipc/core";
 import {
   Game,
   gameCrawled,
@@ -23,6 +22,7 @@ import {
   TfgamesGameId,
   WellKnownTagCategory,
 } from "$node-base/database";
+import { remoteProcedure } from "$pure-base/ipc";
 
 import { GameDataService } from "./GameDataService.mjs";
 

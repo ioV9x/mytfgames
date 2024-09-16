@@ -4,8 +4,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
 
-import { forgeRemoteServiceCollection } from "$ipc/core";
 import services from "$ipc/main-renderer";
+import { forgeRemoteServiceCollection } from "$pure-base/ipc";
 
 import { store } from "./dux/index.mjs";
 import { BrowserIpcEndpoint } from "./ipc/BrowserIpcEndpoint.mts";
