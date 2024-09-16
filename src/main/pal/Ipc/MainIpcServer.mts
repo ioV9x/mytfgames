@@ -1,13 +1,13 @@
 import { ipcMain } from "electron/main";
 import { inject, injectable, multiInject } from "inversify";
 
+import { IpcServiceProvider } from "$node-base/ipc";
 import {
   DefaultRemoteReduxActionSender,
   registerIpcServices,
   type RemoteProcedureServer,
 } from "$pure-base/ipc";
 
-import { IpcServiceProvider } from "./IpcServiceProvider.mjs";
 import { ElectronMainMessageTransport } from "./MainMessageTransport.mjs";
 import { RemoteReduxActionSender } from "./RemoteReduxActionSender.mjs";
 

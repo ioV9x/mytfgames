@@ -1,6 +1,7 @@
 import { ContainerModule } from "inversify";
 
-import { IpcServiceProvider, JobSchedule } from "$main/pal";
+import { JobSchedule } from "$main/pal";
+import { IpcServiceProvider } from "$node-base/ipc";
 
 import { DefaultGameDataService } from "./DefaultGameDataService.mjs";
 import { DefaultGameVersionService } from "./DefaultGameVersionService.mjs";
