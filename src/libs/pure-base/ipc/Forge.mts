@@ -5,7 +5,7 @@ import {
 } from "./RemoteProcedures/index.mjs";
 import {
   type RemoteServiceCollectionShape,
-  RemoteServiceId,
+  RemoteServiceKey,
   type RemoteServiceShape,
 } from "./RemoteServices/index.mjs";
 
@@ -50,7 +50,7 @@ function forgeRemoteService(
       const dispatchImpl = function dispatchRpc(
         ...args: unknown[]
       ): Promise<unknown> {
-        return endpoint.dispatcher.dispatch(blank[RemoteServiceId], key, args);
+        return endpoint.dispatcher.dispatch(blank[RemoteServiceKey], key, args);
       };
       blank[key] = Object.assign(dispatchImpl, {
         [RemoteProcedureOptions]: blank[key][RemoteProcedureOptions],

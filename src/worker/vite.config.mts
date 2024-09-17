@@ -2,7 +2,11 @@ import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig, mergeConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-import { external, getBuildConfig } from "../../tools/vite.base.config.mjs";
+import {
+  external,
+  getBuildConfig,
+  pluginHotRestart,
+} from "../../tools/vite.base.config.mjs";
 
 // https://vitejs.dev/config
 export default defineConfig((env) => {
@@ -38,6 +42,7 @@ export default defineConfig((env) => {
       tsconfigPaths({
         projects: ["src/worker/tsconfig.worker.json"],
       }),
+      pluginHotRestart(),
     ],
   };
 

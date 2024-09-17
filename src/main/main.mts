@@ -19,8 +19,11 @@ import { GamesModule } from "./games/games.module.mjs";
 import { LogModule } from "./log/log.module.mjs";
 import { PalBrowserModule } from "./pal/browser.module.mjs";
 import { PalIpcModule } from "./pal/Ipc/IpcModule.mjs";
+import { PalWorkerModule } from "./pal/worker/worker.module.mjs";
 
-const container = new Container();
+const container = new Container({
+  skipBaseClassChecks: true,
+});
 container.load(
   // keep this list sorted
   ApiModule,
@@ -31,6 +34,7 @@ container.load(
   LogModule,
   PalBrowserModule,
   PalIpcModule,
+  PalWorkerModule,
 );
 
 // load configuration

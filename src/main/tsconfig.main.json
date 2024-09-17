@@ -9,6 +9,7 @@
     "emitDecoratorMetadata": false,
     "paths": {
       "$ipc/main-renderer": ["../libs/ipc-main-renderer/index.mts"],
+      "$ipc/worker-main": ["../libs/ipc-worker-main/index.mts"],
       "$main/*": ["./*/index.mts"],
       "$node-base/*": ["../libs/node-base/*/index.mts"],
       "$node-base/*/module": ["../libs/node-base/*/module.mts"],
@@ -20,6 +21,9 @@
   "references": [
     {
       "path": "../libs/ipc-main-renderer/tsconfig.ipc-main-renderer.json"
+    },
+    {
+      "path": "../libs/ipc-worker-main/tsconfig.ipc-worker-main.json"
     },
     {
       "path": "../libs/node-base/tsconfig.node-base.json"

@@ -7,7 +7,7 @@ import {
   RemoteProcedureServer,
 } from "./RemoteProcedures/index.mjs";
 import {
-  RemoteServiceId,
+  RemoteServiceKey,
   RemoteServiceShape,
 } from "./RemoteServices/index.mjs";
 
@@ -52,7 +52,7 @@ export function remoteProcedure<
   ) {
     if (Reflect.hasMetadata(ProcedureMetadata, target, key)) {
       throw new Error(
-        `Duplicate remote procedure binding for ${key} (as ${proto[RemoteServiceId]}:${procId.toString()})`,
+        `Duplicate remote procedure binding for ${key} (as ${proto[RemoteServiceKey]}:${procId.toString()})`,
       );
     }
 
@@ -65,7 +65,7 @@ export function remoteProcedure<
     }
     serviceMetadata.push(key);
 
-    const { [RemoteServiceId]: serviceId, [procId]: descriptor } = proto;
+    const { [RemoteServiceKey]: serviceId, [procId]: descriptor } = proto;
     const { [RemoteProcedureOptions]: options } =
       descriptor as RemoteProcedureDescriptor<unknown[], unknown>;
     Reflect.defineMetadata(

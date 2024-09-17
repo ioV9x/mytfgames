@@ -2,19 +2,22 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
-    "outDir": "../../../out/dist/libs-node-base",
+    "outDir": "../../../out/dist/ipc-worker-main",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "paths": {
-      "$node-base/*": ["./*/index.mts"],
-      "$pure-base/*": ["../pure-base/*/index.mts"]
+      "$node-base/utils": ["../node-base/utils/index.mjs"],
+      "$pure-base/ipc": ["../pure-base/ipc/index.mjs"]
     }
   },
   "include": ["./**/*.mts"],
   "exclude": ["vitest.config.mts"],
   "references": [
+    {
+      "path": "../node-base/tsconfig.node-base.json"
+    },
     {
       "path": "../pure-base/tsconfig.pure-base.json"
     }
