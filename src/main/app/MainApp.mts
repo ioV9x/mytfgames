@@ -66,6 +66,8 @@ export class MainApp {
     app.setAppLogsPath(paths.logs);
 
     this.setupElectronPath("sessionData", paths.session_data);
+
+    fs.mkdirSync(paths.blob_store, { recursive: true });
   }
   private setupElectronPath(which: string, path: string): void {
     fs.mkdirSync(path, { recursive: true });

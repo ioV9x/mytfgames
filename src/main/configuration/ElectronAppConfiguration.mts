@@ -20,6 +20,9 @@ const appConfigurationSchema: JTDSchemaType<ConfigurationInput> = {
         database: {
           type: "string",
         },
+        blob_store: {
+          type: "string",
+        },
         logs: {
           type: "string",
         },
@@ -91,6 +94,7 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
       return {
         paths: {
           database: "<config-dir>/db.sqlite3",
+          blob_store: "<config-dir>/blobs",
           logs: "<config-dir>/logs",
           user_data: "<config-dir>",
           session_data: "<config-dir>/chromium",
@@ -161,6 +165,9 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
     return {
       database: resolveConfigPath(
         minimal.database ?? "<default-user-data>/db.sqlite3",
+      ),
+      blob_store: resolveConfigPath(
+        minimal.blob_store ?? "<default-user-data>/blobs",
       ),
       config_dir: configurationDirectory,
       renderer_app: path.resolve(app.getAppPath(), ".vite/renderer"),

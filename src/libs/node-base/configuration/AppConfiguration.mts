@@ -3,6 +3,7 @@ import { makeServiceIdentifier } from "$node-base/utils";
 export interface ConfigurationInput {
   readonly paths?: {
     readonly database?: string;
+    readonly blob_store?: string;
     readonly logs?: string;
     readonly session_data?: string;
     readonly user_data?: string;
@@ -25,6 +26,7 @@ const AppConfigurationTree = makeServiceIdentifier<AppConfigurationTree>(
 type AppConfigurationTree = ConfigurationInput & {
   readonly paths: {
     readonly database: string;
+    readonly blob_store: string;
     readonly logs: string;
     readonly session_data: string;
     readonly user_data: string;
