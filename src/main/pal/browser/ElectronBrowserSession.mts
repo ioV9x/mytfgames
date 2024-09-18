@@ -5,8 +5,8 @@ import { pathToFileURL } from "node:url";
 import { net, protocol, type Session } from "electron/main";
 import { inject, injectable } from "inversify";
 
-import { AppConfiguration } from "$main/configuration";
 import { Logger, logger } from "$main/log";
+import { AppConfiguration } from "$node-base/configuration";
 
 import {
   type BrowserSession,

@@ -4,7 +4,6 @@ import { app, session } from "electron/main";
 import installExtension, { REDUX_DEVTOOLS } from "electron-devtools-installer";
 import { inject, injectable } from "inversify";
 
-import { AppConfiguration } from "$main/configuration";
 import { Logger, logger } from "$main/log";
 import {
   type BrowserSession,
@@ -13,6 +12,7 @@ import {
   BrowserWindowFactory,
   MainIpcServer,
 } from "$main/pal";
+import { AppConfiguration } from "$node-base/configuration";
 
 import { migrate } from "../database/KyselyDatabaseProvider.mjs";
 import { WorkerShim } from "../pal/worker/Worker.mjs";

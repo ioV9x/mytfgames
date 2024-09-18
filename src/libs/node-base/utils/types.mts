@@ -1,8 +1,14 @@
+import { AppConfigurationTree } from "$node-base/configuration";
+
 export type DeepRequired<T> = {
   [P in keyof T]-?: Exclude<T[P], undefined> extends object
     ? DeepRequired<T[P]>
     : T[P];
 };
+
+export interface WorkerData {
+  config: AppConfigurationTree;
+}
 
 export function isErrnoException(
   error: unknown,

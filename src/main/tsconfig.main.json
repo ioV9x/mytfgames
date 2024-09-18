@@ -11,8 +11,7 @@
       "$ipc/main-renderer": ["../libs/ipc-main-renderer/index.mts"],
       "$ipc/worker-main": ["../libs/ipc-worker-main/index.mts"],
       "$main/*": ["./*/index.mts"],
-      "$node-base/*": ["../libs/node-base/*/index.mts"],
-      "$node-base/*/module": ["../libs/node-base/*/module.mts"],
+      "$node-base/*": ["../libs/node-base/*/index.mts", "../libs/node-base/*"],
       "$pure-base/*": ["../libs/pure-base/*/index.mts"]
     }
   },

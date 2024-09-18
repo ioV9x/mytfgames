@@ -4,7 +4,7 @@ import { createLogger, levelFromName, stdSerializers } from "bunyan";
 import { app } from "electron/main";
 import { ContainerModule } from "inversify";
 
-import { AppConfigurationTree } from "$main/configuration";
+import { AppConfigurationTree } from "$node-base/configuration";
 
 import { BaseLogger, CategoryLogger, LogCategoryKey } from "./constants.mjs";
 

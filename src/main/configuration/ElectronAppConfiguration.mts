@@ -3,22 +3,15 @@ import path from "node:path";
 
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd";
 import { app } from "electron/main";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import * as TOML from "smol-toml";
 
 import {
-  AppConfiguration,
-  AppConfigurationLoader,
   AppConfigurationTree,
   ConfigurationInput,
-} from "./AppConfiguration.mjs";
+} from "$node-base/configuration";
 
-@injectable()
-export class ElectronAppConfiguration implements AppConfiguration {
-  constructor(
-    @inject(AppConfigurationTree) readonly root: AppConfigurationTree,
-  ) {}
-}
+import { AppConfigurationLoader } from "./AppConfiguration.mjs";
 
 const appConfigurationSchema: JTDSchemaType<ConfigurationInput> = {
   optionalProperties: {

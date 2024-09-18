@@ -5,10 +5,9 @@ import { app } from "electron";
 import { Container } from "inversify";
 
 import { MainApp } from "$main/app";
-import {
-  AppConfigurationLoader,
-  AppConfigurationTree,
-} from "$main/configuration";
+import { AppConfigurationLoader } from "$main/configuration";
+import { AppConfigurationTree } from "$node-base/configuration";
+import { BaseConfigurationModule } from "$node-base/configuration/configuration.module.mjs";
 import { makeServiceIdentifier } from "$node-base/utils";
 
 import { ApiModule } from "./api/api.module.mjs";
@@ -28,6 +27,7 @@ container.load(
   // keep this list sorted
   ApiModule,
   AppModule,
+  BaseConfigurationModule,
   ConfigurationModule,
   DatabaseModule,
   GamesModule,

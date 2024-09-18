@@ -2,7 +2,7 @@ import SQLite from "better-sqlite3";
 import { ContainerModule } from "inversify";
 import { Kysely, SqliteDialect } from "kysely";
 
-import { AppConfigurationTree } from "$main/configuration";
+import { AppConfigurationTree } from "$node-base/configuration";
 import { AppDatabase, DatabaseProvider } from "$node-base/database";
 
 export const DatabaseModule = new ContainerModule((bind) => {

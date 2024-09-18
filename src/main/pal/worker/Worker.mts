@@ -2,10 +2,11 @@ import EventEmitter from "node:events";
 import path from "node:path";
 import { Worker } from "node:worker_threads";
 
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 
+import { AppConfigurationTree } from "$node-base/configuration";
 import { NodeWorkerMessageTransport } from "$node-base/ipc";
-import { makeServiceIdentifier } from "$node-base/utils";
+import { makeServiceIdentifier, WorkerData } from "$node-base/utils";
 import { MessageTransport } from "$pure-base/ipc";
 
 interface WorkerShim
@@ -26,6 +27,12 @@ export class NodeWorkerShim
 {
   private current: NodeWorkerMessageTransport | null = null;
 
+  constructor(
+    @inject(AppConfigurationTree) private readonly config: AppConfigurationTree,
+  ) {
+    super();
+  }
+
   start(): Promise<void> {
     if (this.current) {
       throw new Error("Worker already started");
@@ -38,7 +45,9 @@ export class NodeWorkerShim
         stderr: false,
         stdin: false,
         stdout: false,
-        workerData: null,
+        workerData: {
+          config: this.config,
+        } satisfies WorkerData,
       });
       const transport = (this.current = new NodeWorkerMessageTransport(
         "worker",
