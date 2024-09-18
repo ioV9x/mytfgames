@@ -1,1 +1,1 @@
-["tools/vitest.config.*.mts"]
+["src/libs/*", "src/main", "src/renderer"]

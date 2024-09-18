@@ -9,11 +9,8 @@
     "*.cts",
     "*.mts",
     "package.json",
-    "tools/vitest.config.main.mts",
-    "tools/vite.config.renderer.mts",
-    "tools/vite.config.preload.mts",
-    "tools/vite.config.main.mts",
-    "tools/vite.base.config.mts"
-  ],
-  "exclude": ["src/**/*"]
+    "tools/**/*.mts",
+    "src/**/vite.config.mts",
+    "src/libs/**/vitest.config.mts"
+  ]
 }

@@ -1,4 +1,4 @@
-import { makeServiceIdentifier } from "$main/utils";
+import { makeServiceIdentifier } from "$node-base/utils";
 
 export enum LoginState {
   Unknown = -1,

@@ -15,6 +15,7 @@ import {
 } from "$main/pal";
 
 import { migrate } from "../database/KyselyDatabaseProvider.mjs";
+import { WorkerShim } from "../pal/worker/Worker.mjs";
 import { JobSchedulingService } from "./JobSchedulingService.mjs";
 
 @injectable()
@@ -31,6 +32,7 @@ export class MainApp {
     readonly jobSchedulingService: JobSchedulingService,
     @inject(AppConfiguration) readonly configuration: AppConfiguration,
     @inject(MainIpcServer) readonly _ipcServer: unknown,
+    @inject(WorkerShim) readonly workerShim: WorkerShim,
   ) {
     this.log.info("<===================== My TFGames =====================>");
   }
@@ -47,6 +49,9 @@ export class MainApp {
 
     // apply migrations before starting the renderer in order to avoid DB access
     await migrate(this.configuration.root.paths.database);
+    // start the worker before the renderer, but after the migrations as the
+    // worker will open a database connection on startup
+    await this.workerShim.start();
 
     await this.startRenderer();
   }

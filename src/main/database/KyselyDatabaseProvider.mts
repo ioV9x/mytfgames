@@ -10,9 +10,8 @@ import {
   SqliteDialect,
 } from "kysely";
 
-import { isErrnoException } from "$main/utils";
-
-import { AppDatabase } from "./AppDatabase.mjs";
+import { AppDatabase } from "$node-base/database";
+import { isErrnoException } from "$node-base/utils";
 
 export class ViteMigrationProvider implements MigrationProvider {
   async getMigrations(): Promise<Record<string, Migration>> {

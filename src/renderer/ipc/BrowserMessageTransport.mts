@@ -1,4 +1,4 @@
-import { IpcEventArgs, IpcMessage, MessageTransport } from "$ipc/core";
+import { IpcEventArgs, IpcMessage, MessageTransport } from "$pure-base/ipc";
 
 export class BrowserMessageTransport implements MessageTransport {
   constructor(

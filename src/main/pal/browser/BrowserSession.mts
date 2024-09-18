@@ -1,6 +1,6 @@
 import type { Session } from "electron/main";
 
-import { makeServiceIdentifier } from "$main/utils";
+import { makeServiceIdentifier } from "$node-base/utils";
 
 export const BrowserSessionTypeId = Symbol("browser session");
 export interface BrowserSession {

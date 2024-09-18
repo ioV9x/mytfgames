@@ -1,5 +1,5 @@
-import { GameId, TfgamesGameId } from "$main/database";
-import { makeServiceIdentifier } from "$main/utils";
+import { GameId, TfgamesGameId } from "$node-base/database";
+import { makeServiceIdentifier } from "$node-base/utils";
 
 const GameDataService =
   makeServiceIdentifier<GameDataService>("game info service");

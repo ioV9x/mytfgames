@@ -1,0 +1,22 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../../out/dist/libs-node-base",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "paths": {
+      "$node-base/*": ["./*/index.mts"],
+      "$pure-base/*": ["../pure-base/*/index.mts"]
+    }
+  },
+  "include": ["./**/*.mts"],
+  "exclude": ["vitest.config.mts"],
+  "references": [
+    {
+      "path": "../pure-base/tsconfig.pure-base.json"
+    }
+  ]
+}

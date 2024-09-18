@@ -1,6 +1,6 @@
 import { Temporal } from "temporal-polyfill";
 
-import { makeServiceIdentifier } from "$main/utils";
+import { makeServiceIdentifier } from "$node-base/utils";
 
 export interface Job {
   readonly id: string;

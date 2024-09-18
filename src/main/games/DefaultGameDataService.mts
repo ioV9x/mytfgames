@@ -4,7 +4,6 @@ import * as R from "remeda";
 import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
 
-import { remoteProcedure } from "$ipc/core";
 import {
   Game,
   gameCrawled,
@@ -13,6 +12,7 @@ import {
   GameSId,
 } from "$ipc/main-renderer";
 import { GamesApi, RemoteCategory, RemoteVersionInfo } from "$main/api";
+import { RemoteReduxActionSender } from "$main/pal";
 import {
   AppQueryCreator,
   DatabaseProvider,
@@ -21,8 +21,8 @@ import {
   TagTable,
   TfgamesGameId,
   WellKnownTagCategory,
-} from "$main/database";
-import { RemoteReduxActionSender } from "$main/pal";
+} from "$node-base/database";
+import { remoteProcedure } from "$pure-base/ipc";
 
 import { GameDataService } from "./GameDataService.mjs";
 

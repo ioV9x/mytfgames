@@ -3,7 +3,7 @@ import { ContainerModule, injectable } from "inversify";
 import {
   DefaultRemoteReduxActionSender,
   RemoteProcedureServer,
-} from "$ipc/core";
+} from "$pure-base/ipc";
 
 import { MainIpcServer, RemoteReduxActionSender } from "./index.mjs";
 import {

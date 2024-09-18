@@ -19,7 +19,7 @@ const config: ForgeConfig = {
         {
           // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
           entry: "src/main/main.mts",
-          config: "tools/vite.config.main.mts",
+          config: "src/main/vite.config.mts",
         },
         {
           entry: "src/preload/preload.ts",
@@ -28,13 +28,13 @@ const config: ForgeConfig = {
         {
           // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
           entry: "src/worker/worker.mts",
-          config: "tools/vite.config.main.mts",
+          config: "src/worker/vite.config.mts",
         },
       ],
       renderer: [
         {
           name: "renderer",
-          config: "tools/vite.config.renderer.mts",
+          config: "src/renderer/vite.config.mts",
         },
       ],
     }),

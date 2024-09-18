@@ -1,0 +1,33 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../out/dist/renderer",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "exactOptionalPropertyTypes": false,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "$pure-base/ipc": ["../libs/pure-base/ipc/index.mjs"],
+      "$ipc/main-renderer": ["../libs/ipc-main-renderer/index.mjs"],
+      "$renderer/*": ["./*/index.mjs"],
+      "$renderer/components": ["./ui/components.mjs"],
+      "$renderer/dux": ["./dux/index.mjs"],
+      "$renderer/dux/*": ["./dux/*.mjs"]
+    }
+  },
+  "include": ["./**/*.mts", "./**/*.tsx", "./**/*.svg", "./**/*.json"],
+  "exclude": ["vite.config.mts"],
+  "references": [
+    {
+      "path": "../libs/ipc-main-renderer/tsconfig.ipc-main-renderer.json"
+    },
+    {
+      "path": "../libs/pure-base/tsconfig.pure-base.json"
+    }
+  ]
+}

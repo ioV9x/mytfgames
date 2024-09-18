@@ -2,13 +2,13 @@ import { inject, injectable } from "inversify";
 import * as R from "remeda";
 import * as uuid from "uuid";
 
-import { remoteProcedure } from "$ipc/core";
 import {
   GameSId,
   GameVersion,
   GameVersionService as GameVersionServiceContract,
 } from "$ipc/main-renderer";
-import { DatabaseProvider, GameId } from "$main/database";
+import { DatabaseProvider, GameId } from "$node-base/database";
+import { remoteProcedure } from "$pure-base/ipc";
 
 @injectable()
 export class DefaultGameVersionService {

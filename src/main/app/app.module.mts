@@ -1,6 +1,6 @@
 import { ContainerModule } from "inversify";
 
-import { IpcServiceProvider } from "$main/pal";
+import { IpcServiceProvider } from "$node-base/ipc";
 
 import { AccountService } from "./AccountService.mjs";
 import { DefaultJobSchedulingService } from "./DefaultJobSchedulingService.mjs";

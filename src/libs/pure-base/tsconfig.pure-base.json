@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../../out/dist/libs-pure-base",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "paths": {
+      "$pure-base/*": ["./*/index.mts"]
+    }
+  },
+  "include": ["./**/*.mts"],
+  "exclude": ["vitest.config.mts"]
+}
