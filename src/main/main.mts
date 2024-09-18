@@ -8,12 +8,12 @@ import { MainApp } from "$main/app";
 import { AppConfigurationLoader } from "$main/configuration";
 import { AppConfigurationTree } from "$node-base/configuration";
 import { BaseConfigurationModule } from "$node-base/configuration/configuration.module.mjs";
+import { DatabaseModule } from "$node-base/database/database.module.mjs";
 import { makeServiceIdentifier } from "$node-base/utils";
 
 import { ApiModule } from "./api/api.module.mjs";
 import { AppModule } from "./app/app.module.mjs";
 import { ConfigurationModule } from "./configuration/configuration.module.mjs";
-import { DatabaseModule } from "./database/database.module.mjs";
 import { GamesModule } from "./games/games.module.mjs";
 import { LogModule } from "./log/log.module.mjs";
 import { PalBrowserModule } from "./pal/browser.module.mjs";

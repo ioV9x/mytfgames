@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { AppDatabase } from "$node-base/database";
 
-import { ViteMigrationProvider } from "./KyselyDatabaseProvider.mjs";
+import { ViteMigrationProvider } from "./KyselyMigrationProvider.mjs";
 
 let canRun: boolean;
 try {

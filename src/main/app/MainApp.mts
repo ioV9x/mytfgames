@@ -14,7 +14,7 @@ import {
 } from "$main/pal";
 import { AppConfiguration } from "$node-base/configuration";
 
-import { migrate } from "../database/KyselyDatabaseProvider.mjs";
+import { migrate } from "../database/KyselyMigrationProvider.mjs";
 import { WorkerShim } from "../pal/worker/Worker.mjs";
 import { JobSchedulingService } from "./JobSchedulingService.mjs";
 
