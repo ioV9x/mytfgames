@@ -31,7 +31,8 @@ import {
   formatGameTimestamp,
 } from "$renderer/utils";
 
-import { GameVersionList } from "./-components/GameVersionList";
+import { GameVersionArtifacts } from "./-components/GameVersionArtifacts";
+import { GameVersionSources } from "./-components/GameVersionSources";
 
 const classNs = "games-game-view";
 
@@ -111,23 +112,20 @@ function GameViewLoaded({ game, versions }: GameViewLoadedProps) {
 
       <section className={`${classNs}__content`}>
         <Grid>
-          {game.listing && (
-            <Column sm={4} md={8} className="games-game-view__content-listing">
-              <GameOfficialListing listing={game.listing} />
-            </Column>
-          )}
-          {game.description && (
-            <Column
-              sm={4}
-              md={8}
-              className="games-game-view__content-description"
-            >
-              <GameDescription description={game.description} />
-            </Column>
-          )}
-          <Column sm={4} md={8} className="games-game-view__content-versions">
-            <h2>Game Versions</h2>
-            <GameVersionList versions={versions} />
+          <Column sm={4} md={8}>
+            <Stack gap={5} orientation="vertical">
+              {game.listing && <GameOfficialListing listing={game.listing} />}
+              {game.description && (
+                <GameDescription description={game.description} />
+              )}
+            </Stack>
+          </Column>
+
+          <Column sm={4} md={8}>
+            <Stack gap={5} orientation="vertical">
+              <GameVersionArtifacts versions={versions} />
+              <GameVersionSources versions={versions} />
+            </Stack>
           </Column>
         </Grid>
       </section>
