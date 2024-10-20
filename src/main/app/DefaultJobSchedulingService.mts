@@ -4,7 +4,7 @@ import { isPromise } from "util/types";
 
 import { Logger, logger } from "$main/log";
 import { Job, JobSchedule } from "$main/pal";
-import { makeAggregatedError } from "$node-base/utils";
+import { makeAggregateError } from "$pure-base/utils";
 
 import { JobSchedulingService } from "./JobSchedulingService.mjs";
 
@@ -111,12 +111,6 @@ class JobScheduleTracker {
   }
 }
 
-export class AggregatedError extends Error {
-  constructor(readonly causes: readonly unknown[]) {
-    super("Multiple errors occurred");
-  }
-}
-
 /**
  * The default implementation of the job scheduling service.
  *
@@ -197,7 +191,7 @@ export class DefaultJobSchedulingService implements JobSchedulingService {
       }
     }
     if (failures.length > 0) {
-      throw makeAggregatedError(failures);
+      throw makeAggregateError(failures);
     }
   }
 }
