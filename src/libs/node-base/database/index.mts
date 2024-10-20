@@ -5,3 +5,4 @@ export type * from "./GameEntities.mjs";
 export type * from "./GameVersionEntities.mjs";
 export type * from "./TagEntities.mjs";
 export { WellKnownTagCategory } from "./TagEntities.mjs";
+export { ViteMigrationProvider } from "./ViteMigrationProvider.mjs";

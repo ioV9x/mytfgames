@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { AppDatabase } from "$node-base/database";
 
-import { ViteMigrationProvider } from "./KyselyMigrationProvider.mjs";
+import { ViteMigrationProvider } from "./ViteMigrationProvider.mjs";
 
 let canRun: boolean;
 try {
@@ -14,7 +14,7 @@ try {
   canRun = false;
 }
 
-describe.runIf(canRun)("KyselyDatabaseProvider", () => {
+describe.runIf(canRun)("ViteDatabaseProvider", () => {
   it("should migrate the database", async () => {
     const database = new SQLite(":memory:");
     const db = new Kysely<AppDatabase>({

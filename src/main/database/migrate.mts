@@ -2,25 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 
 import SQLite from "better-sqlite3";
-import {
-  Kysely,
-  Migration,
-  MigrationProvider,
-  Migrator,
-  SqliteDialect,
-} from "kysely";
+import { Kysely, Migrator, SqliteDialect } from "kysely";
 
-import { AppDatabase } from "$node-base/database";
+import { AppDatabase, ViteMigrationProvider } from "$node-base/database";
 import { isErrnoException } from "$node-base/utils";
-
-export class ViteMigrationProvider implements MigrationProvider {
-  async getMigrations(): Promise<Record<string, Migration>> {
-    // we need to await the import because it's a dynamic import which looses
-    // its type information if we don't
-    // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/return-await
-    return await import.meta.glob("./migrations/*.mts", { eager: true });
-  }
-}
 
 export async function migrate(dbPath: string): Promise<void> {
   const dbDir = path.dirname(dbPath);
