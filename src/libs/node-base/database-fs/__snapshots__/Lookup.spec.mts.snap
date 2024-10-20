@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`database-fs:Lookup > dbfsFindNodeNoByPath > should throw an error for absolute paths with a parent node 1`] = `[Error: Tried to resolve an absolute path with a parent node]`;

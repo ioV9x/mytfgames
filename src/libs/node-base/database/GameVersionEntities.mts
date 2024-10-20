@@ -55,7 +55,7 @@ export interface GameVersionArtifactTable {
    *
    * An artifact can either be a directory or a file.
    */
-  node_no: number;
+  node_no: bigint;
 }
 
 export interface GameVersionSourceTable {

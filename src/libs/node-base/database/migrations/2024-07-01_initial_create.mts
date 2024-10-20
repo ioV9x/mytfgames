@@ -100,13 +100,6 @@ export async function up(db: Kysely<any>): Promise<void> {
       )
       .modifyEnd(sql`STRICT`)
       .execute();
-    await trx
-      .insertInto("node")
-      .values({
-        node_no: 0,
-        node_type: "D",
-      })
-      .execute();
 
     await trx.schema
       .createTable("node_directory")
@@ -119,14 +112,6 @@ export async function up(db: Kysely<any>): Promise<void> {
         (cb) => cb.onDelete("cascade"),
       )
       .modifyEnd(sql`STRICT`)
-      .execute();
-    await trx
-      .insertInto("node_directory")
-      .values([
-        {
-          directory_no: 0,
-        },
-      ])
       .execute();
 
     await trx.schema
@@ -186,6 +171,38 @@ export async function up(db: Kysely<any>): Promise<void> {
       .createIndex("node_file_____blake3_hash")
       .on("node_file")
       .column("blake3_hash")
+      .execute();
+
+    // create well known directories
+    // 0 is the root node
+    // -1 is reserved as an invalid node number / sentinel value
+    // [-128; -2] are reserved for well known root directories
+    // [-2**63; -129] are reserved for well known directories
+    await trx
+      .insertInto("node")
+      .values([
+        { node_no: 0n, node_type: "D" },
+        { node_no: -2n, node_type: "D" },
+        { node_no: -3n, node_type: "D" },
+        { node_no: -129n, node_type: "D" },
+      ])
+      .execute();
+    await trx
+      .insertInto("node_directory")
+      .values([
+        { directory_no: 0n },
+        { directory_no: -2n },
+        { directory_no: -3n },
+        { directory_no: -129n },
+      ])
+      .execute();
+    await trx
+      .insertInto("node_member")
+      .values([
+        { node_no: -2n, name: "tmp", node_no_parent: 0n },
+        { node_no: -3n, name: "artifacts", node_no_parent: 0n },
+        { node_no: -129n, name: "import", node_no_parent: -2n },
+      ])
       .execute();
 
     ////////////////////////////////////////////////////////////////////////////
