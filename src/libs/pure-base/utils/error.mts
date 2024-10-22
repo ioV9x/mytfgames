@@ -1,6 +1,7 @@
 export enum ErrorTypeId {
   AbortError = "io.gitgud/ioV9x/mytfgames#AbortError",
   AggregateError = "io.gitgud/ioV9x/mytfgames#AggregateError",
+  DbfsError = "io.gitgud/ioV9x/mytfgames#DbfsError",
   ErrnoException = "io.gitgud/ioV9x/mytfgames#ErrnoException",
   ExternalApiError = "io.gitgud/ioV9x/mytfgames#ExternalApiError",
   LogicError = "io.gitgud/ioV9x/mytfgames#LogicError",
@@ -167,6 +168,49 @@ export function isLogicError(error: unknown): error is LogicError {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Dbfs Error
+const DbfsErrorType = Symbol.for(ErrorTypeId.DbfsError);
+export enum DbfsErrorCode {
+  EEXIST = "EEXIST",
+  ENOENT = "ENOENT",
+}
+export interface DbfsError extends ExtendedError {
+  readonly [DbfsErrorType]: true;
+  code: DbfsErrorCode;
+}
+class $DbfsError extends Error implements DbfsError {
+  get [ExtendedErrorType]() {
+    return true as const;
+  }
+  get [DbfsErrorType]() {
+    return true as const;
+  }
+  constructor(
+    readonly code: DbfsErrorCode,
+    message?: string,
+  ) {
+    super(message);
+  }
+}
+interface SerializedDbfsError extends BasicSerializedError {
+  type: ErrorTypeId.DbfsError;
+  code: DbfsErrorCode;
+}
+export function makeDbfsError(
+  code: DbfsErrorCode,
+  message?: string,
+): DbfsError {
+  return new $DbfsError(code, message);
+}
+export function isDbfsError(error: unknown): error is DbfsError {
+  return (
+    isExtendedError(error) &&
+    DbfsErrorType in error &&
+    error[DbfsErrorType] === true
+  );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Transferred Error
 const TransferredErrorType = Symbol.for(ErrorTypeId.TransferredError);
 export interface TransferredError extends ExtendedError {
@@ -233,6 +277,7 @@ export function makeTransportClosedError(transport: {
 export type SerializedError =
   | SerializedAbortError
   | SerializedAggregateError
+  | SerializedDbfsError
   | SerializedErrnoException
   | SerializedExternalApiError
   | SerializedLogicError
@@ -257,6 +302,14 @@ export function serializeError(error: ExtendedError): SerializedError {
         isExtendedError(nested) ? serializeError(nested) : nested,
       ),
       cause: undefined,
+    };
+  } else if (isDbfsError(error)) {
+    return {
+      type: ErrorTypeId.DbfsError,
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      cause: error.cause,
     };
   } else if (isErrnoException(error)) {
     return {
