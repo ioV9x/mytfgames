@@ -17,6 +17,7 @@ import { ConfigurationModule } from "./configuration/configuration.module.mjs";
 import { GamesModule } from "./games/games.module.mjs";
 import { LogModule } from "./log/log.module.mjs";
 import { PalBrowserModule } from "./pal/browser.module.mjs";
+import { PalDialogsModule } from "./pal/dialogs.module.mjs";
 import { PalIpcModule } from "./pal/Ipc/IpcModule.mjs";
 import { PalWorkerModule } from "./pal/worker/worker.module.mjs";
 
@@ -33,6 +34,7 @@ container.load(
   GamesModule,
   LogModule,
   PalBrowserModule,
+  PalDialogsModule,
   PalIpcModule,
   PalWorkerModule,
 );

@@ -36,6 +36,16 @@ export class ElectronBrowserWindowFactory implements BrowserWindowFactory {
   }
 }
 
+@injectable()
+export class ElectronBrowserWindowConfigurer {
+  dereference(window: BrowserWindow): XElectronBrowserWindow {
+    if (!(window instanceof ElectronBrowserWindow)) {
+      throw new TypeError("Invalid browser window object");
+    }
+    return window.handle;
+  }
+}
+
 class ElectronBrowserWindow implements BrowserWindow {
   constructor(readonly handle: XElectronBrowserWindow) {}
 

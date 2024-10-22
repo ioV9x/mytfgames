@@ -5,6 +5,7 @@ import { IpcEventArgs, IpcMessage, MessageTransport } from "$pure-base/ipc";
 export class ElectronMainMessageTransport implements MessageTransport {
   constructor(
     readonly id: string,
+    readonly webContentsId: number,
     private readonly port: MessagePortMain,
   ) {}
 

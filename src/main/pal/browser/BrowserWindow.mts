@@ -17,3 +17,11 @@ const BrowserWindowFactory = makeServiceIdentifier<BrowserWindowFactory>(
   "browser window factory",
 );
 export { BrowserWindowFactory };
+
+interface BrowserWindowConfigurer {
+  dereference(window: BrowserWindow): Electron.BrowserWindow;
+}
+const BrowserWindowConfigurer = makeServiceIdentifier<BrowserWindowConfigurer>(
+  "browser window configurer",
+);
+export { BrowserWindowConfigurer };

@@ -37,6 +37,7 @@ export class MainIpcServer {
       }
       const transport = new ElectronMainMessageTransport(
         `webcontents-${ev.sender.id.toString()}`,
+        ev.sender.id,
         port,
       );
       this.remoteProcedureServer.addTransport(transport);

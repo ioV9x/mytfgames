@@ -6,5 +6,6 @@ import {
 import { GameSId } from "./GameDataService.mjs";
 
 export const ArtifactService = makeRemoteServiceDescriptor("artifacts", {
-  importArtifact: makeRemoteProcedureDescriptor<[gameId: GameSId], void>(),
+
+  openDirectoryChooser: makeRemoteProcedureDescriptor<[], string | null>(),
 });
