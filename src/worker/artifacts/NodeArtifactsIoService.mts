@@ -1,16 +1,24 @@
 import assert from "node:assert";
-import { createReadStream, createWriteStream, Dirent } from "node:fs";
 import {
   constants,
+  createReadStream,
+  createWriteStream,
+  Dirent,
+  statSync,
+} from "node:fs";
+import {
   copyFile,
   mkdir,
   mkdtemp,
   readdir,
   readFile,
   rename,
+  rm,
+  rmdir,
   stat,
   unlink,
 } from "node:fs/promises";
+import { platform } from "node:os";
 import path from "node:path";
 import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
@@ -25,12 +33,13 @@ import { AppConfiguration } from "$node-base/configuration";
 import { AppQueryCreator, DatabaseProvider } from "$node-base/database";
 import { collectAsyncIterable, isErrnoException } from "$node-base/utils";
 import { remoteProcedure } from "$pure-base/ipc";
+import { makeLogicError } from "$pure-base/utils";
 
 const EXTERNAL_BLOB_STORAGE_THRESHOLD = 32n * 1024n;
 
 interface DirectoryNode {
-  files: [string, Buffer][];
-  directories: [string, DirectoryNode][];
+  files: [name: string, mode: bigint, fileHash: Buffer][];
+  directories: [name: string, content: DirectoryNode][];
 }
 
 @injectable()
@@ -108,8 +117,8 @@ class ImportOperation {
       while (queue.length !== 0) {
         const [dirNo, { files, directories }] = queue.shift()!;
         await Promise.all(
-          files.map(([name, fileHash]) =>
-            this.insertFileNode(tx, dirNo, name, fileHash),
+          files.map(([name, mode, fileHash]) =>
+            this.insertFileNode(tx, dirNo, name, mode, fileHash),
           ),
         );
 
@@ -131,6 +140,7 @@ class ImportOperation {
     qc: AppQueryCreator,
     node_no_parent: bigint,
     name: string,
+    mode: bigint,
     fileHash: Buffer,
   ): Promise<void> {
     const nodeInsertResult = await qc
@@ -148,7 +158,7 @@ class ImportOperation {
         .insertInto("node_file")
         .values({
           file_no: node_no,
-          unix_mode: 0o644,
+          unix_mode: Number(mode),
           blake3_hash: fileHash,
         })
         .execute(),
@@ -203,7 +213,7 @@ class ImportOperation {
   ): Promise<DirectoryNode> {
     const fileEntries: Dirent[] = [];
     const subdirectoryEntries: Dirent[] = [];
-    for await (const item of await readdir(directoryPath, {
+    for (const item of await readdir(directoryPath, {
       withFileTypes: true,
     })) {
       if (item.isDirectory()) {
@@ -213,10 +223,10 @@ class ImportOperation {
       }
     }
 
-    const files: [string, Buffer][] = await Promise.all(
+    const files: [string, bigint, Buffer][] = await Promise.all(
       fileEntries.map(async (fileEntry) => {
         const filePath = path.join(directoryPath, fileEntry.name);
-        return [fileEntry.name, await this.importFile(filePath, signal)];
+        return [fileEntry.name, ...(await this.importFile(filePath, signal))];
       }),
     );
     const subdirectories: [string, DirectoryNode][] = [];
@@ -235,13 +245,14 @@ class ImportOperation {
   private async importFile(
     filePath: string,
     signal: AbortSignal,
-  ): Promise<Buffer> {
-    const { size } = await stat(filePath, { bigint: true });
-    if (size <= EXTERNAL_BLOB_STORAGE_THRESHOLD) {
-      return this.importSmallFile(filePath, signal);
-    } else {
-      return this.importLargeFile(filePath, signal);
-    }
+  ): Promise<[bigint, Buffer]> {
+    const { size, mode } = await stat(filePath, { bigint: true });
+    const filteredMode = mapFileMode(mode);
+    const fileHash =
+      size <= EXTERNAL_BLOB_STORAGE_THRESHOLD
+        ? this.importSmallFile(filePath, signal)
+        : this.importLargeFile(filePath, signal);
+    return [filteredMode, await fileHash];
   }
 
   private async importSmallFile(
@@ -393,4 +404,68 @@ class Blake3Stream extends Transform {
     this.#context.reset();
     callback(null);
   }
+}
+
+const usedMaskNames = [
+  "S_IRUSR",
+  "S_IWUSR",
+  "S_IXUSR",
+  "S_IRGRP",
+  "S_IWGRP",
+  "S_IXGRP",
+  "S_IROTH",
+  "S_IWOTH",
+  "S_IXOTH",
+] as const;
+const modeMasks = Object.freeze(
+  usedMaskNames
+    .map((name) =>
+      typeof constants[name] === "number" && constants[name] > 0
+        ? ([name, BigInt(constants[name])] as const)
+        : null,
+    )
+    .reduce<Record<(typeof usedMaskNames)[number], bigint> | null>(
+      (acc, mask) => {
+        if (acc == null || mask == null) {
+          return null;
+        }
+        acc[mask[0]] = mask[1];
+        return acc;
+      },
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      Object.create(null),
+    ),
+);
+
+function mapFileMode(mode: bigint): bigint {
+  if (modeMasks == null) {
+    return 0o644n;
+  }
+  const {
+    S_IRUSR,
+    S_IWUSR,
+    S_IXUSR,
+    S_IRGRP,
+    S_IWGRP,
+    S_IXGRP,
+    S_IROTH,
+    S_IWOTH,
+    S_IXOTH,
+  } = modeMasks;
+  return (
+    (normalizeFileRights(mode, S_IRUSR, S_IWUSR, S_IXUSR) << 6n) |
+    (normalizeFileRights(mode, S_IRGRP, S_IWGRP, S_IXGRP) << 3n) |
+    normalizeFileRights(mode, S_IROTH, S_IWOTH, S_IXOTH)
+  );
+}
+function normalizeFileRights(
+  mode: bigint,
+  iread: bigint,
+  iwrite: bigint,
+  iexec: bigint,
+): bigint {
+  const read = (mode & iread) !== 0n ? 4n : 0n;
+  const write = (mode & iwrite) !== 0n ? 2n : 0n;
+  const exec = (mode & iexec) !== 0n ? 1n : 0n;
+  return read | write | exec;
 }
