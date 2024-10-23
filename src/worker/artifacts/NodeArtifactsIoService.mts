@@ -90,7 +90,15 @@ class ImportOperation {
     // operation. We do this first to avoid having to lock the database for a
     // long time. If we fail during this step, unused files will be cleaned up
     // by the garbage collection on next startup.
-    const tree = await this.reapDirectory(folderPath, signal);
+    let tree: DirectoryNode;
+    try {
+      tree = await this.reapDirectory(folderPath, signal);
+    } catch (error) {
+      // cleanup the temporary directory
+      await rm(this.stageDirPath, { recursive: true });
+      throw error;
+    }
+    await rmdir(this.stageDirPath);
 
     // then replicate the directory structure in the database
     await this.database.transaction().execute(async (tx) => {
