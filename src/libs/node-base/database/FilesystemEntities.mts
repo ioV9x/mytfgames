@@ -34,6 +34,7 @@ export const WellKnownDirectory = Object.freeze(
       INVALID: -1n,
 
       ARTIFACTS: -3n,
+      CLEANUP_QUEUE: -4n,
       TMP_IMPORT: -129n,
       TMP: -2n,
     } as const,

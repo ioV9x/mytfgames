@@ -27,8 +27,22 @@ export async function migrate(dbPath: string): Promise<void> {
       throw error;
     }
   }
+  try {
+    fs.copyFileSync(
+      `${dbPath}-wal`,
+      tmpDbPath,
+      fs.constants.COPYFILE_FICLONE | fs.constants.COPYFILE_EXCL,
+    );
+  } catch (error) {
+    if (isErrnoException(error) && error.code === "ENOENT") {
+      // swallow the error, the WAL file only exists after an app crash
+    } else {
+      throw error;
+    }
+  }
 
   const rawDatabase = new SQLite(tmpDbPath, { fileMustExist: false });
+  rawDatabase.pragma("journal_mode = WAL");
   const db = new Kysely<AppDatabase>({
     dialect: new SqliteDialect({
       database: rawDatabase,
@@ -60,6 +74,12 @@ export async function migrate(dbPath: string): Promise<void> {
   rawDatabase.close();
 
   fs.renameSync(tmpDbPath, dbPath);
-  fs.rmSync(`${tmpDbPath}-journal`);
+  try {
+    fs.rmSync(`${dbPath}-wal`);
+  } catch (error) {
+    if (!isErrnoException(error) || error.code !== "ENOENT") {
+      throw error;
+    }
+  }
   fs.rmdirSync(tmpDir);
 }

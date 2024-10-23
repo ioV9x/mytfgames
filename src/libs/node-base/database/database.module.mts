@@ -16,6 +16,7 @@ export const DatabaseModule = new ContainerModule((bind) => {
             // if you access the database before the migrations are run,
             // you'll rightfully get an error
             fileMustExist: true,
+            timeout: 10000,
           });
           return Promise.resolve(instance);
         },

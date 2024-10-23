@@ -4,7 +4,6 @@ import { sqliteSafeMigration } from "$node-base/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function up(db: Kysely<any>): Promise<void> {
-  await sql`PRAGMA journal_mode = TRUNCATE`.execute(db);
   await sqliteSafeMigration(db, async (trx) => {
     ////////////////////////////////////////////////////////////////////////////
     // tags
@@ -184,6 +183,7 @@ export async function up(db: Kysely<any>): Promise<void> {
         { node_no: 0n, node_type: "D" },
         { node_no: -2n, node_type: "D" },
         { node_no: -3n, node_type: "D" },
+        { node_no: -4n, node_type: "D" },
         { node_no: -129n, node_type: "D" },
       ])
       .execute();
@@ -193,6 +193,7 @@ export async function up(db: Kysely<any>): Promise<void> {
         { directory_no: 0n },
         { directory_no: -2n },
         { directory_no: -3n },
+        { directory_no: -4n },
         { directory_no: -129n },
       ])
       .execute();
@@ -201,6 +202,7 @@ export async function up(db: Kysely<any>): Promise<void> {
       .values([
         { node_no: -2n, name: "tmp", node_no_parent: 0n },
         { node_no: -3n, name: "artifacts", node_no_parent: 0n },
+        { node_no: -4n, name: "cleanup_queue", node_no_parent: 0n },
         { node_no: -129n, name: "import", node_no_parent: -2n },
       ])
       .execute();
@@ -423,13 +425,14 @@ export async function up(db: Kysely<any>): Promise<void> {
       .insertInto("artifact_platform")
       .values(
         [
+          ["html", "HTML", 0],
+          ["htwi", "Twine HTML", 0],
           ["la64", "Linux ARM64", 0],
           ["lx64", "Linux x64", 0],
           ["lx86", "Linux x86", 0],
           ["ma64", "macOS ARM64", 0],
           ["mx64", "macOS x64", 0],
-          ["N/A", "N/A: cross-platform", 0],
-          ["twin", "TWINE html", 0],
+          ["NA", "N/A: cross-platform", 0],
           ["wa64", "Windows ARM64", 0],
           ["wx64", "Windows x64", 0],
           ["wx86", "Windows x86", 0],
