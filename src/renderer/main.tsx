@@ -7,6 +7,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import services from "$ipc/main-renderer";
 import { forgeRemoteServiceCollection } from "$pure-base/ipc";
 
+import { loadArtifactPlatforms } from "./dux/game-versions.mts";
 import { store } from "./dux/index.mjs";
 import { BrowserIpcEndpoint } from "./ipc/BrowserIpcEndpoint.mts";
 import { IpcContext } from "./ipc/IpcContext.mts";
@@ -30,6 +31,7 @@ function main(ev: MessageEvent) {
   }
   const endpoint = new BrowserIpcEndpoint(port, store);
   const boundservices = forgeRemoteServiceCollection(endpoint, services);
+  fetchInitialData(store, boundservices);
 
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
@@ -40,4 +42,10 @@ function main(ev: MessageEvent) {
       </IpcContext.Provider>
     </React.StrictMode>,
   );
+}
+
+function fetchInitialData(s: typeof store, boundServices: typeof services) {
+  s.dispatch(
+    loadArtifactPlatforms({ gameVersions: boundServices.gameVersions }),
+  ).catch((error: unknown) => console.error(error));
 }
