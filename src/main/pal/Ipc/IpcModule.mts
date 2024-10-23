@@ -17,7 +17,7 @@ export const PalIpcModule = new ContainerModule((bind) => {
     .inSingletonScope();
   bind(RemoteReduxActionSender)
     .to(injectable()(DefaultRemoteReduxActionSender))
-    .inRequestScope();
+    .inSingletonScope();
 
   bind(MainIpcServer).to(MainIpcServerImpl).inSingletonScope();
 });
