@@ -1,6 +1,6 @@
 import { ContainerModule } from "inversify";
 
-import { JobSchedule } from "$main/pal";
+import { JobSource } from "$main/pal";
 import { IpcServiceProvider } from "$node-base/ipc";
 
 import { DefaultGameDataService } from "./DefaultGameDataService.mjs";
@@ -15,5 +15,5 @@ export const GamesModule = new ContainerModule((bind) => {
   bind(DefaultGameVersionService).toSelf().inSingletonScope();
   bind(IpcServiceProvider).toService(DefaultGameVersionService);
 
-  bind(JobSchedule).to(GameListingSyncSchedule).inSingletonScope();
+  bind(JobSource).to(GameListingSyncSchedule).inSingletonScope();
 });

@@ -3,14 +3,14 @@ import { Temporal } from "temporal-polyfill";
 import { isPromise } from "util/types";
 
 import { Logger, logger } from "$main/log";
-import { Job, JobSchedule } from "$main/pal";
+import { isJobEmitter, isJobSchedule, Job, JobSource } from "$main/pal";
 import { makeAggregateError } from "$pure-base/utils";
 
 import { JobSchedulingService } from "./JobSchedulingService.mjs";
 
 type JobMap = Partial<Record<string, Job>>;
 
-class JobScheduleTracker {
+class JobSourceTracker {
   readonly #log: Logger;
   readonly #jobs: JobMap;
   readonly #waitQueue: Job[];
@@ -18,12 +18,12 @@ class JobScheduleTracker {
   lastRun: Temporal.Instant;
   nextRun: Temporal.Instant;
 
-  readonly queueJobs: (jobs: Job[]) => void;
+  readonly queueJobs: (jobs: Job[] | Job) => void;
   readonly runJob: (job: Job) => void;
 
   constructor(
     log: Logger,
-    readonly schedule: JobSchedule,
+    readonly schedule: JobSource,
     now: Temporal.Instant,
   ) {
     this.#log = log;
@@ -31,34 +31,50 @@ class JobScheduleTracker {
     this.#waitQueue = [];
     this.#semaphore = schedule.maxJobConcurrency;
     this.lastRun = Temporal.Instant.fromEpochMilliseconds(0);
-    this.nextRun = schedule.runOnStart
-      ? now
-      : now.add(schedule.scheduleCheckInterval);
+    if (isJobSchedule(schedule)) {
+      this.nextRun = schedule.runOnStart
+        ? now
+        : now.add(schedule.scheduleCheckInterval);
+    } else {
+      // *sometime* in the future 😂
+      this.nextRun = Temporal.Instant.fromEpochMilliseconds(2 ** 52);
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.runJob = this.$runJob.bind(this);
     this.queueJobs = this.$queueJobs.bind(this);
+
+    if (isJobEmitter(schedule)) {
+      schedule.addListener("created", this.queueJobs);
+    }
   }
 
   checkSchedule(now: Temporal.Instant): Promise<Job[]> | Job[] {
-    if (Temporal.Instant.compare(now, this.nextRun) < 0) {
+    const schedule = this.schedule;
+    if (
+      Temporal.Instant.compare(now, this.nextRun) < 0 ||
+      !isJobSchedule(schedule)
+    ) {
       return [];
     }
 
-    const jobs = this.schedule.checkSchedule();
+    const jobs = schedule.checkSchedule();
     if (isPromise(jobs)) {
       void jobs.then(() => {
         this.lastRun = now;
-        this.nextRun = now.add(this.schedule.scheduleCheckInterval);
+        this.nextRun = now.add(schedule.scheduleCheckInterval);
       });
     } else {
       this.lastRun = now;
-      this.nextRun = now.add(this.schedule.scheduleCheckInterval);
+      this.nextRun = now.add(schedule.scheduleCheckInterval);
     }
     return jobs;
   }
 
-  private $queueJobs(jobs: Job[]): void {
+  private $queueJobs(jobs: Job[] | Job): void {
+    if (!Array.isArray(jobs)) {
+      jobs = [jobs];
+    }
     this.#log.debug(
       `Queueing ${jobs.length} jobs for ${this.schedule.scheduleName}`,
     );
@@ -79,7 +95,8 @@ class JobScheduleTracker {
   }
   private async $runJob(job: Job): Promise<void> {
     try {
-      const result = job.run();
+      // TODO: implement job cancellation via UI
+      const result = job.run(new AbortController().signal);
       if (isPromise(result)) {
         await result;
       }
@@ -121,18 +138,18 @@ class JobScheduleTracker {
 @injectable()
 export class DefaultJobSchedulingService implements JobSchedulingService {
   readonly #log: Logger;
-  readonly #schedules: JobScheduleTracker[];
+  readonly #sources: JobSourceTracker[];
 
   readonly tickInterval = Temporal.Duration.from({ seconds: 60 });
 
   constructor(
     @logger("scheduler") log: Logger,
-    @multiInject(JobSchedule) jobSchedules: JobSchedule[],
+    @multiInject(JobSource) jobSources: JobSource[],
   ) {
     this.#log = log;
     const now = Temporal.Now.instant();
-    this.#schedules = jobSchedules.map(
-      (schedule) => new JobScheduleTracker(log, schedule, now),
+    this.#sources = jobSources.map(
+      (source) => new JobSourceTracker(log, source, now),
     );
   }
 
@@ -140,11 +157,11 @@ export class DefaultJobSchedulingService implements JobSchedulingService {
     this.#log.debug("Ticking job scheduler");
     const now = Temporal.Now.instant();
 
-    const asyncSchedules: [JobScheduleTracker, Promise<Job[]>][] = [];
+    const asyncSchedules: [JobSourceTracker, Promise<Job[]>][] = [];
 
     let numSyncSchedules = 0;
     let numAsyncSchedules = 0;
-    for (const scheduleTracker of this.#schedules) {
+    for (const scheduleTracker of this.#sources) {
       if (Temporal.Instant.compare(now, scheduleTracker.nextRun) < 0) {
         continue;
       }
