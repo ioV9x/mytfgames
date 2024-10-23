@@ -25,6 +25,7 @@ export class MainApp {
 
   constructor(
     @logger("app") public readonly log: Logger,
+    @logger("rejections") public readonly rejectionsLog: Logger,
     @inject(BrowserSessionConfigurer)
     readonly sessionConfigurer: BrowserSessionConfigurer,
     @inject(BrowserWindowFactory) readonly windowFactory: BrowserWindowFactory,
@@ -35,6 +36,10 @@ export class MainApp {
     @inject(WorkerShim) readonly workerShim: WorkerShim,
   ) {
     this.log.info("<===================== My TFGames =====================>");
+
+    process.addListener("unhandledRejection", (error: unknown) => {
+      this.rejectionsLog.debug(error);
+    });
   }
 
   async run(): Promise<void> {
