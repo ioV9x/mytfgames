@@ -12,7 +12,7 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "paths": {
-      "$pure-base/ipc": ["../libs/pure-base/ipc/index.mjs"],
+      "$pure-base/*": ["../libs/pure-base/*/index.mjs"],
       "$ipc/main-renderer": ["../libs/ipc-main-renderer/index.mjs"],
       "$renderer/*": ["./*/index.mjs"],
       "$renderer/components": ["./ui/components.mjs"],
