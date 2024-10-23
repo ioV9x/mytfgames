@@ -30,7 +30,7 @@ export async function migrate(dbPath: string): Promise<void> {
   try {
     fs.copyFileSync(
       `${dbPath}-wal`,
-      tmpDbPath,
+      `${tmpDbPath}-wal`,
       fs.constants.COPYFILE_FICLONE | fs.constants.COPYFILE_EXCL,
     );
   } catch (error) {
