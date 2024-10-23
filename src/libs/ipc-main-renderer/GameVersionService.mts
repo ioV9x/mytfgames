@@ -1,3 +1,5 @@
+import { createAction } from "@reduxjs/toolkit";
+
 import {
   makeRemoteProcedureDescriptor,
   makeRemoteServiceDescriptor,
@@ -28,6 +30,11 @@ export interface ArtifactPlatform {
   name: string;
   userDefined: boolean;
 }
+
+export const gameArtifactImported = createAction(
+  "ipc/games/versions/artifacts/imported",
+  (gameVersion: GameVersion) => ({ payload: gameVersion }),
+);
 
 export const GameVersionService = makeRemoteServiceDescriptor(
   "games:versions",

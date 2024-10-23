@@ -123,7 +123,7 @@ function GameViewLoaded({ game, versions }: GameViewLoadedProps) {
 
           <Column sm={4} md={8}>
             <Stack gap={5} orientation="vertical">
-              <GameVersionArtifacts versions={versions} />
+              <GameVersionArtifacts gameSId={game.id} versions={versions} />
               <GameVersionSources versions={versions} />
             </Stack>
           </Column>

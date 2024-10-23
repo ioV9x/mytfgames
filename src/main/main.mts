@@ -13,6 +13,7 @@ import { makeServiceIdentifier } from "$node-base/utils";
 
 import { ApiModule } from "./api/api.module.mjs";
 import { AppModule } from "./app/app.module.mjs";
+import { ArtifactsModule } from "./artifacts/artifacts.module.mjs";
 import { ConfigurationModule } from "./configuration/configuration.module.mjs";
 import { GamesModule } from "./games/games.module.mjs";
 import { LogModule } from "./log/log.module.mjs";
@@ -28,6 +29,7 @@ container.load(
   // keep this list sorted
   ApiModule,
   AppModule,
+  ArtifactsModule,
   BaseConfigurationModule,
   ConfigurationModule,
   DatabaseModule,

@@ -2,6 +2,7 @@ import { SerializedError } from "@reduxjs/toolkit";
 
 import {
   ArtifactPlatform,
+  gameArtifactImported,
   GameSId,
   GameVersion,
   GameVersionService,
@@ -52,6 +53,21 @@ const GameVersionsSlice = createSliceWithThunks({
       ),
     };
   },
+  extraReducers(builder) {
+    builder.addCase(gameArtifactImported, (state, { payload }) => {
+      const { gameId, version } = payload;
+      const versions = state.entities[gameId];
+      if (versions) {
+        const versionIndex = versions.findIndex((v) => v.version === version);
+        if (versionIndex < 0) {
+          versions.push(payload);
+        } else {
+          versions[versionIndex] = payload;
+        }
+      }
+    });
+  },
+});
 
 export const { loadArtifactPlatforms, loadGameVersionsForGame } =
   GameVersionsSlice.actions;

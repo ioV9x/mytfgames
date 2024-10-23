@@ -3,9 +3,13 @@ import {
   makeRemoteServiceDescriptor,
 } from "$pure-base/ipc";
 
-import { GameSId } from "./GameDataService.mjs";
+import type { GameSId } from "./GameDataService.mjs";
 
 export const ArtifactService = makeRemoteServiceDescriptor("artifacts", {
+  startImportFromFilesystem: makeRemoteProcedureDescriptor<
+    [gameId: GameSId, version: string, platform: string, path: string],
+    void
+  >(),
 
   openDirectoryChooser: makeRemoteProcedureDescriptor<[], string | null>(),
 });
