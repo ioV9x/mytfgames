@@ -3,6 +3,7 @@ import * as R from "remeda";
 import * as uuid from "uuid";
 
 import {
+  ArtifactPlatform,
   GameSId,
   GameVersion,
   GameVersionService as GameVersionServiceContract,
@@ -10,15 +11,75 @@ import {
 import { DatabaseProvider, GameId } from "$node-base/database";
 import { remoteProcedure } from "$pure-base/ipc";
 
+import { GameVersionService } from "./GameVersionService.mjs";
+
 @injectable()
-export class DefaultGameVersionService {
+export class DefaultGameVersionService implements GameVersionService {
   constructor(
     @inject(DatabaseProvider) private readonly db: DatabaseProvider,
   ) {}
 
+  retrieveVersionInfoForGame(
+    gameId: GameSId | GameId,
+    version: string,
+  ): Promise<GameVersion> {
+    const id =
+      typeof gameId === "string" ? (uuid.parse(gameId) as GameId) : gameId;
+
+    return this.db.transaction().execute(async (trx) => {
+      const versionRow = await trx
+        .selectFrom("game_version")
+        .select(["note"])
+        .where("game_id", "=", id)
+        .where("version", "=", version)
+        .executeTakeFirstOrThrow();
+
+      const sources = await trx
+        .selectFrom("game_version_source")
+        .select(["uri", "official_note as officialNote"])
+        .where("game_id", "=", id)
+        .where("version", "=", version)
+        .execute();
+
+      const artifacts = await trx
+        .selectFrom("game_version_artifact")
+        .select(["platform_type as platform", "node_no as rootNodeNo"])
+        .where("game_id", "=", id)
+        .where("version", "=", version)
+        .execute();
+
+      return {
+        gameId: typeof gameId === "string" ? gameId : uuid.stringify(id),
+        version,
+        note: versionRow.note,
+        sources,
+        artifacts: artifacts.map(({ platform, rootNodeNo }) => ({
+          platform,
+          rootNodeNo: BigInt(rootNodeNo),
+        })),
+      };
+    });
+  }
+
+  @remoteProcedure(GameVersionServiceContract, "getArtifactPlatforms")
+  async artifactPlatforms(): Promise<ArtifactPlatform[]> {
+    const platforms = await this.db
+      .selectFrom("artifact_platform")
+      .select(["platform_type as id", "name", "user_defined as userDefined"])
+      .execute();
+    return platforms.map(({ id, name, userDefined }) => ({
+      id,
+      name,
+      userDefined: userDefined !== 0,
+    }));
+  }
+
   @remoteProcedure(GameVersionServiceContract, "retrieveVersionsForGame")
-  async retrieveVersionsForGame(gameId: GameSId): Promise<GameVersion[]> {
-    const id = uuid.parse(gameId) as GameId;
+  async retrieveVersionsForGame(
+    gameId: GameSId | GameId,
+  ): Promise<GameVersion[]> {
+    const id =
+      typeof gameId === "string" ? (uuid.parse(gameId) as GameId) : gameId;
 
     const [versions, sources, artifacts] = await this.db
       .transaction()
@@ -37,11 +98,7 @@ export class DefaultGameVersionService {
             .execute(),
           trx
             .selectFrom("game_version_artifact")
-            .select([
-              "version",
-              "platform_type as platform",
-              "node_no as rootNodeNo",
-            ])
+            .select(["version", "platform_type as platform"])
             .where("game_id", "=", id)
             .execute(),
         ]),
@@ -50,11 +107,18 @@ export class DefaultGameVersionService {
     const groupedSources = R.groupBy(sources, (s) => s.version);
     const groupedArtifacts = R.groupBy(artifacts, (a) => a.version);
     return versions.map(({ note, version }) => ({
-      gameId,
+      gameId: typeof gameId === "string" ? gameId : uuid.stringify(gameId),
       version,
       note,
-      sources: groupedSources[version] ?? [],
-      artifacts: groupedArtifacts[version] ?? [],
+      sources:
+        groupedSources[version]?.map(({ officialNote, uri }) => ({
+          officialNote,
+          uri,
+        })) ?? [],
+      artifacts:
+        groupedArtifacts[version]?.map(({ platform }) => ({
+          platform,
+        })) ?? [],
     }));
   }
 }

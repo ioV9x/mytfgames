@@ -16,7 +16,6 @@ export interface GameVersion {
 
 export interface GameArtifact {
   platform: string;
-  rootNodeNo: number;
 }
 
 export interface GameVersionSource {
@@ -24,9 +23,20 @@ export interface GameVersionSource {
   officialNote: string;
 }
 
+export interface ArtifactPlatform {
+  id: string;
+  name: string;
+  userDefined: boolean;
+}
+
 export const GameVersionService = makeRemoteServiceDescriptor(
   "games:versions",
   {
+    getArtifactPlatforms: makeRemoteProcedureDescriptor<
+      [],
+      ArtifactPlatform[]
+    >(),
+
     retrieveVersionsForGame: makeRemoteProcedureDescriptor<
       [gameId: GameSId],
       GameVersion[]
