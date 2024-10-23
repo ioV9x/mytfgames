@@ -254,14 +254,21 @@ class ImportOperation {
     const blobTempId = this.nextBlobTempId();
     const blobTempPath = path.join(this.stageDirPath, blobTempId);
     let fileHash: Buffer;
-    try {
-      fileHash = await this.cloneFileTo(filePath, blobTempPath, signal);
-    } catch (error) {
-      if (isErrnoException(error) && error.code === "ENOSYS") {
-        // Fallback to copying the file if cloning is not supported
-        fileHash = await this.copyFileTo(filePath, blobTempPath, signal);
-      } else {
-        throw error;
+    if (platform() === "win32") {
+      // libuv does not support file cloning on Windows, so we always have to
+      // copy the file. Might need to revisit this after Win11 ships an
+      // automatic CoW copy optimization for CopyFile on ReFS.
+      fileHash = await this.copyFileTo(filePath, blobTempPath, signal);
+    } else {
+      try {
+        fileHash = await this.cloneFileTo(filePath, blobTempPath, signal);
+      } catch (error) {
+        if (isErrnoException(error) && error.code === "ENOSYS") {
+          // Fallback to copying the file if cloning is not supported
+          fileHash = await this.copyFileTo(filePath, blobTempPath, signal);
+        } else {
+          throw error;
+        }
       }
     }
     const size = (await stat(blobTempPath, { bigint: true })).size;
