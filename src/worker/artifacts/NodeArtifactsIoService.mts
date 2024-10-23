@@ -47,8 +47,13 @@ export class NodeArtifactIoService {
     );
   }
 
-  @remoteProcedure(ArtifactIoServiceDescriptor, "importFolder")
-  async importFolder(rootNode: bigint, folderPath: string): Promise<void> {
+  @remoteProcedure(ArtifactIoServiceDescriptor, "importFromFsNode")
+  async importFromFsNode(fsPath: string, targetNode: bigint): Promise<void> {
+    if (!statSync(fsPath).isDirectory()) {
+      throw makeLogicError(
+        "Only directories are currently supported for fs imports",
+      );
+    }
     try {
       await mkdir(this.importsDir);
     } catch (error) {
@@ -63,11 +68,7 @@ export class NodeArtifactIoService {
       stageDir,
       this.database,
     );
-    await importOperation.run(
-      rootNode,
-      folderPath,
-      new AbortController().signal,
-    );
+    await importOperation.run(targetNode, fsPath, new AbortController().signal);
   }
 }
 

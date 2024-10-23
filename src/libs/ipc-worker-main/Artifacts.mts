@@ -8,8 +8,12 @@ import {
 export const ArtifactIoServiceDescriptor = makeRemoteServiceDescriptor(
   "worker:artifacts",
   {
-    importFolder: makeRemoteProcedureDescriptor<
+    exportAsFolder: makeRemoteProcedureDescriptor<
       [rootNode: bigint, folderPath: string],
+      void
+    >(),
+    importFromFsNode: makeRemoteProcedureDescriptor<
+      [fsPath: string, targetNode: bigint],
       void
     >(),
   },
