@@ -263,7 +263,12 @@ class ImportOperation {
       signal,
     });
     const fileHash = blake3(content);
-    await this.insertFileContent(fileHash, content.length, content);
+    await this.insertFileContent(
+      this.database,
+      fileHash,
+      content.length,
+      content,
+    );
     return fileHash;
   }
 
@@ -291,13 +296,6 @@ class ImportOperation {
         }
       }
     }
-    const size = (await stat(blobTempPath, { bigint: true })).size;
-    const newlyInserted = await this.insertFileContent(fileHash, size, null);
-    if (!newlyInserted) {
-      // The file is already in the store, remove the temporary file
-      await unlink(blobTempPath);
-      return fileHash;
-    }
 
     const fileName = fileHash.toString("hex");
     const subDirectory = path.join(
@@ -305,18 +303,37 @@ class ImportOperation {
       fileName.substring(0, 3),
       fileName.substring(3, 6),
     );
-    await mkdir(subDirectory, { recursive: true });
-    await rename(blobTempPath, path.join(subDirectory, fileName));
+    const mkdirPromise = mkdir(subDirectory, { recursive: true });
 
+    const size = (await stat(blobTempPath, { bigint: true })).size;
+    await this.database.transaction().execute(async (trx) => {
+      const newlyInserted = await this.insertFileContent(
+        trx,
+        fileHash,
+        size,
+        null,
+      );
+      await mkdirPromise;
+      // we need to do this in the same transaction to prevent deletion races
+      // with the dbfs garbage collector
+      if (!newlyInserted) {
+        // The file is already in the store, remove the temporary file
+        await unlink(blobTempPath);
+        return;
+      }
+
+      await rename(blobTempPath, path.join(subDirectory, fileName));
+    });
     return fileHash;
   }
 
   private async insertFileContent(
+    qc: AppQueryCreator,
     blake3_hash: Buffer,
     size: bigint | number,
     data: Buffer | null,
   ): Promise<boolean> {
-    const insertResult = await this.database
+    const insertResult = await qc
       .insertInto("node_file_content")
       .values({
         blake3_hash,

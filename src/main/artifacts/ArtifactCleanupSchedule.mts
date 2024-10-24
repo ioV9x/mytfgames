@@ -1,4 +1,5 @@
-import { unlink } from "node:fs/promises";
+import { Dirent } from "node:fs";
+import { readdir, unlink } from "node:fs/promises";
 import path from "node:path";
 
 import { inject, injectable } from "inversify";
@@ -181,6 +182,12 @@ class DbfsNodeCleanupJob implements Job {
   }
 }
 
+const blobSubDirPattern = /^[0-9a-fA-F]{3}$/;
+const blobNamePattern = /^[0-9a-fA-F]{64}$/;
+function isBlobSubDir(ent: Dirent): boolean {
+  return ent.isDirectory() && blobSubDirPattern.test(ent.name);
+}
+
 class DbfsContentCleanupJob implements Job {
   readonly id: string;
 
@@ -210,35 +217,139 @@ class DbfsContentCleanupJob implements Job {
             ),
           ),
         )
-        .returning("blake3_hash")
-        .execute();
+        .executeTakeFirstOrThrow();
 
-      for (const resultChunk of R.chunk(result, 32)) {
-        await Promise.allSettled(
-          resultChunk.map(async ({ blake3_hash }) => {
-            const hexHash = blake3_hash.toString("hex");
-            const d1 = hexHash.slice(0, 3);
-            const d2 = hexHash.slice(3, 6);
-            const contentPath = path.join(
-              this.configuration.root.paths.blob_store,
-              `${d1}/${d2}/${hexHash}`,
-            );
-            try {
-              await unlink(contentPath);
-            } catch (error) {
-              if (!isErrnoException(error) || error.code !== "ENOENT") {
-                throw error;
-              }
-            }
-          }),
-        );
-      }
-
-      return result.length;
+      return result.numDeletedRows;
     });
     if (numDeleted > 0) {
       await sql<void>`VACUUM`.execute(this.db);
     }
+
+    // we don't use readdir in recursive mode because the directory structure
+    // provides a natural way to chunk the blobs and it reduces the number of
+    // TOCTOU failures
+    const blobStorePath = this.configuration.root.paths.blob_store;
+    const rootDirs = await readdir(blobStorePath, { withFileTypes: true });
+    for (const rootDir of rootDirs.filter(isBlobSubDir)) {
+      const subDirPath = path.join(blobStorePath, rootDir.name);
+      let subDirs: Dirent[];
+      try {
+        subDirs = await readdir(subDirPath, { withFileTypes: true });
+      } catch (error) {
+        if (isErrnoException(error) && error.code === "ENOENT") {
+          continue;
+        }
+        throw error;
+      }
+      for (const subDir of subDirs.filter(isBlobSubDir)) {
+        const subSubDirPath = path.join(subDirPath, subDir.name);
+        let blobEnts: Dirent[];
+        try {
+          blobEnts = await readdir(subSubDirPath, { withFileTypes: true });
+        } catch (error) {
+          if (isErrnoException(error) && error.code === "ENOENT") {
+            continue;
+          }
+          throw error;
+        }
+
+        for (const blobEntChunk of R.pipe(
+          blobEnts,
+          R.filter((e) => e.isFile() && blobNamePattern.test(e.name)),
+          R.sortBy((e) => e.name),
+          R.map((e) => ({
+            path: path.join(subSubDirPath, e.name),
+            hash: Buffer.from(e.name, "hex"),
+          })),
+          R.chunk(768),
+        )) {
+          await this.#purgeUnreferencedBlobs(blobEntChunk);
+        }
+      }
+    }
     console.timeEnd(`DbfsContentCleanupJob`);
   }
+
+  async #purgeUnreferencedBlobs(blobEnts: { path: string; hash: Buffer }[]) {
+    await this.db.transaction().execute(async (trx) => {
+      await sql<void>`COMMIT TRANSACTION`.execute(trx);
+      await sql<void>`BEGIN IMMEDIATE TRANSACTION`.execute(trx);
+
+      const knownExternalEntries = await trx
+        .selectFrom("node_file_content")
+        .select("blake3_hash as hash")
+        .where(
+          "blake3_hash",
+          "in",
+          blobEnts.map((e) => e.hash),
+        )
+        .where("data", "is", null)
+        .execute();
+
+      const toBeRemoved = sortedDifferenceBy(
+        blobEnts,
+        knownExternalEntries,
+        (e) => e.hash,
+        // Buffer.compare is not an instance method
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        Buffer.compare,
+      );
+
+      await Promise.allSettled(
+        toBeRemoved.map(async ({ path }) => {
+          try {
+            await unlink(path);
+          } catch (e) {
+            if (!isErrnoException(e) || e.code !== "ENOENT") {
+              throw e;
+            }
+          }
+        }),
+      );
+    });
+  }
+}
+
+function sortedDifferenceBy<T1, T2, TV extends NonNullable<unknown>>(
+  data: T1[],
+  exclude: T2[],
+  toValue: (x: T1 | T2) => TV,
+  compare: (a: TV, b: TV) => number,
+): T1[] {
+  if (data.length === 0) {
+    return [];
+  }
+  if (exclude.length === 0) {
+    return [...data];
+  }
+  let i = 0;
+  let iv = toValue(data[i]!);
+  let j = 0;
+  let jv = toValue(exclude[j]!);
+  const result: T1[] = [];
+  for (;;) {
+    const cmp = compare(iv, jv);
+    if (cmp < 0) {
+      result.push(data[i++]!);
+      if (i === data.length) {
+        break;
+      }
+      iv = toValue(data[i]!);
+    } else if (cmp === 0) {
+      if (++i === data.length || ++j === exclude.length) {
+        break;
+      }
+      iv = toValue(data[i]!);
+      jv = toValue(exclude[j]!);
+    } else {
+      if (++j === exclude.length) {
+        break;
+      }
+      jv = toValue(exclude[j]!);
+    }
+  }
+  for (; i < data.length; i++) {
+    result.push(data[i]!);
+  }
+  return result;
 }
