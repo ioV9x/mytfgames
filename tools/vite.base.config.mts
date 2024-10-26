@@ -4,8 +4,6 @@ import path from "node:path";
 
 import type { ConfigEnv, Plugin, UserConfig, ViteDevServer } from "vite";
 
-import pkg from "../package.json";
-
 export const builtins = [
   "electron",
   "electron/browser",
@@ -14,14 +12,7 @@ export const builtins = [
   ...builtinModules.map((m) => [m, `node:${m}`]).flat(),
 ];
 
-export const external = [
-  ...builtins,
-  ...Object.keys(
-    "dependencies" in pkg
-      ? (pkg.dependencies as Record<string, string | undefined>)
-      : {},
-  ),
-];
+export const external = [...builtins, "@napi-rs/blake-hash", "better-sqlite3"];
 
 export function getBuildConfig(env: ConfigEnv<"build">): UserConfig {
   const { root, mode, command } = env;
