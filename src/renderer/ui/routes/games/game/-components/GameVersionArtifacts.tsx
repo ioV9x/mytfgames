@@ -1,6 +1,6 @@
 import "./GameVersionArtifacts.scss";
 
-import { Add } from "@carbon/icons-react";
+import { Add, TrashCan } from "@carbon/icons-react";
 import {
   Button,
   ButtonSize,
@@ -9,16 +9,20 @@ import {
   Modal,
   Stack,
   Table,
+  TableBatchAction,
+  TableBatchActions,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableHeader,
   TableRow,
+  TableSelectAll,
+  TableSelectRow,
   TableToolbar,
   TableToolbarContent,
 } from "@carbon/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 import {
@@ -40,10 +44,21 @@ const GameVersionArtifactTableHeaders = [
     header: "Version",
   },
   {
-    key: "platform",
+    key: "platformName",
     header: "Platform",
   },
 ];
+
+interface ArtifactRowViewState {
+  id: string;
+  version: string;
+  platform: string;
+  platformName: string;
+}
+
+function makeId(version: string, platform: string) {
+  return `${version}|${platform}`;
+}
 
 export interface GameVersionArtifactsProps {
   gameSId: GameSId;
@@ -53,31 +68,41 @@ export function GameVersionArtifacts({
   gameSId,
   versions,
 }: GameVersionArtifactsProps) {
+  const { artifacts } = useIpc();
   const artifactPlatforms = useAppSelector((state) =>
     selectArtifactPlatforms(state),
   );
-  const artifacts = versions.flatMap((version) =>
-    version.artifacts.map((artifact) => ({
-      id: `${version.version}|${artifact.platform}`,
-      version: version.version,
-      platform:
-        artifactPlatforms.find((platform) => platform.id === artifact.platform)
-          ?.name ?? "invalid-value",
-    })),
+  const artifactRows = useMemo<ArtifactRowViewState[]>(
+    () =>
+      versions.flatMap((version) =>
+        version.artifacts.map((artifact) => ({
+          id: makeId(version.version, artifact.platform),
+          version: version.version,
+          platform: artifact.platform,
+          platformName:
+            artifactPlatforms.find(
+              (platform) => platform.id === artifact.platform,
+            )?.name ?? artifact.platform,
+        })),
+      ),
+    [artifactPlatforms, versions],
   );
 
   return (
     <DataTable
       headers={GameVersionArtifactTableHeaders}
-      rows={artifacts}
+      rows={artifactRows}
       isSortable
       size="sm"
     >
       {({
         getTableContainerProps,
         getTableProps,
+        getBatchActionProps,
+        getSelectionProps,
         headers,
         rows,
+        selectedRows,
         getRowProps,
         getHeaderProps,
         getToolbarProps,
@@ -88,6 +113,29 @@ export function GameVersionArtifacts({
           {...getTableContainerProps()}
         >
           <TableToolbar {...getToolbarProps()}>
+            <TableBatchActions {...getBatchActionProps()}>
+              <TableBatchAction
+                renderIcon={TrashCan}
+                iconDescription="Delete the selected artifacts"
+                onClick={() =>
+                  selectedRows.map((row) => {
+                    const artifact = artifactRows.find((r) => r.id === row.id);
+                    if (artifact != null) {
+                      artifacts
+                        .queueArtifactForDeletion(
+                          gameSId,
+                          artifact.version,
+                          artifact.platform,
+                        )
+                        .catch((error: unknown) => console.error(error));
+                    }
+                  })
+                }
+                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+              >
+                Delete
+              </TableBatchAction>
+            </TableBatchActions>
             <TableToolbarContent>
               <ImportArtifactButton gameSId={gameSId} size="sm" />
             </TableToolbarContent>
@@ -95,6 +143,7 @@ export function GameVersionArtifacts({
           <Table {...getTableProps()}>
             <TableHead>
               <TableRow>
+                <TableSelectAll {...getSelectionProps()} />
                 {headers.map((header) => (
                   <TableHeader
                     {...getHeaderProps({ header })}
@@ -109,6 +158,11 @@ export function GameVersionArtifacts({
             <TableBody>
               {rows.map((row) => (
                 <TableRow {...getRowProps({ row })} key={row.id}>
+                  <TableSelectRow
+                    {...getSelectionProps({
+                      row,
+                    })}
+                  />
                   {row.cells.map((cell) => (
                     <TableCell key={cell.id}>{cell.value}</TableCell>
                   ))}

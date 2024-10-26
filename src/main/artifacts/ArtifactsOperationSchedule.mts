@@ -96,6 +96,24 @@ export class ArtifactsOperationSchedule
     );
   }
 
+  @remoteProcedure(ArtifactService, "queueArtifactForDeletion")
+  async queueArtifactForDeletion(
+    gameSId: GameSId,
+    version: string,
+    platform: string,
+  ) {
+    const gameId = uuid.parse(gameSId) as GameId;
+    const obsoleteNodeNo = await this.ops.deleteArtifact(
+      gameId,
+      version,
+      platform,
+    );
+    this.emit(
+      "created",
+      new DbfsNodeCleanupJob(this.configuration, this.db, obsoleteNodeNo, true),
+    );
+  }
+
   async #reapBrokenImports(): Promise<Job[]> {
     await this.db.transaction().execute(async (trx) => {
       await trx
@@ -139,7 +157,8 @@ export class ArtifactsOperationSchedule
 
     return [
       ...cleanupNodeNos.map(
-        ({ node_no }) => new DbfsNodeCleanupJob(this.db, node_no),
+        ({ node_no }) =>
+          new DbfsNodeCleanupJob(this.configuration, this.db, node_no),
       ),
       new DbfsContentCleanupJob(this.configuration, this.db),
     ];

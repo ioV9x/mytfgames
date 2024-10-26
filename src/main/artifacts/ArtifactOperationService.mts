@@ -16,5 +16,11 @@ interface ArtifactOperationService {
     platform: string,
     nodeNo: bigint,
   ): Promise<void>;
+
+  deleteArtifact(
+    gameId: GameId,
+    version: string,
+    platform: string,
+  ): Promise<bigint>;
 }
 export { ArtifactOperationService };

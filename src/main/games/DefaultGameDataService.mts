@@ -230,11 +230,11 @@ export class DefaultGameDataService implements GameDataService {
           }),
         )
         .returning([
-          "name",
+          "name as name",
           "last_change_datetime as lastChangeTimestamp",
           "last_played_datetime as lastPlayedTimestamp",
           "user_rating as userRating",
-          "note",
+          "note as note",
         ])
         .executeTakeFirstOrThrow();
 
@@ -269,7 +269,7 @@ export class DefaultGameDataService implements GameDataService {
             .where("tfgames_game_id", "=", id)
             .set("name", name)
             .set("last_update_datetime", lastUpdate)
-            .returning("game_id")
+            .returning("game_id as game_id")
             .executeTakeFirst();
           if (game === undefined) {
             await this.insertOfficialListing(
@@ -355,7 +355,7 @@ export class DefaultGameDataService implements GameDataService {
             .set("name", gameDetails.name)
             .set("last_update_datetime", gameDetails.lastUpdate)
             .set("num_likes", gameDetails.numLikes ?? 0)
-            .returning("game_id")
+            .returning("game_id as game_id")
             .executeTakeFirst()
         )?.game_id ??
         (await this.insertOfficialListing(

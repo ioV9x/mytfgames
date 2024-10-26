@@ -1,5 +1,5 @@
 import { Dirent } from "node:fs";
-import { readdir, unlink } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import path from "node:path";
 
 import { sql } from "kysely";
@@ -8,8 +8,8 @@ import * as R from "remeda";
 import { Job } from "$main/pal";
 import { AppConfiguration } from "$node-base/configuration";
 import { DatabaseProvider } from "$node-base/database";
+import { dbfsPurgeUnreferencedFileData } from "$node-base/database-fs";
 import { isErrnoException } from "$node-base/utils";
-import { sortedDifferenceBy } from "$pure-base/utils";
 
 const blobSubDirPattern = /^[0-9a-fA-F]{3}$/;
 const blobNamePattern = /^[0-9a-fA-F]{64}$/;
@@ -81,68 +81,20 @@ export class DbfsContentCleanupJob implements Job {
           throw error;
         }
 
-        for (const blobEntChunk of R.pipe(
-          blobEnts,
-          R.filter((e) => e.isFile() && blobNamePattern.test(e.name)),
-          R.sortBy((e) => e.name),
-          R.map((e) => ({
-            path: path.join(subSubDirPath, e.name),
-            hash: Buffer.from(e.name, "hex"),
-          })),
-          R.chunk(768),
-        )) {
-          await this.#purgeUnreferencedBlobs(blobEntChunk);
-        }
+        await dbfsPurgeUnreferencedFileData(
+          this.configuration,
+          this.db,
+          R.pipe(
+            blobEnts,
+            R.filter((e) => e.isFile() && blobNamePattern.test(e.name)),
+            R.sortBy((e) => e.name),
+            R.map((e) => ({
+              path: path.join(subSubDirPath, e.name),
+              hash: Buffer.from(e.name, "hex"),
+            })),
+          ),
+        );
       }
     }
-  }
-
-  async #purgeUnreferencedBlobs(blobEnts: { path: string; hash: Buffer }[]) {
-    await this.db.connection().execute(async (conn) => {
-      await sql<void>`BEGIN IMMEDIATE TRANSACTION`.execute(conn);
-      try {
-        const knownExternalEntries = await conn
-          .selectFrom("node_file_content")
-          .select("blake3_hash as hash")
-          .where(
-            "blake3_hash",
-            "in",
-            blobEnts.map((e) => e.hash),
-          )
-          .where("data", "is", null)
-          .execute();
-
-        const toBeRemoved = sortedDifferenceBy(
-          blobEnts,
-          knownExternalEntries,
-          (e) => e.hash,
-          // Buffer.compare is not an instance method
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          Buffer.compare,
-        );
-
-        await Promise.allSettled(
-          toBeRemoved.map(async ({ path }) => {
-            try {
-              await unlink(path);
-            } catch (e) {
-              if (!isErrnoException(e) || e.code !== "ENOENT") {
-                throw e;
-              }
-            }
-          }),
-        );
-
-        await sql<void>`COMMIT TRANSACTION`.execute(conn);
-      } catch (error) {
-        try {
-          await sql<void>`ROLLBACK TRANSACTION`.execute(conn);
-        } catch {
-          /* swallow */
-          // TODO: log this failure
-        }
-        throw error;
-      }
-    });
   }
 }
