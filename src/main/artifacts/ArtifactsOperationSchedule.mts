@@ -1,5 +1,7 @@
 import EventEmitter from "events";
 import { inject, injectable } from "inversify";
+import { sql } from "kysely";
+import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
 
 import {
@@ -13,32 +15,56 @@ import {
   Job,
   JobEmitter,
   JobEmitterEvents,
+  JobSchedule,
   RemoteReduxActionSender,
 } from "$main/pal";
-import { GameId } from "$node-base/database";
+import { AppConfiguration } from "$node-base/configuration";
+import {
+  DatabaseProvider,
+  GameId,
+  WellKnownDirectory,
+} from "$node-base/database";
 import { remoteProcedure } from "$pure-base/ipc";
 
 import { ArtifactOperationService } from "./ArtifactOperationService.mjs";
+import { DbfsContentCleanupJob } from "./jobs/DbfsContentCleanupJob.mjs";
+import { DbfsNodeCleanupJob } from "./jobs/DbfsNodeCleanupJob.mjs";
 
 @injectable()
 export class ArtifactsOperationSchedule
   extends EventEmitter<JobEmitterEvents>
-  implements JobEmitter
+  implements JobEmitter, JobSchedule
 {
   readonly scheduleName = "artifact-operations";
   readonly maxJobConcurrency = 1;
+  readonly scheduleCheckInterval = Temporal.Duration.from({ minutes: 10 });
+  readonly runOnStart = true;
+
+  private startup = true;
 
   constructor(
-    @inject(ArtifactOperationService)
-    private readonly ops: ArtifactOperationService,
-    @inject(ArtifactIoService)
-    private readonly io: ArtifactIoService,
+    @inject(AppConfiguration) private readonly configuration: AppConfiguration,
+    @inject(DatabaseProvider) private readonly db: DatabaseProvider,
     @inject(RemoteReduxActionSender)
     private readonly remoteRedux: RemoteReduxActionSender,
+    @inject(ArtifactIoService)
+    private readonly io: ArtifactIoService,
     @inject(GameVersionService)
     private readonly gameVersionService: GameVersionService,
+    @inject(ArtifactOperationService)
+    private readonly ops: ArtifactOperationService,
   ) {
     super();
+  }
+
+  checkSchedule(): Promise<Job[]> | Job[] {
+    if (this.startup) {
+      this.startup = false;
+      return this.#reapBrokenImports();
+    }
+
+    // TODO: implement
+    return [];
   }
 
   @remoteProcedure(ArtifactService, "startImportFromFilesystem")
@@ -68,6 +94,55 @@ export class ArtifactsOperationSchedule
         tmpDirNodeNo,
       ),
     );
+  }
+
+  async #reapBrokenImports(): Promise<Job[]> {
+    await this.db.transaction().execute(async (trx) => {
+      await trx
+        .updateTable("node_member")
+        .set({
+          name: sql<string>`hex(randomblob(8)) || '-' || "node_member"."name"`,
+          node_no_parent: WellKnownDirectory.CLEANUP_QUEUE,
+        })
+        .from("game_version_artifact")
+        .whereRef("node_member.node_no", "=", "game_version_artifact.node_no")
+        .where("node_member.node_no_parent", "=", WellKnownDirectory.TMP_IMPORT)
+        .execute();
+
+      await trx
+        .deleteFrom("game_version_artifact")
+        .where((eb) =>
+          eb.exists(
+            eb
+              .selectFrom("node_member")
+              .select("node_member.node_no")
+              .whereRef(
+                "node_member.node_no",
+                "=",
+                "game_version_artifact.node_no",
+              )
+              .where(
+                "node_member.node_no_parent",
+                "=",
+                WellKnownDirectory.CLEANUP_QUEUE,
+              ),
+          ),
+        )
+        .execute();
+    });
+
+    const cleanupNodeNos = await this.db
+      .selectFrom("node_member")
+      .select("node_no")
+      .where("node_no_parent", "=", WellKnownDirectory.CLEANUP_QUEUE)
+      .execute();
+
+    return [
+      ...cleanupNodeNos.map(
+        ({ node_no }) => new DbfsNodeCleanupJob(this.db, node_no),
+      ),
+      new DbfsContentCleanupJob(this.configuration, this.db),
+    ];
   }
 }
 
