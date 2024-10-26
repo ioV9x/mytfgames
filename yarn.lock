@@ -400,7 +400,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/cli@npm:^7.4.0":
+"@electron-forge/cli@npm:~7.4.0":
   version: 7.4.0
   resolution: "@electron-forge/cli@npm:7.4.0"
   dependencies:
@@ -493,7 +493,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/maker-zip@npm:^7.4.0":
+"@electron-forge/maker-zip@npm:~7.4.0":
   version: 7.4.0
   resolution: "@electron-forge/maker-zip@npm:7.4.0"
   dependencies:
@@ -515,7 +515,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/plugin-fuses@npm:^7.4.0":
+"@electron-forge/plugin-fuses@npm:~7.4.0":
   version: 7.4.0
   resolution: "@electron-forge/plugin-fuses@npm:7.4.0"
   dependencies:
@@ -527,7 +527,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/plugin-vite@npm:^7.4.0":
+"@electron-forge/plugin-vite@npm:~7.4.0":
   version: 7.4.0
   resolution: "@electron-forge/plugin-vite@npm:7.4.0"
   dependencies:
@@ -552,7 +552,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/shared-types@npm:7.4.0, @electron-forge/shared-types@npm:^7.4.0":
+"@electron-forge/shared-types@npm:7.4.0, @electron-forge/shared-types@npm:~7.4.0":
   version: 7.4.0
   resolution: "@electron-forge/shared-types@npm:7.4.0"
   dependencies:
@@ -5487,11 +5487,11 @@ __metadata:
     "@carbon/icons-react": "npm:^11.50.1"
     "@carbon/react": "npm:^1.67.1"
     "@carbon/styles": "npm:^1.66.1"
-    "@electron-forge/cli": "npm:^7.4.0"
-    "@electron-forge/maker-zip": "npm:^7.4.0"
-    "@electron-forge/plugin-fuses": "npm:^7.4.0"
-    "@electron-forge/plugin-vite": "npm:^7.4.0"
-    "@electron-forge/shared-types": "npm:^7.4.0"
+    "@electron-forge/cli": "npm:~7.4.0"
+    "@electron-forge/maker-zip": "npm:~7.4.0"
+    "@electron-forge/plugin-fuses": "npm:~7.4.0"
+    "@electron-forge/plugin-vite": "npm:~7.4.0"
+    "@electron-forge/shared-types": "npm:~7.4.0"
     "@electron/fuses": "npm:^1.8.0"
     "@eslint/js": "npm:^9.11.1"
     "@ibm/plex": "npm:^6.4.1"
