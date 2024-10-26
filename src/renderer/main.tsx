@@ -15,6 +15,8 @@ import { IpcContext } from "./ipc/IpcContext.mts";
 import App from "./ui/App.tsx";
 
 window.addEventListener("message", main, { passive: true });
+document.getElementById("root")!.innerText =
+  "Awaiting message port for initialization...";
 
 function main(ev: MessageEvent) {
   if (ev.data !== "main-world-port") {
