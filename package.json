@@ -38,7 +38,7 @@
     "@reduxjs/toolkit": "^2.3.0",
     "@types/better-sqlite3": "^7.6.11",
     "@types/bunyan": "^1.8.11",
-    "@types/node": "~20.16.10",
+    "@types/node": "^20.17.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/uuid": "^10.0.0",
