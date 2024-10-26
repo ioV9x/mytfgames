@@ -43,7 +43,7 @@ export class DefaultGameVersionService implements GameVersionService {
 
       const artifacts = await trx
         .selectFrom("game_version_artifact")
-        .select(["platform_type as platform", "node_no as rootNodeNo"])
+        .select(["platform_type as platform"])
         .where("game_id", "=", id)
         .where("version", "=", version)
         .execute();
@@ -53,9 +53,8 @@ export class DefaultGameVersionService implements GameVersionService {
         version,
         note: versionRow.note,
         sources,
-        artifacts: artifacts.map(({ platform, rootNodeNo }) => ({
+        artifacts: artifacts.map(({ platform }) => ({
           platform,
-          rootNodeNo: BigInt(rootNodeNo),
         })),
       };
     });
