@@ -35,7 +35,7 @@
     "@electron/fuses": "^1.8.0",
     "@eslint/js": "^9.11.1",
     "@ibm/plex": "^6.4.1",
-    "@reduxjs/toolkit": "^2.2.7",
+    "@reduxjs/toolkit": "^2.3.0",
     "@types/better-sqlite3": "^7.6.11",
     "@types/bunyan": "^1.8.11",
     "@types/node": "~20.16.10",
