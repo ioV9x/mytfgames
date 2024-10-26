@@ -1,5 +1,6 @@
 import "./index.scss";
 
+import { unstable_FeatureFlags as FeatureFlags } from "@carbon/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
@@ -14,6 +15,8 @@ import { IpcContext } from "./ipc/IpcContext.mts";
 import App from "./ui/App.tsx";
 
 window.addEventListener("message", main, { passive: true });
+document.getElementById("root")!.innerText =
+  "Awaiting message port for initialization...";
 
 function main(ev: MessageEvent) {
   if (ev.data !== "main-world-port") {
@@ -35,11 +38,21 @@ function main(ev: MessageEvent) {
 
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-      <IpcContext.Provider value={boundservices}>
-        <ReduxProvider store={store}>
-          <App />
-        </ReduxProvider>
-      </IpcContext.Provider>
+      <FeatureFlags
+        flags={{
+          // TODO: @carbon/react v11.70.0 will add a prop for this flag
+          "enable-v12-dynamic-floating-styles": true,
+        }}
+        enableV12Overflowmenu
+        enableV12TileDefaultIcons
+        enableV12TileRadioIcons
+      >
+        <IpcContext.Provider value={boundservices}>
+          <ReduxProvider store={store}>
+            <App />
+          </ReduxProvider>
+        </IpcContext.Provider>
+      </FeatureFlags>
     </React.StrictMode>,
   );
 }
