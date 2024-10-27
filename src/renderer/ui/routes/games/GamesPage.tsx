@@ -14,6 +14,7 @@ import {
   TableRow,
   TableToolbar,
   TableToolbarContent,
+  TableToolbarSearch,
 } from "@carbon/react";
 import { JSX, useEffect, useState } from "react";
 import { useLocation, useSearch } from "wouter";
@@ -45,16 +46,26 @@ export default function GameIndexPage() {
     sort: SortDirection.Desc,
   });
   const orderType = orderFromQuery(query);
+  const name = gameNameFromQuery(query);
 
   const numTotalGames = useAppSelector((state) => state.games.numGames);
   const [searchResult, setSearchResult] = useState<GameSearchResult>({
     selected: [],
     total: 0,
   });
+  if (searchResult.total === 0 && page > 1) {
+    const newQuery = new URLSearchParams(query);
+    // Ideally, we'd set the page to the last page, but we don't have that info.
+    // The backend doesn't provide the number of items if the search is empty
+    // due to pagination running off the end of the list.
+    newQuery.set("page", "1");
+    setLocation(`?${newQuery.toString()}`, { replace: true });
+  }
   useEffect(() => {
     const abortController = new AbortController();
     const paginationPromise = dispatch(
       paginateGameIndex({
+        name,
         page,
         pageSize,
         orderType,
@@ -76,7 +87,7 @@ export default function GameIndexPage() {
       paginationPromise.abort("Effect cancelled"),
     );
     return () => abortController.abort();
-  }, [dispatch, page, pageSize, sort, orderType, numTotalGames]);
+  }, [dispatch, name, page, pageSize, sort, orderType, numTotalGames]);
 
   const loadedGames = useAppSelector((state) =>
     selectLoadedGamesById(state, searchResult.selected),
@@ -86,6 +97,22 @@ export default function GameIndexPage() {
     <TableContainer title="Game Index" className="games__content">
       <TableToolbar>
         <TableToolbarContent>
+          <TableToolbarSearch
+            value={name ?? ""}
+            onChange={(ev, _defaultValue) => {
+              const newQuery = new URLSearchParams(query);
+              const value = ev === "" ? ev : ev.target.value;
+              if (value !== "") {
+                newQuery.set("name", value);
+              } else {
+                newQuery.delete("name");
+              }
+              setLocation(`?${newQuery.toString()}`, {
+                replace: true,
+              });
+            }}
+            defaultExpanded
+          />
           <Button
             renderIcon={AddIcon}
             iconDescription="Add Game"
@@ -128,6 +155,10 @@ function orderFromQuery(query: URLSearchParams) {
   return isGameOrderType(serializedOrder)
     ? serializedOrder
     : GameOrderType.LastUpdate;
+}
+function gameNameFromQuery(query: URLSearchParams) {
+  const name = query.get("name");
+  return name != null && name !== "" ? name : undefined;
 }
 
 const GameTableHeaders: {

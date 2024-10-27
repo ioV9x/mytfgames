@@ -26,7 +26,7 @@ import {
   WellKnownTagCategory,
 } from "$node-base/database";
 import { remoteProcedure } from "$pure-base/ipc";
-import { ToKyselySortDirection } from "$pure-base/utils";
+import { SortDirection, ToKyselySortDirection } from "$pure-base/utils";
 
 import { GameDataService } from "./GameDataService.mjs";
 
@@ -183,54 +183,44 @@ export class DefaultGameDataService implements GameDataService {
 
   @remoteProcedure(GameDataServiceContract, "findGames")
   async findGames(searchParams: GameSearchParams): Promise<GameSearchResult> {
-    const { orderType, orderDirection, page } = searchParams;
+    const { name, orderType, orderDirection, page } = searchParams;
+
+    const games = await this.#findGamesBaseQuery(
+      this.db,
+      orderType,
+      orderDirection,
+    )
+      .$if(name != null, (qb) => {
+        const prefix = `${name}%`;
+        return qb.where((eb) =>
+          eb.or([
+            eb("listing.name", "like", prefix),
+            eb("description.name", "like", prefix),
+          ]),
+        );
+      })
+      .$if(page != null, (qb) =>
+        qb
+          .select((eb) => eb.fn.countAll<number>().over().as("total"))
+          .limit(page!.size)
+          .offset((page!.no - 1) * page!.size),
+      )
+      .execute();
+
+    return {
+      selected: games.map((r) => uuid.stringify(r.id)),
+      total: games[0]?.total ?? games.length,
+    };
+  }
+  #findGamesBaseQuery(
+    qc: AppQueryCreator,
+    orderType: GameOrderType,
+    orderDirection: SortDirection,
+  ) {
     const kyselyDirection = ToKyselySortDirection[orderDirection];
-
-    if (page == null) {
-      const list = await this.db
-        .selectFrom("game")
-        .leftJoin(
-          "game_official_listing as listing",
-          "listing.game_id",
-          "game.game_id",
-        )
-        .leftJoin(
-          "game_description as description",
-          "description.game_id",
-          "game.game_id",
-        )
-        .leftJoin(
-          "game_official_blacklist as blacklist",
-          "blacklist.game_id",
-          "game.game_id",
-        )
-        .where("blacklist.last_crawl_datetime", "is", null)
-        .select(["game.game_id as id"])
-        .orderBy((eb) => {
-          switch (orderType) {
-            case GameOrderType.Id:
-              return eb.ref("game.game_id");
-            case GameOrderType.Name:
-              return eb.fn.coalesce("description.name", "listing.name");
-            case GameOrderType.LastUpdate:
-              return eb.fn.coalesce(
-                "listing.last_update_datetime",
-                "description.last_change_datetime",
-              );
-          }
-        }, kyselyDirection)
-        .execute();
-
-      return {
-        selected: list.map((r) => uuid.stringify(r.id)),
-        total: list.length,
-      };
-    }
-
-    const { no: pageNo, size: pageSize } = page;
-
-    const games = await this.db
+    return qc
       .selectFrom("game")
+      .select("game.game_id as id")
       .leftJoin(
         "game_official_listing as listing",
         "listing.game_id",
@@ -241,16 +231,16 @@ export class DefaultGameDataService implements GameDataService {
         "description.game_id",
         "game.game_id",
       )
-      .leftJoin(
-        "game_official_blacklist as blacklist",
-        "blacklist.game_id",
-        "game.game_id",
+      .where((eb) =>
+        eb.not(
+          eb.exists(
+            eb
+              .selectFrom("game_official_blacklist as blacklist")
+              .select(sql`1`.as("x"))
+              .whereRef("blacklist.game_id", "=", "game.game_id"),
+          ),
+        ),
       )
-      .where("blacklist.last_crawl_datetime", "is", null)
-      .select((eb) => [
-        "game.game_id as id",
-        eb.fn.countAll<number>().over().as("total"),
-      ])
       .orderBy((eb) => {
         switch (orderType) {
           case GameOrderType.Id:
@@ -263,15 +253,7 @@ export class DefaultGameDataService implements GameDataService {
               "description.last_change_datetime",
             );
         }
-      }, kyselyDirection)
-      .limit(pageSize)
-      .offset((pageNo - 1) * pageSize)
-      .execute();
-
-    return {
-      selected: games.map((r) => uuid.stringify(r.id)),
-      total: games[0]?.total ?? 0,
-    };
+      }, kyselyDirection);
   }
 
   @remoteProcedure(GameDataServiceContract, "findGamesByNamePrefix")

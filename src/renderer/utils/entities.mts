@@ -1,5 +1,7 @@
 import { isSortDirection, SortDirection } from "$pure-base/utils";
 
+export const emptyArray: readonly [] = Object.freeze([]);
+
 export enum EntityRetrievalState {
   Loading = "loading",
   Loaded = "loaded",

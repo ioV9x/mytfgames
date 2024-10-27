@@ -42,6 +42,7 @@ export interface GameList {
   preloaded: Game[];
 }
 export interface GameSearchParams {
+  name?: string | undefined;
   orderType: GameOrderType;
   orderDirection: SortDirection;
   page?: {

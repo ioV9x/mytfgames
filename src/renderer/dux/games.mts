@@ -11,7 +11,7 @@ import {
 import { Dictionary, SortDirection } from "$pure-base/utils";
 import { AppAsyncThunkConfig, RootState } from "$renderer/dux";
 import { createSliceWithThunks } from "$renderer/dux/utils";
-import { EntityRetrievalState, upsert } from "$renderer/utils";
+import { emptyArray, EntityRetrievalState, upsert } from "$renderer/utils";
 
 const sliceName = "games";
 
@@ -62,6 +62,7 @@ export const loadGamesById = createAsyncThunk<
 export const paginateGameIndex = createAsyncThunk<
   GameSearchResult,
   {
+    name?: string | undefined;
     orderType: GameOrderType;
     orderDirection: SortDirection;
     page: number;
@@ -72,6 +73,7 @@ export const paginateGameIndex = createAsyncThunk<
   `${sliceName}/paginateGameIndex`,
   async (arg, { getState, dispatch, extra }) => {
     const searchResult = await extra.services.games.findGames({
+      name: arg.name,
       orderType: arg.orderType,
       orderDirection: arg.orderDirection,
       page: {
@@ -80,8 +82,8 @@ export const paginateGameIndex = createAsyncThunk<
       },
     });
     const { games } = getState();
-    const needed = searchResult.selected.filter(
-      (id) => games.entities[id]?.type !== EntityRetrievalState.Loaded,
+    const needed = searchResult.selected.filter((id) =>
+      gameNeedsLoading(games.entities[id]),
     );
     if (needed.length > 0) {
       void dispatch(loadGamesById({ ids: needed, force: true }));
@@ -162,10 +164,14 @@ export function selectGames(state: RootState) {
   return state.games.entities;
 }
 export function selectGamesById(state: RootState, ids: GameSId[]) {
-  return ids.map((id) => state.games.entities[id]);
+  return ids.length > 0
+    ? ids.map((id) => state.games.entities[id])
+    : emptyArray;
 }
 export function selectLoadedGamesById(state: RootState, ids: GameSId[]) {
-  return ids.map((id) => selectLoadedGameById(state, id));
+  return ids.length > 0
+    ? ids.map((id) => selectLoadedGameById(state, id))
+    : emptyArray;
 }
 
 export default GamesSlice.reducer;
@@ -176,10 +182,13 @@ function someGameNeedsLoading(
 ): boolean {
   return ids.some((id) => {
     const game = entities[id];
-    return (
-      game == null ||
-      (game.type !== EntityRetrievalState.Loading &&
-        game.type !== EntityRetrievalState.Loaded)
-    );
+    return gameNeedsLoading(game);
   });
+}
+function gameNeedsLoading(game: Game | null | undefined): boolean {
+  return (
+    game == null ||
+    (game.type !== EntityRetrievalState.Loading &&
+      game.type !== EntityRetrievalState.Loaded)
+  );
 }
