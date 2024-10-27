@@ -4,6 +4,7 @@ import { Add, TrashCan } from "@carbon/icons-react";
 import {
   Button,
   ButtonSize,
+  ComboBox,
   DataTable,
   Dropdown,
   Modal,
@@ -238,22 +239,27 @@ function ImportArtifactButton({ gameSId, size }: ImportArtifactButtonProps) {
               secondaryButtonText="Cancel"
             >
               <Stack gap={5}>
-                <Dropdown
+                <ComboBox
                   id="import-artifact-version"
                   titleText="Version"
-                  label="Select the artifact's version"
+                  helperText="Select the artifact's version or create a new one"
                   items={versions?.map((version) => version.version) ?? []}
                   selectedItem={version}
-                  onChange={({ selectedItem }) => setVersion(selectedItem)}
+                  onChange={({ selectedItem, inputValue }) =>
+                    setVersion(selectedItem ?? inputValue ?? null)
+                  }
                   invalid={version == null}
                   invalidText="Please select a version"
                   disabled={submitting}
+                  allowCustomValue
+                  typeahead
                   autoAlign
                 />
                 <Dropdown
                   id="import-artifact-platform"
                   titleText="Platform"
                   label="Select the artifact's platform"
+                  helperText="Select the artifact's platform"
                   items={artifactPlatforms}
                   itemToString={(def) => def?.name ?? ""}
                   selectedItem={platform}
