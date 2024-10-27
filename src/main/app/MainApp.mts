@@ -102,7 +102,9 @@ export class MainApp {
       });
     }
 
-    this.session = this.sessionConfigurer.configure(session.defaultSession);
+    this.session = await this.sessionConfigurer.configure(
+      session.defaultSession,
+    );
     this.appWindow = this.windowFactory.create();
     await this.appWindow.loadApp();
   }

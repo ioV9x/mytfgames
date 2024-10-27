@@ -11,7 +11,7 @@ export function isBrowserSession(v: object): v is BrowserSession {
 }
 
 interface BrowserSessionConfigurer {
-  configure(nativeSession: Session): BrowserSession;
+  configure(nativeSession: Session): BrowserSession | Promise<BrowserSession>;
   dereference(browserSession: BrowserSession): Session;
 
   registerCustomProtocolPriviliges(): void;

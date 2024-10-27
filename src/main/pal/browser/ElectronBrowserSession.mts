@@ -46,20 +46,21 @@ export class ElectronBrowserSessionConfigurer
     ]);
   }
 
-  configure(nativeSession: Session): BrowserSession {
+  configure(nativeSession: Session): BrowserSession | Promise<BrowserSession> {
     let browserSession = sessionWrappers.get(nativeSession);
     if (browserSession == null) {
       browserSession = new ElectronBrowserSession(nativeSession);
       sessionWrappers.set(nativeSession, browserSession);
-      if (this.configuration.root.proxy) {
-        // TODO: make configure async
-        nativeSession
-          .setProxy(this.configuration.root.proxy)
-          .catch((err: unknown) => {
-            this.log.error("Failed to set proxy", err);
-          });
-      }
       this.setupProtocols(nativeSession);
+      if (this.configuration.root.proxy) {
+        return nativeSession.setProxy(this.configuration.root.proxy).then(
+          () => browserSession!,
+          (err: unknown) => {
+            this.log.error("Failed to set proxy", err);
+            throw err;
+          },
+        );
+      }
     }
     return browserSession;
   }
