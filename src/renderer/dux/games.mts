@@ -12,13 +12,13 @@ import {
   GameOrderType,
   GameSId,
 } from "$ipc/main-renderer";
+import { SortDirection } from "$pure-base/utils";
 import { AppAsyncThunkConfig, RootState } from "$renderer/dux";
 import { createSliceWithThunks } from "$renderer/dux/utils";
 import {
   EntityRetrievalState,
   Page,
   paginationSlice,
-  SortDirection,
   upsert,
 } from "$renderer/utils";
 

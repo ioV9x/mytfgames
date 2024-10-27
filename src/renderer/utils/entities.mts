@@ -1,36 +1,9 @@
-import * as R from "remeda";
+import { isSortDirection, SortDirection } from "$pure-base/utils";
 
 export enum EntityRetrievalState {
   Loading = "loading",
   Loaded = "loaded",
   Error = "error",
-}
-
-export enum SortDirection {
-  Asc = "ASC",
-  Desc = "DESC",
-}
-const SortDirectionValues = Object.freeze(
-  R.unique(Object.values(SortDirection)).sort(),
-);
-export function isSortDirection(value: unknown): value is SortDirection {
-  return (
-    typeof value === "string" &&
-    (SortDirectionValues[
-      R.sortedIndex(SortDirectionValues, value)
-    ] as string) === value
-  );
-}
-export function flipDirection(direction: SortDirection): SortDirection {
-  return direction === SortDirection.Asc
-    ? SortDirection.Desc
-    : SortDirection.Asc;
-}
-export function flipDirectionIf(
-  direction: SortDirection,
-  condition: boolean,
-): SortDirection {
-  return condition ? flipDirection(direction) : direction;
 }
 
 const integerRegex = /^\d{1,15}$/;

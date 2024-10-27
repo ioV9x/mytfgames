@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": false,
     "paths": {
       "$node-base/utils": ["../node-base/utils/index.mjs"],
-      "$pure-base/ipc": ["../pure-base/ipc/index.mjs"]
+      "$pure-base/*": ["../pure-base/*/index.mjs"]
     }
   },
   "include": ["./**/*.mts"],

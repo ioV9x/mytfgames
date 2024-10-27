@@ -8,7 +8,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "paths": {
-      "$pure-base/ipc": ["../pure-base/ipc/index.mjs"]
+      "$pure-base/*": ["../pure-base/*/index.mjs"]
     }
   },
   "include": ["./**/*.mts"],

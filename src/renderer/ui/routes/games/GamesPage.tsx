@@ -23,6 +23,7 @@ import {
   isGameOrderType,
   makeGameDisplayName,
 } from "$ipc/main-renderer";
+import { flipDirection, SortDirection } from "$pure-base/utils";
 import { AppLink } from "$renderer/components";
 import {
   LoadedGame,
@@ -33,10 +34,8 @@ import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
 import { useIpc } from "$renderer/ipc";
 import {
   EntityRetrievalState,
-  flipDirection,
   nearestPage,
   paginationSettingsFromQuery,
-  SortDirection,
 } from "$renderer/utils";
 
 export default function GameIndexPage() {
