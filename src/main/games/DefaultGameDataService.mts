@@ -8,7 +8,10 @@ import {
   Game,
   gameCrawled,
   GameDataService as GameDataServiceContract,
+  gameIndexUpdated,
   GameOrderType,
+  GameSearchParams,
+  GameSearchResult,
   GameSId,
 } from "$ipc/main-renderer";
 import { GamesApi, RemoteCategory, RemoteVersionInfo } from "$main/api";
@@ -23,6 +26,7 @@ import {
   WellKnownTagCategory,
 } from "$node-base/database";
 import { remoteProcedure } from "$pure-base/ipc";
+import { ToKyselySortDirection } from "$pure-base/utils";
 
 import { GameDataService } from "./GameDataService.mjs";
 
@@ -177,6 +181,99 @@ export class DefaultGameDataService implements GameDataService {
     );
   }
 
+  @remoteProcedure(GameDataServiceContract, "findGames")
+  async findGames(searchParams: GameSearchParams): Promise<GameSearchResult> {
+    const { orderType, orderDirection, page } = searchParams;
+    const kyselyDirection = ToKyselySortDirection[orderDirection];
+
+    if (page == null) {
+      const list = await this.db
+        .selectFrom("game")
+        .leftJoin(
+          "game_official_listing as listing",
+          "listing.game_id",
+          "game.game_id",
+        )
+        .leftJoin(
+          "game_description as description",
+          "description.game_id",
+          "game.game_id",
+        )
+        .leftJoin(
+          "game_official_blacklist as blacklist",
+          "blacklist.game_id",
+          "game.game_id",
+        )
+        .where("blacklist.last_crawl_datetime", "is", null)
+        .select(["game.game_id as id"])
+        .orderBy((eb) => {
+          switch (orderType) {
+            case GameOrderType.Id:
+              return eb.ref("game.game_id");
+            case GameOrderType.Name:
+              return eb.fn.coalesce("description.name", "listing.name");
+            case GameOrderType.LastUpdate:
+              return eb.fn.coalesce(
+                "listing.last_update_datetime",
+                "description.last_change_datetime",
+              );
+          }
+        }, kyselyDirection)
+        .execute();
+
+      return {
+        selected: list.map((r) => uuid.stringify(r.id)),
+        total: list.length,
+      };
+    }
+
+    const { no: pageNo, size: pageSize } = page;
+
+    const games = await this.db
+      .selectFrom("game")
+      .leftJoin(
+        "game_official_listing as listing",
+        "listing.game_id",
+        "game.game_id",
+      )
+      .leftJoin(
+        "game_description as description",
+        "description.game_id",
+        "game.game_id",
+      )
+      .leftJoin(
+        "game_official_blacklist as blacklist",
+        "blacklist.game_id",
+        "game.game_id",
+      )
+      .where("blacklist.last_crawl_datetime", "is", null)
+      .select((eb) => [
+        "game.game_id as id",
+        eb.fn.countAll<number>().over().as("total"),
+      ])
+      .orderBy((eb) => {
+        switch (orderType) {
+          case GameOrderType.Id:
+            return eb.ref("game.game_id");
+          case GameOrderType.Name:
+            return eb.fn.coalesce("description.name", "listing.name");
+          case GameOrderType.LastUpdate:
+            return eb.fn.coalesce(
+              "listing.last_update_datetime",
+              "description.last_change_datetime",
+            );
+        }
+      }, kyselyDirection)
+      .limit(pageSize)
+      .offset((pageNo - 1) * pageSize)
+      .execute();
+
+    return {
+      selected: games.map((r) => uuid.stringify(r.id)),
+      total: games[0]?.total ?? 0,
+    };
+  }
+
   @remoteProcedure(GameDataServiceContract, "findGamesByNamePrefix")
   async findGameByNamePrefix(prefix: string): Promise<GameSId[]> {
     const games = await this.db
@@ -283,12 +380,31 @@ export class DefaultGameDataService implements GameDataService {
           }
         }),
       );
-      return await trx
-        .selectFrom("game_official_listing_outdated_v")
-        .select(["game_id", "tfgames_game_id"])
-        .execute();
+      const numEntries = await trx
+        .selectFrom("game")
+        .select((eb) => eb.fn.countAll().as("total"))
+        .where((eb) =>
+          eb.not(
+            eb.exists(
+              eb
+                .selectFrom("game_official_blacklist as blacklisted")
+                .select(sql<number>`1`.as("x"))
+                .whereRef("blacklisted.game_id", "=", "game.game_id"),
+            ),
+          ),
+        )
+        .executeTakeFirstOrThrow();
+
+      return [
+        Number(numEntries.total),
+        await trx
+          .selectFrom("game_official_listing_outdated_v")
+          .select(["game_id", "tfgames_game_id"])
+          .execute(),
+      ] as const;
     });
-    return updated.map(({ game_id, tfgames_game_id }) => [
+    this.remoteRedux.dispatch(gameIndexUpdated({ numGames: updated[0] }));
+    return updated[1].map(({ game_id, tfgames_game_id }) => [
       game_id,
       tfgames_game_id,
     ]);

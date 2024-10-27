@@ -40,7 +40,7 @@ export interface GamePageProps {
   gameId: GameSId;
 }
 export default function GamePage({ gameId }: GamePageProps) {
-  const { games, gameVersions } = useIpc();
+  const { gameVersions } = useIpc();
   const dispatch = useAppDispatch();
   const game = useAppSelector((state) => state.games.entities[gameId]);
   const versions = useAppSelector((state) =>
@@ -51,7 +51,6 @@ export default function GamePage({ gameId }: GamePageProps) {
     if (game?.type !== EntityRetrievalState.Loaded) {
       void dispatch(
         loadGamesById({
-          games,
           ids: [gameId],
         }),
       );
@@ -64,7 +63,7 @@ export default function GamePage({ gameId }: GamePageProps) {
         }),
       );
     }
-  }, [dispatch, game, gameId, games, gameVersions, versions]);
+  }, [dispatch, game, gameId, gameVersions, versions]);
 
   return (
     <GameView

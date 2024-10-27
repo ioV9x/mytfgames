@@ -15,11 +15,12 @@ import {
   TableToolbar,
   TableToolbarContent,
 } from "@carbon/react";
-import { JSX, useEffect } from "react";
+import { JSX, useEffect, useState } from "react";
 import { useLocation, useSearch } from "wouter";
 
 import {
   GameOrderType,
+  GameSearchResult,
   isGameOrderType,
   makeGameDisplayName,
 } from "$ipc/main-renderer";
@@ -28,18 +29,12 @@ import { AppLink } from "$renderer/components";
 import {
   LoadedGame,
   paginateGameIndex,
-  selectGamePage,
+  selectLoadedGamesById,
 } from "$renderer/dux/games";
 import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
-import { useIpc } from "$renderer/ipc";
-import {
-  EntityRetrievalState,
-  nearestPage,
-  paginationSettingsFromQuery,
-} from "$renderer/utils";
+import { nearestPage, paginationSettingsFromQuery } from "$renderer/utils";
 
 export default function GameIndexPage() {
-  const ipcContext = useIpc();
   const dispatch = useAppDispatch();
   const [_, setLocation] = useLocation();
   const query = new URLSearchParams(useSearch());
@@ -51,31 +46,40 @@ export default function GameIndexPage() {
   });
   const orderType = orderFromQuery(query);
 
+  const numTotalGames = useAppSelector((state) => state.games.numGames);
+  const [searchResult, setSearchResult] = useState<GameSearchResult>({
+    selected: [],
+    total: 0,
+  });
   useEffect(() => {
-    void dispatch(
+    const abortController = new AbortController();
+    const paginationPromise = dispatch(
       paginateGameIndex({
         page,
         pageSize,
         orderType,
         orderDirection: sort,
-        games: ipcContext.games,
       }),
     );
-  }, [ipcContext, dispatch, page, pageSize, sort, orderType]);
+    void paginationPromise.then(async (req) => {
+      if (
+        abortController.signal.aborted ||
+        req.meta.requestStatus !== "fulfilled"
+      ) {
+        return;
+      }
+      const searchResult = await paginationPromise.unwrap();
+      setSearchResult(searchResult);
+    });
 
-  const numItems = useAppSelector(
-    (state) => state.games.order?.[orderType].length ?? 0,
-  );
-  const games = useAppSelector((state) =>
-    selectGamePage(state, {
-      page,
-      pageSize,
-      orderType,
-      orderDirection: sort,
-    }),
-  );
-  const loadedGames = games.map((game) =>
-    game?.type === EntityRetrievalState.Loaded ? game : undefined,
+    abortController.signal.addEventListener("abort", () =>
+      paginationPromise.abort("Effect cancelled"),
+    );
+    return () => abortController.abort();
+  }, [dispatch, page, pageSize, sort, orderType, numTotalGames]);
+
+  const loadedGames = useAppSelector((state) =>
+    selectLoadedGamesById(state, searchResult.selected),
   );
 
   return (
@@ -93,7 +97,7 @@ export default function GameIndexPage() {
       </TableToolbar>
       <GameTable
         items={loadedGames}
-        totalItems={numItems}
+        totalItems={searchResult.total}
         page={page}
         pageSize={pageSize}
         pageSizes={[10, 20, 30, 40]}

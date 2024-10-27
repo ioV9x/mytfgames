@@ -5,6 +5,7 @@ import {
   makeRemoteProcedureDescriptor,
   makeRemoteServiceDescriptor,
 } from "$pure-base/ipc";
+import { SortDirection } from "$pure-base/utils";
 
 export type GameSId = string;
 export interface Game {
@@ -40,6 +41,18 @@ export interface GameList {
   order: GameSId[];
   preloaded: Game[];
 }
+export interface GameSearchParams {
+  orderType: GameOrderType;
+  orderDirection: SortDirection;
+  page?: {
+    no: number;
+    size: number;
+  };
+}
+export interface GameSearchResult {
+  selected: GameSId[];
+  total: number;
+}
 
 export enum GameOrderType {
   Id = "id",
@@ -63,7 +76,7 @@ export const gameCrawled = createAction(
   },
 );
 
-export const gameIndexUpdated = createAction<Record<GameOrderType, GameSId[]>>(
+export const gameIndexUpdated = createAction<{ numGames: number }>(
   "ipc/games/index-updated",
 );
 
@@ -87,5 +100,9 @@ export const GameDataService = makeRemoteServiceDescriptor("games:data", {
       },
     ],
     void
+  >(),
+  findGames: makeRemoteProcedureDescriptor<
+    [search: GameSearchParams],
+    GameSearchResult
   >(),
 });

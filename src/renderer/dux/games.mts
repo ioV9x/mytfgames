@@ -1,26 +1,17 @@
-import {
-  createAction,
-  createAsyncThunk,
-  createSelector,
-  SerializedError,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, SerializedError } from "@reduxjs/toolkit";
 
 import {
   Game as RawGame,
   gameCrawled,
-  GameDataService,
+  gameIndexUpdated,
   GameOrderType,
+  GameSearchResult,
   GameSId,
 } from "$ipc/main-renderer";
-import { SortDirection } from "$pure-base/utils";
+import { Dictionary, SortDirection } from "$pure-base/utils";
 import { AppAsyncThunkConfig, RootState } from "$renderer/dux";
 import { createSliceWithThunks } from "$renderer/dux/utils";
-import {
-  EntityRetrievalState,
-  Page,
-  paginationSlice,
-  upsert,
-} from "$renderer/utils";
+import { EntityRetrievalState, upsert } from "$renderer/utils";
 
 const sliceName = "games";
 
@@ -34,33 +25,28 @@ export type Game =
   | { type: EntityRetrievalState.Error; id: GameSId; error: string };
 
 export interface GamesState {
-  entities: Partial<Record<GameSId, Game>>;
-  order: Record<GameOrderType, GameSId[]> | null;
+  numGames: number;
+  entities: Dictionary<GameSId, Game>;
   lastError: SerializedError | null;
 }
 
 const initialState = {
+  numGames: -1,
   entities: {},
-  order: null,
   lastError: null,
 } satisfies GamesState as GamesState;
-
-export const GameIndexUpdated = createAction<Record<GameOrderType, GameSId[]>>(
-  `${sliceName}/indexUpdated`,
-);
 
 export const loadGamesById = createAsyncThunk<
   RawGame[],
   {
-    games: typeof GameDataService;
     ids: GameSId[];
     force?: boolean;
   },
   AppAsyncThunkConfig
 >(
   `${sliceName}/loadGamesById`,
-  async (arg, _thunkApi) => {
-    return await arg.games.retrieveGamesById(arg.ids);
+  async (arg, { extra }) => {
+    return await extra.services.games.retrieveGamesById(arg.ids);
   },
   {
     condition(arg, { getState }) {
@@ -74,47 +60,33 @@ export const loadGamesById = createAsyncThunk<
 );
 
 export const paginateGameIndex = createAsyncThunk<
-  RawGame[],
+  GameSearchResult,
   {
-    games: typeof GameDataService;
     orderType: GameOrderType;
     orderDirection: SortDirection;
     page: number;
     pageSize: number;
-    force?: boolean;
   },
   AppAsyncThunkConfig
 >(
   `${sliceName}/paginateGameIndex`,
-  async (arg, { getState, dispatch }) => {
-    const games = getState().games;
-    let order = games.order;
-    if (arg.force === true || order == null) {
-      order = await arg.games.retrieveOrder();
-      dispatch(GameIndexUpdated(order));
+  async (arg, { getState, dispatch, extra }) => {
+    const searchResult = await extra.services.games.findGames({
+      orderType: arg.orderType,
+      orderDirection: arg.orderDirection,
+      page: {
+        no: arg.page,
+        size: arg.pageSize,
+      },
+    });
+    const { games } = getState();
+    const needed = searchResult.selected.filter(
+      (id) => games.entities[id]?.type !== EntityRetrievalState.Loaded,
+    );
+    if (needed.length > 0) {
+      void dispatch(loadGamesById({ ids: needed, force: true }));
     }
-    const selectedOrder = order[arg.orderType];
-    const needed = paginationSlice(arg, selectedOrder, arg.orderDirection);
-    return await dispatch(
-      loadGamesById({ games: arg.games, ids: needed }),
-    ).unwrap();
-  },
-  {
-    condition(arg, { getState }) {
-      const games = getState().games;
-      if (arg.force === true || games.lastError != null) {
-        return true;
-      }
-      const order = games.order?.[arg.orderType];
-      if (order == null) {
-        return true;
-      }
-
-      return someGameNeedsLoading(
-        games.entities,
-        paginationSlice(arg, order, arg.orderDirection),
-      );
-    },
+    return searchResult;
   },
 );
 
@@ -125,12 +97,8 @@ const GamesSlice = createSliceWithThunks({
     return {};
   },
   extraReducers(builder) {
-    builder.addCase(GameIndexUpdated, (state, { payload }) => {
-      if (state.order == null) {
-        state.order = payload;
-        return;
-      }
-      Object.assign(state.order, payload);
+    builder.addCase(gameIndexUpdated, (state, { payload }) => {
+      state.numGames = payload.numGames;
     });
 
     // loadGamesById
@@ -170,11 +138,6 @@ const GamesSlice = createSliceWithThunks({
       }
     });
 
-    // paginateGameIndex
-    builder.addCase(paginateGameIndex.rejected, (state, { error }) => {
-      state.lastError = error;
-    });
-
     // gameCrawled
     builder.addCase(gameCrawled, (state, { payload }) => {
       upsert(state.entities, payload.id, payload, {
@@ -186,25 +149,24 @@ const GamesSlice = createSliceWithThunks({
 
 // export const { createGame } = GamesSlice.actions;
 
-export const selectGames = (state: RootState) => state.games.entities;
-
-export interface GamePage extends Page {
-  orderType: GameOrderType;
-  orderDirection: SortDirection;
+export function selectGameById(state: RootState, id: GameSId) {
+  return state.games.entities[id];
 }
-const emptyArray: readonly [] = Object.freeze([]);
-export const selectGamePage = createSelector(
-  selectGames,
-  (_state: RootState, { page }: GamePage) => page,
-  (_state: RootState, { pageSize }: GamePage) => pageSize,
-  (_state: RootState, { orderDirection }: GamePage) => orderDirection,
-  (state: RootState, { orderType }: GamePage) =>
-    state.games.order?.[orderType] ?? emptyArray,
-  (entities, page, pageSize, orderDirection, order) =>
-    paginationSlice({ page, pageSize }, order, orderDirection).map(
-      (id) => entities[id],
-    ),
-);
+export function selectLoadedGameById(state: RootState, id: GameSId) {
+  return state.games.entities[id]?.type === EntityRetrievalState.Loaded
+    ? state.games.entities[id]
+    : undefined;
+}
+
+export function selectGames(state: RootState) {
+  return state.games.entities;
+}
+export function selectGamesById(state: RootState, ids: GameSId[]) {
+  return ids.map((id) => state.games.entities[id]);
+}
+export function selectLoadedGamesById(state: RootState, ids: GameSId[]) {
+  return ids.map((id) => selectLoadedGameById(state, id));
+}
 
 export default GamesSlice.reducer;
 

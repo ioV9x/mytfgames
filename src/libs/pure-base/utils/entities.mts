@@ -13,6 +13,12 @@ export function isSortDirection(value: unknown): value is SortDirection {
     SortDirectionValues[SortDirectionValues.indexOf(value)] === value
   );
 }
+
+export const ToKyselySortDirection = Object.freeze({
+  [SortDirection.Asc]: "asc",
+  [SortDirection.Desc]: "desc",
+});
+
 export function flipDirection(direction: SortDirection): SortDirection {
   return direction === SortDirection.Asc
     ? SortDirection.Desc
