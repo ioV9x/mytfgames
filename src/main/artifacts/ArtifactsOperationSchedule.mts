@@ -6,8 +6,8 @@ import * as uuid from "uuid";
 
 import {
   ArtifactService,
-  gameArtifactImported,
   GameSId,
+  gameVersionUpdated,
 } from "$ipc/main-renderer";
 import { ArtifactIoService } from "$ipc/worker-main";
 import { GameVersionService } from "$main/games";
@@ -80,6 +80,9 @@ export class ArtifactsOperationSchedule
       version,
       platform,
     );
+    const updatedVersionInfo =
+      await this.gameVersionService.retrieveVersionInfoForGame(gameId, version);
+    this.remoteRedux.dispatch(gameVersionUpdated(updatedVersionInfo));
     this.emit(
       "created",
       new ArtifactImportFromFsJob(
@@ -195,7 +198,6 @@ class ArtifactImportFromFsJob implements Job {
       this.gameId,
       this.version,
     );
-
-    this.rras.dispatch(gameArtifactImported(version));
+    this.rras.dispatch(gameVersionUpdated(version));
   }
 }

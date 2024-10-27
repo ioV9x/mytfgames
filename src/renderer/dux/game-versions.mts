@@ -2,10 +2,10 @@ import { SerializedError } from "@reduxjs/toolkit";
 
 import {
   ArtifactPlatform,
-  gameArtifactImported,
   GameSId,
   GameVersion,
   GameVersionService,
+  gameVersionUpdated,
 } from "$ipc/main-renderer";
 
 import { RootState } from "./index.mts";
@@ -54,7 +54,7 @@ const GameVersionsSlice = createSliceWithThunks({
     };
   },
   extraReducers(builder) {
-    builder.addCase(gameArtifactImported, (state, { payload }) => {
+    builder.addCase(gameVersionUpdated, (state, { payload }) => {
       const { gameId, version } = payload;
       const versions = state.entities[gameId];
       if (versions) {

@@ -8,10 +8,19 @@ import {
   GameVersion,
   GameVersionService as GameVersionServiceContract,
 } from "$ipc/main-renderer";
-import { DatabaseProvider, GameId } from "$node-base/database";
+import {
+  DatabaseProvider,
+  GameId,
+  WellKnownDirectory,
+} from "$node-base/database";
 import { remoteProcedure } from "$pure-base/ipc";
 
 import { GameVersionService } from "./GameVersionService.mjs";
+
+const disablingDirectories: bigint[] = [
+  WellKnownDirectory.TMP_IMPORT,
+  WellKnownDirectory.CLEANUP_QUEUE,
+];
 
 @injectable()
 export class DefaultGameVersionService implements GameVersionService {
@@ -42,8 +51,9 @@ export class DefaultGameVersionService implements GameVersionService {
         .execute();
 
       const artifacts = await trx
-        .selectFrom("game_version_artifact")
-        .select(["platform_type as platform"])
+        .selectFrom("game_version_artifact as artifact")
+        .leftJoin("node_member", "node_member.node_no", "artifact.node_no")
+        .select(["platform_type as platform", "node_member.node_no_parent"])
         .where("game_id", "=", id)
         .where("version", "=", version)
         .execute();
@@ -53,8 +63,11 @@ export class DefaultGameVersionService implements GameVersionService {
         version,
         note: versionRow.note,
         sources,
-        artifacts: artifacts.map(({ platform }) => ({
+        artifacts: artifacts.map(({ platform, node_no_parent }) => ({
           platform,
+          disabled:
+            !node_no_parent ||
+            disablingDirectories.includes(BigInt(node_no_parent)),
         })),
       };
     });
@@ -96,8 +109,13 @@ export class DefaultGameVersionService implements GameVersionService {
             .where("game_id", "=", id)
             .execute(),
           trx
-            .selectFrom("game_version_artifact")
-            .select(["version", "platform_type as platform"])
+            .selectFrom("game_version_artifact as artifact")
+            .leftJoin("node_member", "node_member.node_no", "artifact.node_no")
+            .select([
+              "version",
+              "platform_type as platform",
+              "node_member.node_no_parent",
+            ])
             .where("game_id", "=", id)
             .execute(),
         ]),
@@ -115,8 +133,11 @@ export class DefaultGameVersionService implements GameVersionService {
           uri,
         })) ?? [],
       artifacts:
-        groupedArtifacts[version]?.map(({ platform }) => ({
+        groupedArtifacts[version]?.map(({ platform, node_no_parent }) => ({
           platform,
+          disabled:
+            !node_no_parent ||
+            disablingDirectories.includes(BigInt(node_no_parent)),
         })) ?? [],
     }));
   }

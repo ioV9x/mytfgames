@@ -39,7 +39,10 @@ import {
 import { useAppSelector } from "$renderer/dux/utils";
 import { useIpc } from "$renderer/ipc";
 
-const GameVersionArtifactTableHeaders = [
+const GameVersionArtifactTableHeaders: {
+  key: keyof ArtifactRowViewState;
+  header: string;
+}[] = [
   {
     key: "version",
     header: "Version",
@@ -55,6 +58,7 @@ interface ArtifactRowViewState {
   version: string;
   platform: string;
   platformName: string;
+  disabled: boolean;
 }
 
 function makeId(version: string, platform: string) {
@@ -84,6 +88,7 @@ export function GameVersionArtifacts({
             artifactPlatforms.find(
               (platform) => platform.id === artifact.platform,
             )?.name ?? artifact.platform,
+          disabled: artifact.disabled,
         })),
       ),
     [artifactPlatforms, versions],
@@ -104,6 +109,7 @@ export function GameVersionArtifacts({
         headers,
         rows,
         selectedRows,
+        selectRow,
         getRowProps,
         getHeaderProps,
         getToolbarProps,
@@ -122,13 +128,19 @@ export function GameVersionArtifacts({
                   selectedRows.map((row) => {
                     const artifact = artifactRows.find((r) => r.id === row.id);
                     if (artifact != null) {
+                      if (artifact.disabled) {
+                        selectRow(row.id);
+                        return;
+                      }
                       artifacts
                         .queueArtifactForDeletion(
                           gameSId,
                           artifact.version,
                           artifact.platform,
                         )
-                        .catch((error: unknown) => console.error(error));
+                        .catch((error: unknown) =>
+                          console.error(artifact, error),
+                        );
                     }
                   })
                 }
@@ -163,6 +175,7 @@ export function GameVersionArtifacts({
                     {...getSelectionProps({
                       row,
                     })}
+                    disabled={row.disabled}
                   />
                   {row.cells.map((cell) => (
                     <TableCell key={cell.id}>{cell.value}</TableCell>

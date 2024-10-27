@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import * as uuid from "uuid";
 
-import { gameArtifactImported } from "$ipc/main-renderer";
+import { gameVersionUpdated } from "$ipc/main-renderer";
 import { GameVersionService } from "$main/games";
 import { RemoteReduxActionSender } from "$main/pal";
 import {
@@ -125,7 +125,7 @@ export class DefaultArtifactOperationService
     // TODO: This should probably be part of the above transaction
     const versionInfo =
       await this.gameVersionService.retrieveVersionInfoForGame(gameId, version);
-    this.remoteRedux.dispatch(gameArtifactImported(versionInfo));
+    this.remoteRedux.dispatch(gameVersionUpdated(versionInfo));
     return nodeNo;
   }
 }

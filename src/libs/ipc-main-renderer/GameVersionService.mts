@@ -18,6 +18,7 @@ export interface GameVersion {
 
 export interface GameArtifact {
   platform: string;
+  disabled: boolean;
 }
 
 export interface GameVersionSource {
@@ -31,8 +32,8 @@ export interface ArtifactPlatform {
   userDefined: boolean;
 }
 
-export const gameArtifactImported = createAction(
-  "ipc/games/versions/artifacts/imported",
+export const gameVersionUpdated = createAction(
+  "ipc/games/versions/updated",
   (gameVersion: GameVersion) => ({ payload: gameVersion }),
 );
 
