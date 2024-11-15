@@ -5,10 +5,10 @@ import path from "node:path";
 import { sql } from "kysely";
 import * as R from "remeda";
 
-import { Job } from "$main/pal";
 import { AppConfiguration } from "$node-base/configuration";
 import { DatabaseProvider } from "$node-base/database";
 import { dbfsPurgeUnreferencedFileData } from "$node-base/database-fs";
+import { Job } from "$node-base/job-scheduling";
 import { isErrnoException } from "$node-base/utils";
 
 const blobSubDirPattern = /^[0-9a-fA-F]{3}$/;

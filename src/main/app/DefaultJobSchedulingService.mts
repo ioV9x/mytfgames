@@ -3,7 +3,12 @@ import { Temporal } from "temporal-polyfill";
 import { isPromise } from "util/types";
 
 import { Logger, logger } from "$main/log";
-import { isJobEmitter, isJobSchedule, Job, JobSource } from "$main/pal";
+import {
+  isJobEmitter,
+  isJobSchedule,
+  Job,
+  JobSource,
+} from "$node-base/job-scheduling";
 import { makeAggregateError } from "$pure-base/utils";
 
 import { JobSchedulingService } from "./JobSchedulingService.mjs";

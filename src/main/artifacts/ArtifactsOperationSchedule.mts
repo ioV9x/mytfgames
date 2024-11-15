@@ -11,19 +11,19 @@ import {
 } from "$ipc/main-renderer";
 import { ArtifactIoService } from "$ipc/worker-main";
 import { GameVersionService } from "$main/games";
-import {
-  Job,
-  JobEmitter,
-  JobEmitterEvents,
-  JobSchedule,
-  RemoteReduxActionSender,
-} from "$main/pal";
 import { AppConfiguration } from "$node-base/configuration";
 import {
   DatabaseProvider,
   GameId,
   WellKnownDirectory,
 } from "$node-base/database";
+import { RemoteReduxActionSender } from "$node-base/ipc";
+import {
+  Job,
+  JobEmitter,
+  JobEmitterEvents,
+  JobSchedule,
+} from "$node-base/job-scheduling";
 import { remoteProcedure } from "$pure-base/ipc";
 
 import { ArtifactOperationService } from "./ArtifactOperationService.mjs";

@@ -8,6 +8,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "paths": {
+      "$game-info/*": ["../libs/game-info/*/index.mts", "../libs/game-info/*"],
       "$ipc/main-renderer": ["../libs/ipc-main-renderer/index.mts"],
       "$ipc/worker-main": ["../libs/ipc-worker-main/index.mts"],
       "$main/*": ["./*/index.mts"],
@@ -18,6 +19,9 @@
   "include": ["./**/*.mts", "../../forge.env.d.mts"],
   "exclude": ["vite.config.mts"],
   "references": [
+    {
+      "path": "../libs/game-info/tsconfig.game-info.json"
+    },
     {
       "path": "../libs/ipc-main-renderer/tsconfig.ipc-main-renderer.json"
     },

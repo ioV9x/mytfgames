@@ -1,7 +1,7 @@
 import { ContainerModule } from "inversify";
 
-import { JobSource } from "$main/pal";
 import { IpcServiceProvider } from "$node-base/ipc";
+import { JobSource } from "$node-base/job-scheduling";
 
 import { ArtifactOperationService } from "./ArtifactOperationService.mjs";
 import { ArtifactsOperationSchedule } from "./ArtifactsOperationSchedule.mjs";

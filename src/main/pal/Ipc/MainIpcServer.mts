@@ -1,7 +1,7 @@
 import { ipcMain } from "electron/main";
 import { inject, injectable, multiInject } from "inversify";
 
-import { IpcServiceProvider } from "$node-base/ipc";
+import { IpcServiceProvider, RemoteReduxActionSender } from "$node-base/ipc";
 import {
   DefaultRemoteReduxActionSender,
   registerIpcServices,
@@ -9,7 +9,6 @@ import {
 } from "$pure-base/ipc";
 
 import { ElectronMainMessageTransport } from "./MainMessageTransport.mjs";
-import { RemoteReduxActionSender } from "./RemoteReduxActionSender.mjs";
 
 export const RemoteProcedureServerInjectionSymbol = Symbol(
   "remote procedure server",

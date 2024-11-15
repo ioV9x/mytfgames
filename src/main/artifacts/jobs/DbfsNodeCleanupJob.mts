@@ -1,10 +1,10 @@
 import { sql } from "kysely";
 import * as R from "remeda";
 
-import { Job } from "$main/pal";
 import { AppConfiguration } from "$node-base/configuration";
 import { DatabaseProvider } from "$node-base/database";
 import { dbfsPurgeUnreferencedFileData } from "$node-base/database-fs";
+import { Job } from "$node-base/job-scheduling";
 
 export class DbfsNodeCleanupJob implements Job {
   readonly id: string;
