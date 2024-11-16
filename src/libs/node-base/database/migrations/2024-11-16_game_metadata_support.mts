@@ -127,6 +127,42 @@ export async function up(db: Kysely<any>): Promise<void> {
       .execute();
 
     ////////////////////////////////////////////////////////////////////////////
+    // game_user_notes
+    //
+    await trx.schema.dropIndex("game_description_____name").execute();
+    await trx.schema
+      .dropIndex("game_description_____last_change_datetime")
+      .execute();
+    await trx.schema
+      .dropIndex("game_description_____last_played_datetime")
+      .execute();
+
+    await trx.schema
+      .alterTable("game_description")
+      .renameTo("game_user_notes")
+      .execute();
+    await trx.schema
+      .alterTable("game_user_notes")
+      .renameColumn("name", "custom_name")
+      .execute();
+
+    await trx.schema
+      .createIndex("game_user_notes_____custom_name")
+      .on("game_user_notes")
+      .column("custom_name")
+      .execute();
+    await trx.schema
+      .createIndex("game_user_notes_____last_change_datetime")
+      .on("game_user_notes")
+      .column("last_change_datetime")
+      .execute();
+    await trx.schema
+      .createIndex("game_user_notes_____last_played_datetime")
+      .on("game_user_notes")
+      .column("last_played_datetime")
+      .execute();
+
+    ////////////////////////////////////////////////////////////////////////////
     // db views
     //
   });
@@ -138,6 +174,38 @@ export async function down(db: Kysely<any>): Promise<void> {
     ////////////////////////////////////////////////////////////////////////////
     // db views
     //
+    ////////////////////////////////////////////////////////////////////////////
+    // game_user_notes
+    //
+    await trx.schema.dropIndex("game_user_notes_____custom_name").execute();
+    await trx.schema
+      .dropIndex("game_user_notes_____last_change_datetime")
+      .execute();
+    await trx.schema
+      .dropIndex("game_user_notes_____last_played_datetime")
+      .execute();
+
+    await trx.schema
+      .alterTable("game_user_notes")
+      .renameTo("game_description")
+      .execute();
+
+    await trx.schema
+      .createIndex("game_description_____name")
+      .on("game_description")
+      .column("name")
+      .execute();
+    await trx.schema
+      .createIndex("game_description_____last_change_datetime")
+      .on("game_description")
+      .column("last_change_datetime")
+      .execute();
+    await trx.schema
+      .createIndex("game_description_____last_played_datetime")
+      .on("game_description")
+      .column("last_played_datetime")
+      .execute();
+
     ////////////////////////////////////////////////////////////////////////////
     // tags
     //

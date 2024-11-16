@@ -10,7 +10,7 @@ export interface GameTable {
   game_id: GameId;
 }
 
-export interface GameDescriptionTable {
+export interface GameUserNotesTable {
   /**
    * UUID of the game; foreign key to the game table.
    */
@@ -18,7 +18,7 @@ export interface GameDescriptionTable {
   /**
    * The title of the game assigned by the current user.
    */
-  name: string;
+  custom_name: string;
   last_change_datetime: string;
   last_played_datetime: Generated<string>;
   /**

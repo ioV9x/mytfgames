@@ -15,12 +15,12 @@ import type {
   NodeTypeTable,
 } from "./FilesystemEntities.mjs";
 import type {
-  GameDescriptionTable,
   GameOfficialBlacklistTable,
   GameOfficialListingDetailsTable,
   GameOfficialListingOutdatedView,
   GameOfficialListingTable,
   GameTable,
+  GameUserNotesTable,
 } from "./GameEntities.mjs";
 import type {
   ArtifactPlatformTable,
@@ -37,7 +37,7 @@ import type {
 
 export interface AppDatabase {
   game: GameTable;
-  game_description: GameDescriptionTable;
+  game_user_notes: GameUserNotesTable;
   game_tag: GameTagTable;
   game_official_listing: GameOfficialListingTable;
   game_official_blacklist: GameOfficialBlacklistTable;

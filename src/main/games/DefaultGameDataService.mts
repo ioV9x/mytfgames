@@ -54,8 +54,8 @@ export class DefaultGameDataService implements GameDataService {
       .selectFrom("game")
       .select(["game.game_id as id"])
       .leftJoin(
-        "game_description as description",
-        "description.game_id",
+        "game_user_notes as user_notes",
+        "user_notes.game_id",
         "game.game_id",
       )
       .leftJoin(
@@ -74,14 +74,16 @@ export class DefaultGameDataService implements GameDataService {
         return await ids.orderBy("game.game_id").execute();
       case GameOrderType.Name:
         return await ids
-          .orderBy((eb) => eb.fn.coalesce("description.name", "listing.name"))
+          .orderBy((eb) =>
+            eb.fn.coalesce("user_notes.custom_name", "listing.name"),
+          )
           .execute();
       case GameOrderType.LastUpdate:
         return await ids
           .orderBy((eb) =>
             eb.fn.coalesce(
               "listing.last_update_datetime",
-              "description.last_change_datetime",
+              "user_notes.last_change_datetime",
             ),
           )
           .execute();
@@ -106,17 +108,17 @@ export class DefaultGameDataService implements GameDataService {
                   "game.game_id",
                 )
                 .leftJoin(
-                  "game_description as description",
-                  "description.game_id",
+                  "game_user_notes as user_notes",
+                  "user_notes.game_id",
                   "game.game_id",
                 )
                 .select([
                   "game.game_id as id",
-                  "description.name as name",
-                  "description.last_change_datetime as lastChange",
-                  "description.last_played_datetime as lastPlayed",
-                  "description.note as note",
-                  "description.user_rating as userRating",
+                  "user_notes.custom_name as name",
+                  "user_notes.last_change_datetime as lastChange",
+                  "user_notes.last_played_datetime as lastPlayed",
+                  "user_notes.note as note",
+                  "user_notes.user_rating as userRating",
                   "listing.name as officialName",
                   "listing.num_likes as numLikes",
                   "listing.tfgames_game_id as tfgamesId",
@@ -184,7 +186,7 @@ export class DefaultGameDataService implements GameDataService {
         return qb.where((eb) =>
           eb.or([
             eb("listing.name", "like", prefix),
-            eb("description.name", "like", prefix),
+            eb("user_notes.custom_name", "like", prefix),
           ]),
         );
       })
@@ -216,8 +218,8 @@ export class DefaultGameDataService implements GameDataService {
         "game.game_id",
       )
       .leftJoin(
-        "game_description as description",
-        "description.game_id",
+        "game_user_notes as user_notes",
+        "user_notes.game_id",
         "game.game_id",
       )
       .where((eb) =>
@@ -235,11 +237,11 @@ export class DefaultGameDataService implements GameDataService {
           case GameOrderType.Id:
             return eb.ref("game.game_id");
           case GameOrderType.Name:
-            return eb.fn.coalesce("description.name", "listing.name");
+            return eb.fn.coalesce("user_notes.custom_name", "listing.name");
           case GameOrderType.LastUpdate:
             return eb.fn.coalesce(
               "listing.last_update_datetime",
-              "description.last_change_datetime",
+              "user_notes.last_change_datetime",
             );
         }
       }, kyselyDirection);
@@ -249,7 +251,7 @@ export class DefaultGameDataService implements GameDataService {
   async findGameByNamePrefix(prefix: string): Promise<GameSId[]> {
     const games = await this.db
       .selectFrom("game")
-      .leftJoin("game_description", "game_description.game_id", "game.game_id")
+      .leftJoin("game_user_notes", "game_user_notes.game_id", "game.game_id")
       .leftJoin(
         "game_official_listing",
         "game_official_listing.game_id",
@@ -258,7 +260,7 @@ export class DefaultGameDataService implements GameDataService {
       .where((eb) =>
         eb.or([
           eb("game_official_listing.name", "like", `${prefix}%`),
-          eb("game_description.name", "like", `${prefix}%`),
+          eb("game_user_notes.custom_name", "like", `${prefix}%`),
         ]),
       )
       .select(["game.game_id"])
@@ -281,10 +283,10 @@ export class DefaultGameDataService implements GameDataService {
     });
     const game = await this.db.transaction().execute(async (trx) => {
       const updatedDescription = await trx
-        .insertInto("game_description")
+        .insertInto("game_user_notes")
         .values({
           game_id,
-          name: description.name,
+          custom_name: description.name,
           user_rating: description.userRating,
           note: description.note,
           last_change_datetime,
@@ -292,13 +294,13 @@ export class DefaultGameDataService implements GameDataService {
         .onConflict((oc) =>
           oc.doUpdateSet({
             last_change_datetime,
-            name: description.name,
+            custom_name: description.name,
             user_rating: description.userRating,
             note: description.note,
           }),
         )
         .returning([
-          "name as name",
+          "custom_name as name",
           "last_change_datetime as lastChangeTimestamp",
           "last_played_datetime as lastPlayedTimestamp",
           "user_rating as userRating",
