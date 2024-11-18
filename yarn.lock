@@ -311,15 +311,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@carbon/react@npm:^1.69.0":
-  version: 1.69.0
-  resolution: "@carbon/react@npm:1.69.0"
+"@carbon/react@npm:^1.70.0":
+  version: 1.70.0
+  resolution: "@carbon/react@npm:1.70.0"
   dependencies:
     "@babel/runtime": "npm:^7.24.7"
     "@carbon/feature-flags": "npm:^0.24.0"
     "@carbon/icons-react": "npm:^11.52.0"
     "@carbon/layout": "npm:^11.28.0"
-    "@carbon/styles": "npm:^1.68.0"
+    "@carbon/styles": "npm:^1.69.0"
     "@floating-ui/react": "npm:^0.26.0"
     "@ibm/telemetry-js": "npm:^1.5.0"
     classnames: "npm:2.5.1"
@@ -341,13 +341,13 @@ __metadata:
     react: ^16.8.6 || ^17.0.1 || ^18.2.0
     react-dom: ^16.8.6 || ^17.0.1 || ^18.2.0
     sass: ^1.33.0
-  checksum: 10c0/2a8c8b0d1b1cd732cd1826b1b6c920299364381b2af252463857909ca63ec58d5f2a288b710607eb0fdd3f25829862f2628c76235bedef64d96f1136ba0a1621
+  checksum: 10c0/806b17d97e63967f989a5a2851255e9a7bfbcff6a85116686f660e43819da62820fd2d47ca67aa993e2904cedfc5e13945049a6b522919a4d71c6d3654344482
   languageName: node
   linkType: hard
 
-"@carbon/styles@npm:^1.68.0":
-  version: 1.68.0
-  resolution: "@carbon/styles@npm:1.68.0"
+"@carbon/styles@npm:^1.69.0":
+  version: 1.69.0
+  resolution: "@carbon/styles@npm:1.69.0"
   dependencies:
     "@carbon/colors": "npm:^11.28.0"
     "@carbon/feature-flags": "npm:^0.24.0"
@@ -363,7 +363,7 @@ __metadata:
   peerDependenciesMeta:
     sass:
       optional: true
-  checksum: 10c0/c10fd89ed19e6f4a242590e6518e9a14ade3c2806c425df21ae739102a4374a81b0c0da624ec8d8e40e4c3357a9ed60606bc8ee827d38bfee79ff15d3496e018
+  checksum: 10c0/492ec13513c5fb173d5cd5f5a62b310f5133bb7062eea35cdb03389f3b644bf9028b3fbf0d2eaf882541df99f509fb1ea706e442f5bad2dd6018aa305d3adfdc
   languageName: node
   linkType: hard
 
@@ -5475,8 +5475,8 @@ __metadata:
     "@carbon/colors": "npm:^11.28.0"
     "@carbon/grid": "npm:^11.29.0"
     "@carbon/icons-react": "npm:^11.52.0"
-    "@carbon/react": "npm:^1.69.0"
-    "@carbon/styles": "npm:^1.68.0"
+    "@carbon/react": "npm:^1.70.0"
+    "@carbon/styles": "npm:^1.69.0"
     "@electron-forge/cli": "npm:~7.4.0"
     "@electron-forge/maker-zip": "npm:~7.4.0"
     "@electron-forge/plugin-fuses": "npm:~7.4.0"
