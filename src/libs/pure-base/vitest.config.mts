@@ -1,7 +1,7 @@
 import tsconfigPaths from "vite-tsconfig-paths";
-import { defineConfig } from "vitest/config";
+import { defineConfig, type ViteUserConfig } from "vitest/config";
 
-export default defineConfig((_configEnv) => {
+export default defineConfig((_configEnv): ViteUserConfig => {
   const root = import.meta.dirname;
   return {
     root,
