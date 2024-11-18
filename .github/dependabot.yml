@@ -11,7 +11,7 @@ updates:
       interval: weekly
     versioning-strategy: increase
     commit-message:
-      prefix: "build(deps): Update"
+      prefix: "build(deps)"
     reviewers:
       - ioV9x
     groups:
