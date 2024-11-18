@@ -1,0 +1,61 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      day: friday
+      interval: weekly
+    versioning-strategy: increase
+    commit-message:
+      prefix: "build(deps): Update"
+    reviewers:
+      - ioV9x
+    groups:
+      better-sqlite3:
+        patterns:
+          - "@types/better-sqlite3"
+          - "better-sqlite3"
+      bunyan:
+        patterns:
+          - "@types/bunyan"
+          - "bunyan"
+      electron:
+        patterns:
+          - "@electron/*"
+          - "electron"
+      electron-forge:
+        patterns:
+          - "@electron-forge/*"
+      eslint:
+        patterns:
+          - "@eslint/*"
+          - "eslint"
+      ibm-carbon:
+        patterns:
+          - "@carbon/*"
+          - "@ibm/*"
+      react:
+        patterns:
+          - "@types/react"
+          - "@types/react-dom"
+          - "react"
+          - "react-dom"
+      vite:
+        patterns:
+          - "vite"
+          - "vite-tsconfig-paths"
+    ignore:
+      # 7.5 breaks ES modules
+      - dependency-name: "@electron-forge/*"
+        update-types: [version-update:semver-minor, version-update:semver-major]
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-minor, version-update:semver-major]
+      # only prerelease is available until React 19 releases
+      - dependency-name: "eslint-plugin-react-hooks"
+      # next sass update generates warnings in combination with carbon
+      # wait for carbon to fix the warnings
+      - dependency-name: "sass"
