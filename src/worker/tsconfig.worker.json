@@ -3,6 +3,8 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "../../out/dist/worker",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "paths": {
