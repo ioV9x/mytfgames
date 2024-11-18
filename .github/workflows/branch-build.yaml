@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [master, "release/v*"]
+  pull_request:
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            cache: yarn
+          - os: windows-latest
+            cache: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable Corepack (non-Windows)
+        if: startsWith(matrix.os, 'windows') == false
+        run: corepack enable
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          # setup-node invokes yarn via an absolute path, i.e. the previous
+          # `corepack enable` is bypassed. https://github.com/actions/setup-node/issues/1027
+          cache: ${{ matrix.cache }}
+      - name: Enable Corepack (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: corepack enable
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Build
+        run: yarn compile:check
+      - name: Package
+        run: yarn forge:package
+
+  test:
+    name: Test on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            cache: yarn
+          - os: windows-latest
+            cache: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable Corepack (non-Windows)
+        if: startsWith(matrix.os, 'windows') == false
+        run: corepack enable
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          # see build job
+          cache: ${{ matrix.cache }}
+      - name: Enable Corepack (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: corepack enable
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Test
+        run: yarn test
+      - name: Lint
+        run: yarn lint
+      - name: Check formatting
+        run: yarn format:check
