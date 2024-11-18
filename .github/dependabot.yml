@@ -48,6 +48,7 @@ updates:
         patterns:
           - "vite"
           - "vite-tsconfig-paths"
+          - "vitest" # typing interdependencies
     ignore:
       # 7.5 breaks ES modules
       - dependency-name: "@electron-forge/*"
