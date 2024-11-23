@@ -42,10 +42,7 @@ function main(ev: MessageEvent) {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <FeatureFlags
-        flags={{
-          // TODO: @carbon/react v11.70.0 will add a prop for this flag
-          "enable-v12-dynamic-floating-styles": true,
-        }}
+        enableV12DynamicFloatingStyles
         enableV12Overflowmenu
         enableV12TileDefaultIcons
         enableV12TileRadioIcons
