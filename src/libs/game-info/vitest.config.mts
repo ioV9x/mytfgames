@@ -6,14 +6,14 @@ export default defineConfig((_configEnv): ViteUserConfig => {
   return {
     root,
     test: {
-      name: "tfgames",
+      name: "game-info",
       root,
       include: ["**/*.spec.mts"],
     },
     plugins: [
       tsconfigPaths({
         root,
-        projects: ["tsconfig.tfgames.json"],
+        projects: ["tsconfig.game-info.json"],
       }),
     ],
   };
