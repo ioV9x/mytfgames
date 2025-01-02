@@ -61,9 +61,9 @@ export function getBuildDefine(
 ): Record<string, string | undefined> {
   const { command, forgeConfig } = env;
 
-  const defines = (forgeConfig?.renderer ?? [])
-    .filter(({ name }) => name != null)
-    .map(({ name }) => getDefinesFor(command, name!));
+  const defines = (forgeConfig?.renderer ?? []).map(({ name }) =>
+    getDefinesFor(command, name),
+  );
 
   return Object.assign({}, ...defines) as Record<string, string | undefined>;
 }
