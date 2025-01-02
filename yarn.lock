@@ -3539,21 +3539,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:5.1.0-rc.0":
-  version: 5.1.0-rc.0
-  resolution: "eslint-plugin-react-hooks@npm:5.1.0-rc.0"
+"eslint-plugin-react-hooks@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "eslint-plugin-react-hooks@npm:5.1.0"
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
-  checksum: 10c0/0b1574910506627f8c8cfdf62368b6536b8b8b475e579234274b0aacc926fe33d2a5f8f8b92fb1621ca4bccbcfced34e248bb82e8b0bea8e0b4271d82d0821c8
+  checksum: 10c0/37ef76e1d916d46ab8e93a596078efcf2162e2c653614437e0c54e31d02a5dadabec22802fab717effe257aeb4bdc20c2a710666a89ab1cf07e01e614dde75d8
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-refresh@npm:^0.4.14":
-  version: 0.4.14
-  resolution: "eslint-plugin-react-refresh@npm:0.4.14"
+"eslint-plugin-react-refresh@npm:^0.4.16":
+  version: 0.4.16
+  resolution: "eslint-plugin-react-refresh@npm:0.4.16"
   peerDependencies:
-    eslint: ">=7"
-  checksum: 10c0/427108008ffcc2e0be36897398e61a2fae54c5bf092af0171bc4cf1927080d40619bb07be02ecd7c515372210228cf849023997cfa0252d37115f9b0c0debcd2
+    eslint: ">=8.40"
+  checksum: 10c0/0628d54b6cc6773a89252e2a7c82c7905a00dc8dc99a6ae2885a64f3b45bd3012a40cf9791ee24aa5dcf75665d8c8be4699845bbbf205cd0ef652702701a7865
   languageName: node
   linkType: hard
 
@@ -5585,8 +5585,8 @@ __metadata:
     electron-devtools-installer: "npm:^3.2.0"
     eslint: "npm:^9.15.0"
     eslint-config-prettier: "npm:^9.1.0"
-    eslint-plugin-react-hooks: "npm:5.1.0-rc.0"
-    eslint-plugin-react-refresh: "npm:^0.4.14"
+    eslint-plugin-react-hooks: "npm:^5.1.0"
+    eslint-plugin-react-refresh: "npm:^0.4.16"
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     inversify: "npm:^6.1.4"
     kysely: "npm:^0.27.4"
