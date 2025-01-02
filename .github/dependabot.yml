@@ -9,6 +9,7 @@ updates:
     schedule:
       day: friday
       interval: weekly
+    open-pull-requests-limit: 10
     versioning-strategy: increase
     commit-message:
       prefix: "build(deps)"
