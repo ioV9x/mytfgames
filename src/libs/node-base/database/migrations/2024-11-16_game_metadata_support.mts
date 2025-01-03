@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import { Kysely, sql } from "kysely";
 
 import { sqliteSafeMigration } from "$node-base/utils";
 
@@ -163,6 +163,80 @@ export async function up(db: Kysely<any>): Promise<void> {
       .execute();
 
     ////////////////////////////////////////////////////////////////////////////
+    // game_metadata
+    //
+    await trx.schema
+      .createTable("game_metadata")
+      .addColumn("game_id", "blob", (col) => col.notNull().primaryKey())
+      .addColumn("metadata_version", "integer", (col) => col.notNull())
+      .addColumn("name", "text", (col) => col.notNull())
+      .addColumn("tfgames_site_game_id", "integer")
+      .addColumn("synopsis", "text", (col) => col.notNull())
+      .addColumn("full_description", "text", (col) => col.notNull())
+      .addColumn("last_update_datetime", "text", (col) => col.notNull())
+      .addForeignKeyConstraint(
+        "game_described_by_game_metadata_fk",
+        ["game_id"],
+        "game",
+        ["game_id"],
+        (cb) => cb.onDelete("cascade"),
+      )
+      .modifyEnd(sql`STRICT`)
+      .execute();
+    await trx.schema
+      .createIndex("game_metadata_____name")
+      .on("game_metadata")
+      .column("name")
+      .execute();
+    await trx.schema
+      .createIndex("game_metadata_____last_update_datetime")
+      .on("game_metadata")
+      .column("last_update_datetime")
+      .execute();
+
+    ////////////////////////////////////////////////////////////////////////////
+    // author
+    //
+    await trx.schema
+      .createTable("author")
+      .addColumn("author_id", "blob", (col) => col.notNull().primaryKey())
+      .addColumn("metadata_version", "integer", (col) => col.notNull())
+      .addColumn("name", "text", (col) => col.notNull())
+      .addColumn("tfgames_site_profile_id", "integer")
+      .execute();
+    await trx.schema
+      .createIndex("author_____name")
+      .on("author")
+      .column("name")
+      .execute();
+
+    await trx.schema
+      .createTable("game_author")
+      .addColumn("game_id", "blob", (col) => col.notNull())
+      .addColumn("author_id", "blob", (col) => col.notNull())
+      .addPrimaryKeyConstraint("game_author_pk", ["game_id", "author_id"])
+      .addForeignKeyConstraint(
+        "game_created_by_author_fk",
+        ["game_id"],
+        "game",
+        ["game_id"],
+        (cb) => cb.onDelete("cascade"),
+      )
+      .addForeignKeyConstraint(
+        "author_creates_game_fk",
+        ["author_id"],
+        "author",
+        ["author_id"],
+        (cb) => cb.onDelete("cascade"),
+      )
+      .execute();
+    await trx.schema
+      .createIndex("game_author_____author_id")
+      .on("game_author")
+      .column("author_id")
+      .execute();
+
+    ////////////////////////////////////////////////////////////////////////////
     // db views
     //
   });
@@ -174,6 +248,25 @@ export async function down(db: Kysely<any>): Promise<void> {
     ////////////////////////////////////////////////////////////////////////////
     // db views
     //
+
+    ////////////////////////////////////////////////////////////////////////////
+    // author
+    //
+    await trx.schema.dropIndex("game_author_____author_id").execute();
+    await trx.schema.dropTable("game_author").execute();
+
+    await trx.schema.dropIndex("author_____name").execute();
+    await trx.schema.dropTable("author").execute();
+
+    ////////////////////////////////////////////////////////////////////////////
+    // game_metadata
+    //
+    await trx.schema
+      .dropIndex("game_metadata_____last_update_datetime")
+      .execute();
+    await trx.schema.dropIndex("game_metadata_____name").execute();
+    await trx.schema.dropTable("game_metadata").execute();
+
     ////////////////////////////////////////////////////////////////////////////
     // game_user_notes
     //

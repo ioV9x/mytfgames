@@ -3,6 +3,8 @@ import type { Kysely, QueryCreator } from "kysely";
 import { makeServiceIdentifier } from "$node-base/utils";
 
 import type {
+  AuthorTable,
+  GameAuthorTable,
   GameOfficialTfgamesAuthor,
   TfgamesAuthorTable,
 } from "./AuthorEntities.mjs";
@@ -15,6 +17,7 @@ import type {
   NodeTypeTable,
 } from "./FilesystemEntities.mjs";
 import type {
+  GameMetadataTable,
   GameOfficialBlacklistTable,
   GameOfficialListingDetailsTable,
   GameOfficialListingOutdatedView,
@@ -38,6 +41,8 @@ import type {
 export interface AppDatabase {
   game: GameTable;
   game_user_notes: GameUserNotesTable;
+  game_author: GameAuthorTable;
+  game_metadata: GameMetadataTable;
   game_tag: GameTagTable;
   game_official_listing: GameOfficialListingTable;
   game_official_blacklist: GameOfficialBlacklistTable;
@@ -52,6 +57,7 @@ export interface AppDatabase {
   tag: TagTable;
   official_tag: OfficialTagTable;
 
+  author: AuthorTable;
   tfgames_author: TfgamesAuthorTable;
 
   artifact_platform: ArtifactPlatformTable;
