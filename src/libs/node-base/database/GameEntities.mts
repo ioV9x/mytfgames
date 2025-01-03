@@ -1,4 +1,4 @@
-import { Generated } from "kysely";
+import type { Generated } from "kysely";
 
 export type GameId = Buffer;
 export type TfgamesGameId = number;
@@ -33,6 +33,37 @@ export interface GameUserNotesTable {
    * Default value is an empty string.
    */
   note: Generated<string>;
+}
+
+export interface GameMetadataTable {
+  /**
+   * UUID of the game; foreign key to the game table.
+   */
+  game_id: GameId;
+  /**
+   * The imported information version.
+   */
+  metadata_version: number;
+  /**
+   * The title of the game.
+   */
+  name: string;
+  /**
+   * The id of the game on tfgames.site.
+   */
+  tfgames_site_game_id: TfgamesGameId | null;
+  /**
+   * The synopsis of the game.
+   */
+  synopsis: string;
+  /**
+   * The full description of the game in MD format (without frontmatter).
+   */
+  full_description: string;
+  /**
+   * The release datetime of the game in ISO 8601 format.
+   */
+  last_update_datetime: string;
 }
 
 /**
