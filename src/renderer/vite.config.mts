@@ -21,6 +21,9 @@ export default defineConfig((env) => {
     build: {
       outDir: path.join(defaultedRoot, `.vite`, name),
     },
+    optimizeDeps: {
+      include: ["@reduxjs/toolkit", "remeda", "temporal-polyfill"],
+    },
     plugins: [
       react({}),
       pluginExposeRenderer(name),
@@ -38,5 +41,5 @@ export default defineConfig((env) => {
       include: ["**/*.spec.mts"],
     },
     clearScreen: false,
-  } as UserConfig;
+  } satisfies UserConfig;
 });
