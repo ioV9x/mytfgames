@@ -23,7 +23,6 @@
     "@carbon/icons-react": "^11.53.0",
     "@carbon/react": "^1.73.0",
     "@carbon/styles": "^1.72.0",
-    "@ibm/plex": "^6.4.1",
     "@reduxjs/toolkit": "^2.5.0",
     "ajv": "^8.17.1",
     "better-sqlite3": "^11.7.0",
@@ -82,6 +81,7 @@
     "vitest": "^2.1.8"
   },
   "resolutions": {
+    "@ibm/plex": "npm:empty-npm-package@1.0.0",
     "gray-matter/js-yaml": "npm:4.1.0",
     "vite": "npm:6.0.7"
   }
