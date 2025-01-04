@@ -1229,23 +1229,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ibm/plex@npm:6.0.0-next.6":
-  version: 6.0.0-next.6
-  resolution: "@ibm/plex@npm:6.0.0-next.6"
-  checksum: 10c0/7f47f9535def1047dff51703fd1041c2f2915df1d405f1d62e785cc55b56478ea91af2e95b838692ef4142835ea765217935e2e336bac5a4437a9092ec0cfb4f
+"@ibm/plex@npm:empty-npm-package@1.0.0":
+  version: 1.0.0
+  resolution: "empty-npm-package@npm:1.0.0"
+  checksum: 10c0/86dc2266288d7e3456205b8fe69ef30a1561d2365783439df0870124e5f4cf64b845ef3fea9b3312107d5a08e8d0b56813392be80a98825b4ad75d22b7e68ce0
   languageName: node
   linkType: hard
 
-"@ibm/plex@npm:^6.4.1":
-  version: 6.4.1
-  resolution: "@ibm/plex@npm:6.4.1"
-  dependencies:
-    "@ibm/telemetry-js": "npm:^1.5.1"
-  checksum: 10c0/0b69bbbdcdfc2d7ac3212e99e0711d706d5ba283d27916d4bc45ab5eeef5cc9837003e9566f3ecc05b4c1422f56247558918720cff91ca8ac46516bdd7b735c4
-  languageName: node
-  linkType: hard
-
-"@ibm/telemetry-js@npm:^1.5.0, @ibm/telemetry-js@npm:^1.5.1":
+"@ibm/telemetry-js@npm:^1.5.0":
   version: 1.5.2
   resolution: "@ibm/telemetry-js@npm:1.5.2"
   bin:
@@ -5511,7 +5502,6 @@ __metadata:
     "@electron-forge/shared-types": "npm:~7.6.0"
     "@electron/fuses": "npm:^1.8.0"
     "@eslint/js": "npm:^9.18.0"
-    "@ibm/plex": "npm:^6.4.1"
     "@napi-rs/blake-hash": "npm:^1.3.4"
     "@reduxjs/toolkit": "npm:^2.5.0"
     "@types/better-sqlite3": "npm:^7.6.12"
