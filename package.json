@@ -31,7 +31,9 @@
     "domelementtype": "^2.3.0",
     "domhandler": "^5.0.3",
     "electron-devtools-installer": "^4.0.0",
+    "gray-matter": "patch:gray-matter@npm%3A4.0.3#~/.yarn/patches/gray-matter-npm-4.0.3-852ae4f34c.patch",
     "inversify": "^6.2.1",
+    "js-yaml": "^4.1.0",
     "kysely": "^0.27.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -54,6 +56,7 @@
     "@napi-rs/blake-hash": "^1.3.4",
     "@types/better-sqlite3": "^7.6.12",
     "@types/bunyan": "^1.8.11",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.17.14",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
@@ -75,6 +78,7 @@
     "vitest": "^3.0.1"
   },
   "resolutions": {
-    "@ibm/plex": "npm:empty-npm-package@1.0.0"
+    "@ibm/plex": "npm:empty-npm-package@1.0.0",
+    "gray-matter/js-yaml": "npm:4.1.0"
   }
 }
