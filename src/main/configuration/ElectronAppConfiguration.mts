@@ -1,15 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import Ajv, { JTDSchemaType } from "ajv/dist/jtd";
+import type { JTDSchemaType, ValidateFunction } from "ajv/dist/jtd";
 import { app } from "electron/main";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import * as TOML from "smol-toml";
 
 import {
   AppConfigurationTree,
   ConfigurationInput,
 } from "$node-base/configuration";
+import { Ajv } from "$node-base/utils";
 
 import { AppConfigurationLoader } from "./AppConfiguration.mjs";
 
@@ -65,8 +66,11 @@ const appConfigurationSchema: JTDSchemaType<ConfigurationInput> = {
 
 @injectable()
 export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
-  private readonly ajv = new Ajv();
-  private readonly validate = this.ajv.compile(appConfigurationSchema);
+  readonly #validate: ValidateFunction<ConfigurationInput>;
+
+  constructor(@inject(Ajv) private readonly ajv: Ajv) {
+    this.#validate = this.ajv.compile(appConfigurationSchema);
+  }
 
   get configurationFilePath(): string {
     const configurationDir = app.isPackaged
@@ -106,12 +110,12 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
   loadConfigurationFileFrom(configurationFilePath: string): ConfigurationInput {
     const configurationFile = fs.readFileSync(configurationFilePath, "utf-8");
     const maybeConfiguration = TOML.parse(configurationFile);
-    if (this.validate(maybeConfiguration)) {
+    if (this.#validate(maybeConfiguration)) {
       return maybeConfiguration;
     }
     // TODO: add validation errors to the error object and display them to the user
     throw new Error(
-      "invalid configuration file\n" + JSON.stringify(this.validate.errors),
+      "invalid configuration file\n" + JSON.stringify(this.#validate.errors),
     );
   }
 
