@@ -5,10 +5,12 @@
     "outDir": "../../../out/dist/libs-game-info",
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "types": ["node"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "paths": {
       "$ipc/main-renderer": ["../ipc-main-renderer/index.mts"],
+      "$game-info/*": ["./*/index.mts"],
       "$node-base/*": ["../node-base/*/index.mts"],
       "$pure-base/*": ["../pure-base/*/index.mts"]
     }

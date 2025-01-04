@@ -11,6 +11,7 @@ import { AppConfigurationTree } from "$node-base/configuration";
 import { BaseConfigurationModule } from "$node-base/configuration/configuration.module.mjs";
 import { DatabaseModule } from "$node-base/database/database.module.mjs";
 import { makeServiceIdentifier } from "$node-base/utils";
+import { UtilsModule } from "$node-base/utils/utils.module.mjs";
 
 import { AppModule } from "./app/app.module.mjs";
 import { ArtifactsModule } from "./artifacts/artifacts.module.mjs";
@@ -39,6 +40,7 @@ container.load(
   PalDialogsModule,
   PalIpcModule,
   PalWorkerModule,
+  UtilsModule,
 );
 
 // load configuration
