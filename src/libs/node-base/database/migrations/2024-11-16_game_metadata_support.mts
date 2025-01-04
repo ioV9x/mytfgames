@@ -9,6 +9,11 @@ export async function up(db: Kysely<any>): Promise<void> {
     // tags
     //
     await trx
+      .deleteFrom("artifact_platform")
+      // Twine needs to be differentiated between Harlowe, SugarCube, …
+      .where("platform_type", "=", "htwi")
+      .execute();
+    await trx
       .insertInto("tag")
       .values([
         { tag_category: "AT", tag: "Dom", tag_name: "Domination" },
