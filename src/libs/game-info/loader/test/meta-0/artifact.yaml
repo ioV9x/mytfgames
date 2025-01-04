@@ -1,0 +1,13 @@
+version: "1.0.4.2"
+platform: "html"
+# ["html", "HTML", 0],
+# ["la64", "Linux ARM64", 0],
+# ["lx64", "Linux x64", 0],
+# ["lx86", "Linux x86", 0],
+# ["ma64", "macOS ARM64", 0],
+# ["mx64", "macOS x64", 0],
+# ["NA", "N/A: cross-platform", 0],
+# ["wa64", "Windows ARM64", 0],
+# ["wx64", "Windows x64", 0],
+# ["wx86", "Windows x86", 0],
+schema-version: "0" # meta information format version, must be "0"
