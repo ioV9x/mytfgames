@@ -103,6 +103,11 @@ export class DefaultGameDataService implements GameDataService {
               trx
                 .selectFrom("game")
                 .leftJoin(
+                  "game_metadata as metadata",
+                  "game_metadata.game_id",
+                  "game.game_id",
+                )
+                .leftJoin(
                   "game_official_listing as listing",
                   "listing.game_id",
                   "game.game_id",
