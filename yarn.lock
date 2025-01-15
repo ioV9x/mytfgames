@@ -3235,16 +3235,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^33.3.1":
-  version: 33.3.1
-  resolution: "electron@npm:33.3.1"
+"electron@npm:^34.0.0":
+  version: 34.0.0
+  resolution: "electron@npm:34.0.0"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10c0/1d05f09ae407aa9cf00866abf5e9155d9343f9212ba349c64f5afc8de50053e5f2100808a8b9f39545d133e2790cc2bdcaa8ee72bcef1dc434f776216b3a00ef
+  checksum: 10c0/7d5c4465038fa5570864d0ee2b73673471baa7335ec8b4ea66ac56c8dcdc13075b213336282aa74592d5c70262dd388b2256ba6a08301604ae15b91653e06419
   languageName: node
   linkType: hard
 
@@ -5524,7 +5524,7 @@ __metadata:
     cheerio: "npm:^1.0.0"
     domelementtype: "npm:^2.3.0"
     domhandler: "npm:^5.0.3"
-    electron: "npm:^33.3.1"
+    electron: "npm:^34.0.0"
     electron-devtools-installer: "npm:^4.0.0"
     eslint: "npm:^9.17.0"
     eslint-config-prettier: "npm:^9.1.0"
