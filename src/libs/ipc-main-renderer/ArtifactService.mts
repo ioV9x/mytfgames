@@ -14,6 +14,4 @@ export const ArtifactService = makeRemoteServiceDescriptor("artifacts", {
     [gameId: GameSId, version: string, platform: string],
     void
   >(),
-
-  openDirectoryChooser: makeRemoteProcedureDescriptor<[], string | null>(),
 });
