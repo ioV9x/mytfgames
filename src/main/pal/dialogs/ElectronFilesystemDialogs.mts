@@ -5,7 +5,7 @@ import {
 } from "electron/main";
 import { inject, injectable } from "inversify";
 
-import { ArtifactService } from "$ipc/main-renderer";
+import { ShellDialogService } from "$ipc/main-renderer";
 import { BrowserWindow, BrowserWindowConfigurer } from "$main/pal";
 import { MessageTransport, remoteProcedure } from "$pure-base/ipc";
 
@@ -25,7 +25,7 @@ export class ElectronFilesystemDialogs implements FilesystemDialogs {
     );
   }
 
-  @remoteProcedure(ArtifactService, "openDirectoryChooser")
+  @remoteProcedure(ShellDialogService, "openDirectoryChooser")
   async remoteOpenDirectoryChooser(
     target: MessageTransport,
   ): Promise<string | null> {
