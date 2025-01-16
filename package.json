@@ -70,10 +70,7 @@
     "uuid": "^11.0.5",
     "vite": "^6.0.7",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.8",
+    "vitest": "^3.0.0",
     "wouter": "^3.3.5"
-  },
-  "resolutions": {
-    "vite": "6.0.7"
   }
 }
