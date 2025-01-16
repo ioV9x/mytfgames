@@ -51,13 +51,13 @@ updates:
           - "vite-tsconfig-paths"
           - "vitest" # typing interdependencies
     ignore:
-      # 7.5 breaks ES modules
-      - dependency-name: "@electron-forge/*"
-        update-types: [version-update:semver-minor, version-update:semver-major]
+      # depends on the nodejs version bundled with electron
       - dependency-name: "@types/node"
         update-types: [version-update:semver-minor, version-update:semver-major]
-      # only prerelease is available until React 19 releases
-      - dependency-name: "eslint-plugin-react-hooks"
+      # electron ugrades usually require a bit of manual work and should always
+      # be smoke tested. Also it is good idea to wait for the first patch…
+      - dependency-name: "electron"
+        update-types: [version-update:semver-major]
       # next sass update generates warnings in combination with carbon
       # wait for carbon to fix the warnings
       - dependency-name: "sass"
