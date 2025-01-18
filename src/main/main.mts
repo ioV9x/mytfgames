@@ -4,6 +4,7 @@ import "reflect-metadata/lite";
 import { app } from "electron";
 import { Container } from "inversify";
 
+import { GameInfoLoaderModule } from "$game-info/loader/loader.module.mjs";
 import { GameInfoParserModule } from "$game-info/parser/parser.module.mjs";
 import { MainApp } from "$main/app";
 import { AppConfigurationLoader } from "$main/configuration";
@@ -11,6 +12,7 @@ import { AppConfigurationTree } from "$node-base/configuration";
 import { BaseConfigurationModule } from "$node-base/configuration/configuration.module.mjs";
 import { DatabaseModule } from "$node-base/database/database.module.mjs";
 import { makeServiceIdentifier } from "$node-base/utils";
+import { UtilsModule } from "$node-base/utils/utils.module.mjs";
 
 import { AppModule } from "./app/app.module.mjs";
 import { ArtifactsModule } from "./artifacts/artifacts.module.mjs";
@@ -32,6 +34,7 @@ container.load(
   BaseConfigurationModule,
   ConfigurationModule,
   DatabaseModule,
+  GameInfoLoaderModule,
   GameInfoParserModule,
   GamesModule,
   LogModule,
@@ -39,6 +42,7 @@ container.load(
   PalDialogsModule,
   PalIpcModule,
   PalWorkerModule,
+  UtilsModule,
 );
 
 // load configuration

@@ -10,12 +10,18 @@ import { SortDirection } from "$pure-base/utils";
 export type GameSId = string;
 export interface Game {
   id: GameSId;
-  description: null | {
+  userNotes: null | {
     name: string;
     lastChangeTimestamp: string;
     lastPlayedTimestamp: string;
     userRating: number;
     note: string;
+  };
+  metadata: null | {
+    name: string;
+    synopsis: string;
+    fullDescription: string;
+    lastUpdateTimestamp: string;
   };
   listing: null | {
     tfgamesId: number;
@@ -26,15 +32,19 @@ export interface Game {
 }
 
 export function makeGameDisplayName(game: Game): string | undefined {
-  if (game.description?.name == null) {
-    return game.listing?.name;
-  } else if (game.listing?.name == null) {
-    return game.description.name;
-  } else if (game.description.name === game.listing.name) {
-    return game.description.name;
-  } else {
-    return `${game.description.name} (${game.listing.name})`;
+  if (game.userNotes != null) {
+    const officialName = game.metadata?.name ?? game.listing?.name;
+    return officialName == null || officialName === game.userNotes.name
+      ? game.userNotes.name
+      : `${game.userNotes.name} (${officialName})`;
   }
+  if (game.metadata != null) {
+    return game.metadata.name;
+  }
+  if (game.listing != null) {
+    return game.listing.name;
+  }
+  return undefined;
 }
 
 export interface GameList {

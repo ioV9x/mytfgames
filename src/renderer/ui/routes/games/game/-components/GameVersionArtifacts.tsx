@@ -31,6 +31,7 @@ import {
   ArtifactService,
   GameSId,
   GameVersion,
+  ShellDialogService,
 } from "$ipc/main-renderer";
 import {
   selectArtifactPlatforms,
@@ -201,7 +202,7 @@ function ImportArtifactButton({ gameSId, size }: ImportArtifactButtonProps) {
   const versions = useAppSelector((state) =>
     selectGameVersionsForGame(state, { gameId: gameSId }),
   );
-  const { artifacts } = useIpc();
+  const { artifacts, shellDialog } = useIpc();
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -228,6 +229,7 @@ function ImportArtifactButton({ gameSId, size }: ImportArtifactButtonProps) {
 
                 setSubmitting(true);
                 startImportFromFilesystem(
+                  shellDialog,
                   artifacts,
                   gameSId,
                   version,
@@ -299,12 +301,13 @@ function ImportArtifactButton({ gameSId, size }: ImportArtifactButtonProps) {
 }
 
 async function startImportFromFilesystem(
+  shellDialogs: typeof ShellDialogService,
   artifacts: typeof ArtifactService,
   gameId: GameSId,
   version: string,
   platform: string,
 ) {
-  const path = await artifacts.openDirectoryChooser();
+  const path = await shellDialogs.openDirectoryChooser();
   if (path == null) {
     return;
   }
