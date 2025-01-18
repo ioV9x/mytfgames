@@ -1,0 +1,17 @@
+@use "@carbon/react/scss/spacing" as *;
+
+.games--add-game-modal--intro {
+  margin-bottom: $spacing-08;
+}
+
+.games--add-game-modal--folder-select {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+}
+.games--add-game-modal--folder-select > * {
+  margin-right: $spacing-03;
+}
+.games--add-game-modal--folder-select > *:last-child {
+  margin-right: 0;
+}

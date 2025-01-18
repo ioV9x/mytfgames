@@ -22,7 +22,7 @@ export default defineConfig((env) => {
       outDir: path.join(defaultedRoot, `.vite`, name),
     },
     optimizeDeps: {
-      include: ["@reduxjs/toolkit", "remeda", "temporal-polyfill"],
+      include: ["@reduxjs/toolkit", "immer", "remeda", "temporal-polyfill"],
     },
     plugins: [
       react({}),
