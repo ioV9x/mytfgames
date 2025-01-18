@@ -17,6 +17,7 @@ import {
   TableToolbarSearch,
 } from "@carbon/react";
 import { JSX, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import { useLocation, useSearch } from "wouter";
 
 import {
@@ -34,6 +35,8 @@ import {
 } from "$renderer/dux/games";
 import { useAppDispatch, useAppSelector } from "$renderer/dux/utils";
 import { nearestPage, paginationSettingsFromQuery } from "$renderer/utils";
+
+import { AddGameModal } from "./-components/AddGameModal";
 
 export default function GameIndexPage() {
   const dispatch = useAppDispatch();
@@ -113,13 +116,7 @@ export default function GameIndexPage() {
             }}
             defaultExpanded
           />
-          <Button
-            renderIcon={AddIcon}
-            iconDescription="Add Game"
-            onClick={() => setLocation("/games/new")}
-          >
-            Add Game
-          </Button>
+          <AddGameButton />
         </TableToolbarContent>
       </TableToolbar>
       <GameTable
@@ -197,7 +194,7 @@ const GameTableHeaders: {
     render(game) {
       return (
         game.listing?.lastUpdateTimestamp ??
-        game.description?.lastChangeTimestamp ?? <i>N/A</i>
+        game.userNotes?.lastChangeTimestamp ?? <i>N/A</i>
       );
     },
   },
@@ -289,6 +286,35 @@ function GameTable({
         </TableBody>
       </Table>
       {pagination}
+    </>
+  );
+}
+
+function AddGameButton() {
+  const [open, setOpen] = useState(false);
+  const [, navigate] = useLocation();
+  return (
+    <>
+      {typeof document === "undefined"
+        ? null
+        : ReactDOM.createPortal(
+            <AddGameModal
+              open={open}
+              onClose={() => setOpen(false)}
+              onAddGame={(gameId) => {
+                navigate(`/games/${gameId}`);
+              }}
+            />,
+            document.body,
+          )}
+
+      <Button
+        renderIcon={AddIcon}
+        iconDescription="Add Game"
+        onClick={() => setOpen(true)}
+      >
+        Add Game
+      </Button>
     </>
   );
 }
