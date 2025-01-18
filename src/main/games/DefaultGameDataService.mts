@@ -103,6 +103,11 @@ export class DefaultGameDataService implements GameDataService {
               trx
                 .selectFrom("game")
                 .leftJoin(
+                  "game_metadata as metadata",
+                  "metadata.game_id",
+                  "game.game_id",
+                )
+                .leftJoin(
                   "game_official_listing as listing",
                   "listing.game_id",
                   "game.game_id",
@@ -119,6 +124,10 @@ export class DefaultGameDataService implements GameDataService {
                   "user_notes.last_played_datetime as lastPlayed",
                   "user_notes.note as note",
                   "user_notes.user_rating as userRating",
+                  "metadata.name as metadataName",
+                  "metadata.synopsis as synopsis",
+                  "metadata.full_description as fullDescription",
+                  "metadata.last_update_datetime as metadataLastUpdate",
                   "listing.name as officialName",
                   "listing.num_likes as numLikes",
                   "listing.tfgames_game_id as tfgamesId",
@@ -135,20 +144,24 @@ export class DefaultGameDataService implements GameDataService {
       R.flat(),
       R.map(
         ({
+          fullDescription,
           id,
           lastChange,
           lastPlayed,
           lastUpdate,
+          metadataLastUpdate,
+          metadataName,
           name,
           note,
           numLikes,
           officialName,
+          synopsis,
           tfgamesId,
           userRating,
         }) =>
           ({
             id: uuid.stringify(id),
-            description:
+            userNotes:
               name == null
                 ? null
                 : {
@@ -157,6 +170,15 @@ export class DefaultGameDataService implements GameDataService {
                     lastPlayedTimestamp: lastPlayed!,
                     userRating: userRating!,
                     note: note!,
+                  },
+            metadata:
+              metadataName == null
+                ? null
+                : {
+                    name: metadataName,
+                    synopsis: synopsis!,
+                    fullDescription: fullDescription!,
+                    lastUpdateTimestamp: metadataLastUpdate!,
                   },
             listing:
               tfgamesId == null
@@ -282,7 +304,7 @@ export class DefaultGameDataService implements GameDataService {
       smallestUnit: "second",
     });
     const game = await this.db.transaction().execute(async (trx) => {
-      const updatedDescription = await trx
+      const updatedUserNotes = await trx
         .insertInto("game_user_notes")
         .values({
           game_id,
@@ -308,6 +330,17 @@ export class DefaultGameDataService implements GameDataService {
         ])
         .executeTakeFirstOrThrow();
 
+      const metadata = await trx
+        .selectFrom("game_metadata")
+        .where("game_id", "=", game_id)
+        .select([
+          "name as name",
+          "last_update_datetime as lastUpdateTimestamp",
+          "synopsis as synopsis",
+          "full_description as fullDescription",
+        ])
+        .executeTakeFirst();
+
       const listing = await trx
         .selectFrom("game_official_listing")
         .where("game_id", "=", game_id)
@@ -321,7 +354,8 @@ export class DefaultGameDataService implements GameDataService {
 
       return {
         id,
-        description: updatedDescription,
+        userNotes: updatedUserNotes,
+        metadata: metadata ?? null,
         listing: listing ?? null,
       };
     });

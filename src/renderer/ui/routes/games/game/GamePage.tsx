@@ -103,7 +103,7 @@ function GameViewLoaded({ game, versions }: GameViewLoadedProps) {
             <EditGameDescriptionButton
               gameId={game.id}
               listing={game.listing}
-              description={game.description}
+              description={game.userNotes}
             />
           </Column>
         </Grid>
@@ -114,8 +114,8 @@ function GameViewLoaded({ game, versions }: GameViewLoadedProps) {
           <Column sm={4} md={8}>
             <Stack gap={5} orientation="vertical">
               {game.listing && <GameOfficialListing listing={game.listing} />}
-              {game.description && (
-                <GameDescription description={game.description} />
+              {game.userNotes && (
+                <GameDescription description={game.userNotes} />
               )}
             </Stack>
           </Column>
@@ -133,7 +133,7 @@ function GameViewLoaded({ game, versions }: GameViewLoadedProps) {
 }
 
 interface GameDescriptionProps {
-  description: NonNullable<LoadedGame["description"]>;
+  description: NonNullable<LoadedGame["userNotes"]>;
 }
 function GameDescription({ description }: GameDescriptionProps) {
   const displayProps = [
@@ -245,7 +245,7 @@ function GameViewError({ gameId, error }: GameViewErrorProps) {
 
 interface EditGameDescriptionButtonProps {
   gameId: GameSId;
-  description: LoadedGame["description"];
+  description: LoadedGame["userNotes"];
   listing?: LoadedGame["listing"];
 }
 function EditGameDescriptionButton({
