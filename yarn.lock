@@ -5542,7 +5542,7 @@ __metadata:
     vite: "npm:^6.0.7"
     vite-tsconfig-paths: "npm:^5.1.4"
     vitest: "npm:^3.0.1"
-    wouter: "npm:^3.3.5"
+    wouter: "npm:^3.5.1"
   languageName: unknown
   linkType: soft
 
@@ -8025,16 +8025,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wouter@npm:^3.3.5":
-  version: 3.3.5
-  resolution: "wouter@npm:3.3.5"
+"wouter@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "wouter@npm:3.5.1"
   dependencies:
     mitt: "npm:^3.0.1"
     regexparam: "npm:^3.0.0"
     use-sync-external-store: "npm:^1.0.0"
   peerDependencies:
     react: ">=16.8.0"
-  checksum: 10c0/67967fdb4d6b6a921880ebb67ad29298b46f9f7048554cedc583b5e05f7aebedb85cd3ac33cd954027aa73f0aa8adc521cea4f34d485912a891e14f7e0d34d41
+  checksum: 10c0/d8d3766764dc302ab6387331fb467c3ebe63c704d21d50eb4ac6a767bb0e76e0e82b28e01b602ac0e2f2b3d387994e0a0a5c84039a42d2aff83951da3480a1fc
   languageName: node
   linkType: hard
 
