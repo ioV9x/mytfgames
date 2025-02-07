@@ -1839,12 +1839,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.17.14, @types/node@npm:^20.9.0":
+"@types/node@npm:*, @types/node@npm:^20.9.0":
   version: 20.17.14
   resolution: "@types/node@npm:20.17.14"
   dependencies:
     undici-types: "npm:~6.19.2"
   checksum: 10c0/2af0722989c677416dec4d9bc37e262a9724e090e5ce021a976e4ab12d4fa26aecbb00dddc8114d0fbf4a6552f12ace0ec98156247a20bf4d57809b7ce90ea5a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.17.17":
+  version: 20.17.17
+  resolution: "@types/node@npm:20.17.17"
+  dependencies:
+    undici-types: "npm:~6.19.2"
+  checksum: 10c0/6aebc8053b96f1b6d82c3a3fe5fc20d9f7eeb507d79d967221bbecaa2b26665fa1c9efe460be2a2f4aaae4e98f37797df7d5a4189f2b6edf8abf9f82f7fd8b1f
   languageName: node
   linkType: hard
 
@@ -5506,7 +5515,7 @@ __metadata:
     "@reduxjs/toolkit": "npm:^2.5.0"
     "@types/better-sqlite3": "npm:^7.6.12"
     "@types/bunyan": "npm:^1.8.11"
-    "@types/node": "npm:^20.17.14"
+    "@types/node": "npm:^20.17.17"
     "@types/react": "npm:^18.3.18"
     "@types/react-dom": "npm:^18.3.5"
     "@types/uuid": "npm:^10.0.0"
