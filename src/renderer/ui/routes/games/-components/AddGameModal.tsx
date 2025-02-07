@@ -10,14 +10,16 @@ import {
   ModalFooter,
   ModalHeader,
   Stack,
+  TextArea,
   TextInput,
   Toggle,
 } from "@carbon/react";
 import { produce } from "immer";
-import { useReducer } from "react";
+import { useState } from "react";
 
 import { GameSId } from "$ipc/main-renderer";
 import { useIpc } from "$renderer/ipc";
+import { errorToString } from "$renderer/utils";
 
 export interface AddGameRequest {
   readonly title: string;
@@ -26,22 +28,15 @@ export interface AddGameRequest {
   readonly rating: number;
 }
 
-enum AddGameModalActionType {
-  SetError = "setError",
-  ResetError = "resetError",
-  SetMode = "toggleMode",
-  SetPath = "setPath",
-}
-type AddGameModalAction =
-  | { type: AddGameModalActionType.SetMode; mode: "new" | "import" }
-  | { type: AddGameModalActionType.SetPath; path: string }
-  | { type: AddGameModalActionType.SetError; error: string }
-  | { type: AddGameModalActionType.ResetError };
 interface AddGameFormState {
   mode: "new" | "import";
   submitting: boolean;
   import: {
     path: string | undefined;
+  };
+  manual: {
+    name: string | undefined;
+    note: string;
   };
   error: string | undefined;
 }
@@ -52,48 +47,31 @@ export interface AddGameModalProps {
   readonly onAddGame: (newGameId: GameSId) => void;
 }
 export function AddGameModal({ open, onClose, onAddGame }: AddGameModalProps) {
-  const { import: imports } = useIpc();
-  const [state, dispatch] = useReducer(
-    produce((draft: AddGameFormState, action: AddGameModalAction) => {
-      switch (action.type) {
-        case AddGameModalActionType.SetMode:
-          draft.mode = action.mode;
-          break;
-        case AddGameModalActionType.SetPath:
-          draft.import.path = action.path;
-          break;
-        case AddGameModalActionType.SetError:
-          draft.error = action.error;
-          break;
-        case AddGameModalActionType.ResetError:
-          draft.error = undefined;
-          break;
-      }
-    }),
-    {
-      mode: "new",
-      submitting: false,
-      import: { path: undefined },
-      error: undefined,
-    },
-  );
+  const { import: imports, games } = useIpc();
+  const [state, setState] = useState<AddGameFormState>({
+    mode: "new",
+    submitting: false,
+    import: { path: undefined },
+    manual: { name: undefined, note: "" },
+    error: undefined,
+  });
 
   function onSubmit() {
-    if (state.mode === "new") {
-      dispatch({
-        type: AddGameModalActionType.SetError,
-        error: "Not implemented",
-      });
-    } else {
-      imports
-        .importGameInfoFromFolder(state.import.path!)
-        .then(onAddGame, (error: unknown) =>
-          dispatch({
-            type: AddGameModalActionType.SetError,
-            error: error?.toString() ?? "null/undefined error",
-          }),
-        );
-    }
+    const addTask =
+      state.mode === "new"
+        ? games.createCustomGame({
+            name: state.manual.name!,
+            note: state.manual.note,
+          })
+        : imports.importGameInfoFromFolder(state.import.path!);
+
+    addTask.then(onAddGame, (error: unknown) =>
+      setState(
+        produce((draft) => {
+          draft.error = errorToString(error);
+        }),
+      ),
+    );
   }
 
   return (
@@ -122,23 +100,24 @@ export function AddGameModal({ open, onClose, onAddGame }: AddGameModalProps) {
             labelText="Import from metadata"
             toggled={state.mode === "import"}
             onToggle={(checked) =>
-              dispatch({
-                type: AddGameModalActionType.SetMode,
-                mode: checked ? "import" : "new",
-              })
+              setState(
+                produce((draft) => {
+                  draft.mode = checked ? "import" : "new";
+                }),
+              )
             }
           />
           {state.mode === "import" ? (
-            <ImportGameForm state={state} dispatch={dispatch} />
+            <ImportGameForm state={state} setState={setState} />
           ) : (
-            <NewGameForm state={state} dispatch={dispatch} />
+            <NewGameForm state={state} setState={setState} />
           )}
           {state.error != null && (
             <InlineNotification
               kind="error"
               title="Add game failed"
               onCloseButtonClick={() =>
-                dispatch({ type: AddGameModalActionType.ResetError })
+                setState((state) => ({ ...state, error: undefined }))
               }
             >
               {state.error}
@@ -164,32 +143,69 @@ export function AddGameModal({ open, onClose, onAddGame }: AddGameModalProps) {
 
 interface AddGameModalSubFormProps {
   readonly state: AddGameFormState;
-  readonly dispatch: React.Dispatch<AddGameModalAction>;
+  readonly setState: React.Dispatch<React.SetStateAction<AddGameFormState>>;
 }
 
-function NewGameForm({ state, dispatch }: AddGameModalSubFormProps) {
+function NewGameForm({ state, setState }: AddGameModalSubFormProps) {
   return (
     <>
-      <TextInput id="s" labelText="Game name" placeholder="Secretary" />
+      <TextInput
+        id="new-game-name"
+        labelText="Name (required)"
+        required={true}
+        placeholder="Example: Secretary"
+        helperText="This is the name of the game as you know it"
+        value={state.manual.name ?? ""}
+        invalid={state.manual.name === ""}
+        invalidText="This field is required"
+        disabled={state.submitting}
+        onChange={(ev) =>
+          setState(
+            produce((draft) => {
+              draft.manual.name = ev.target.value;
+            }),
+          )
+        }
+      />
+      <TextArea
+        id="new-game-note"
+        labelText="Note"
+        required={false}
+        placeholder="Didn't like the game, because…"
+        value={state.manual.note}
+        disabled={state.submitting}
+        onChange={(ev) =>
+          setState(
+            produce((draft) => {
+              draft.manual.note = ev.target.value;
+            }),
+          )
+        }
+      />
     </>
   );
 }
 
-function ImportGameForm({ state, dispatch }: AddGameModalSubFormProps) {
+function ImportGameForm({ state, setState }: AddGameModalSubFormProps) {
   const { shellDialog } = useIpc();
 
   return (
     <>
       <div className="games--add-game-modal--folder-select">
         <TextInput
-          id="ss"
+          id="new-game-import-path"
           labelText="Artifact directory path"
-          value={state.import.path}
+          required={true}
+          value={state.import.path ?? ""}
+          invalid={state.import.path === ""}
+          invalidText="This field is required"
+          disabled={state.submitting}
           onChange={(ev) =>
-            dispatch({
-              type: AddGameModalActionType.SetPath,
-              path: ev.target.value,
-            })
+            setState(
+              produce((draft) => {
+                draft.import.path = ev.target.value;
+              }),
+            )
           }
         />
 
@@ -198,15 +214,17 @@ function ImportGameForm({ state, dispatch }: AddGameModalSubFormProps) {
           size="md"
           renderIcon={FolderOpen}
           iconDescription="Select directory"
+          disabled={state.submitting}
           onClick={() =>
             void shellDialog.openDirectoryChooser().then((path) => {
               if (path == null) {
                 return;
               }
-              dispatch({
-                type: AddGameModalActionType.SetPath,
-                path,
-              });
+              setState(
+                produce((draft) => {
+                  draft.import.path = path;
+                }),
+              );
             })
           }
         />
@@ -216,5 +234,8 @@ function ImportGameForm({ state, dispatch }: AddGameModalSubFormProps) {
 }
 
 function validateForm(state: AddGameFormState): boolean {
-  return state.mode === "import" && state.import.path != null;
+  return (
+    (state.mode === "import" && !!state.import.path) ||
+    (state.mode === "new" && state.manual.name != null)
+  );
 }

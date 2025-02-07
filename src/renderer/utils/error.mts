@@ -1,7 +1,9 @@
 export function errorToString(error: unknown): string {
+  if (error == null) {
+    return "<null/undefined error value>";
+  }
   if (
     typeof error === "object" &&
-    error != null &&
     "statusText" in error &&
     typeof error.statusText === "string"
   ) {

@@ -28,6 +28,34 @@ export class DefaultGameDataService implements GameDataService {
     private readonly remoteRedux: RemoteReduxActionSender,
   ) {}
 
+  @remoteProcedure(GameDataServiceContract, "createCustomGame")
+  async createCustomGame(description: {
+    name: string;
+    userRating?: number;
+    note: string;
+  }): Promise<GameSId> {
+    const game_id = uuid.v4({}, Buffer.allocUnsafe(16)) as GameId;
+    const last_change_datetime = Temporal.Now.instant().toString({
+      smallestUnit: "second",
+    });
+    await this.db.transaction().execute(async (trx) => {
+      await trx.insertInto("game").values({ game_id }).execute();
+
+      await trx
+        .insertInto("game_user_notes")
+        .values({
+          game_id,
+          custom_name: description.name,
+          user_rating: description.userRating,
+          note: description.note,
+          last_change_datetime,
+        })
+        .returning("game_id")
+        .execute();
+    });
+    return uuid.stringify(game_id);
+  }
+
   @remoteProcedure(GameDataServiceContract, "retrieveOrder")
   async retrieveOrder(): Promise<Record<GameOrderType, GameSId[]>> {
     return await this.db.transaction().execute(async (trx) => {

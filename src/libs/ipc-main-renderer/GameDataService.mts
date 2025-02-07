@@ -92,6 +92,16 @@ export const gameIndexUpdated = createAction<{ numGames: number }>(
 );
 
 export const GameDataService = makeRemoteServiceDescriptor("games:data", {
+  createCustomGame: makeRemoteProcedureDescriptor<
+    [
+      description: {
+        name: string;
+        userRating?: number;
+        note: string;
+      },
+    ],
+    GameSId
+  >(),
   retrieveOrder: makeRemoteProcedureDescriptor<
     [],
     Record<GameOrderType, GameSId[]>
