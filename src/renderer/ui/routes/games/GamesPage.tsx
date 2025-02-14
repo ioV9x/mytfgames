@@ -18,7 +18,7 @@ import {
 } from "@carbon/react";
 import { JSX, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { useLocation, useSearch } from "wouter";
+import { useLocation, useSearchParams } from "wouter";
 
 import {
   GameOrderType,
@@ -40,8 +40,7 @@ import { AddGameModal } from "./-components/AddGameModal";
 
 export default function GameIndexPage() {
   const dispatch = useAppDispatch();
-  const [_, setLocation] = useLocation();
-  const query = new URLSearchParams(useSearch());
+  const [query, setQuery] = useSearchParams();
 
   const { page, pageSize, sort } = paginationSettingsFromQuery(query, {
     page: 1,
@@ -57,12 +56,16 @@ export default function GameIndexPage() {
     total: 0,
   });
   if (searchResult.total === 0 && page > 1) {
-    const newQuery = new URLSearchParams(query);
     // Ideally, we'd set the page to the last page, but we don't have that info.
     // The backend doesn't provide the number of items if the search is empty
     // due to pagination running off the end of the list.
-    newQuery.set("page", "1");
-    setLocation(`?${newQuery.toString()}`, { replace: true });
+    setQuery(
+      (draft) => {
+        draft.set("page", "1");
+        return draft;
+      },
+      { replace: true },
+    );
   }
   useEffect(() => {
     const abortController = new AbortController();
@@ -102,18 +105,20 @@ export default function GameIndexPage() {
         <TableToolbarContent>
           <TableToolbarSearch
             value={name ?? ""}
-            onChange={(ev, _defaultValue) => {
-              const newQuery = new URLSearchParams(query);
-              const value = ev === "" ? ev : ev.target.value;
-              if (value !== "") {
-                newQuery.set("name", value);
-              } else {
-                newQuery.delete("name");
-              }
-              setLocation(`?${newQuery.toString()}`, {
-                replace: true,
-              });
-            }}
+            onChange={(ev, _defaultValue) =>
+              setQuery(
+                (draft) => {
+                  const value = ev === "" ? ev : ev.target.value;
+                  if (value !== "") {
+                    draft.set("name", value);
+                  } else {
+                    draft.delete("name");
+                  }
+                  return draft;
+                },
+                { replace: true },
+              )
+            }
             defaultExpanded
           />
           <AddGameButton />
@@ -125,23 +130,25 @@ export default function GameIndexPage() {
         page={page}
         pageSize={pageSize}
         pageSizes={[10, 20, 30, 40]}
-        onPageChange={(changed) => {
-          const newQuery = new URLSearchParams(query);
-          const nextPage =
-            pageSize === changed.pageSize
-              ? changed.page
-              : nearestPage({ page, pageSize }, changed.pageSize);
-          newQuery.set("page", nextPage.toFixed(0));
-          newQuery.set("pageSize", changed.pageSize.toFixed(0));
-          setLocation(`?${newQuery.toString()}`);
-        }}
+        onPageChange={(changed) =>
+          setQuery((draft) => {
+            const nextPage =
+              pageSize === changed.pageSize
+                ? changed.page
+                : nearestPage({ page, pageSize }, changed.pageSize);
+            draft.set("page", nextPage.toFixed(0));
+            draft.set("pageSize", changed.pageSize.toFixed(0));
+            return draft;
+          })
+        }
         sortedBy={[orderType, sort]}
-        onSortHeaderClicked={({ type, direction }) => {
-          const newQuery = new URLSearchParams(query);
-          newQuery.set("orderBy", type);
-          newQuery.set("sort", direction);
-          setLocation(`?${newQuery.toString()}`);
-        }}
+        onSortHeaderClicked={({ type, direction }) =>
+          setQuery((draft) => {
+            draft.set("orderBy", type);
+            draft.set("sort", direction);
+            return draft;
+          })
+        }
       />
     </TableContainer>
   );
