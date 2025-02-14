@@ -4748,15 +4748,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inversify@npm:^6.2.1":
-  version: 6.2.1
-  resolution: "inversify@npm:6.2.1"
+"inversify@npm:^6.2.2":
+  version: 6.2.2
+  resolution: "inversify@npm:6.2.2"
   dependencies:
     "@inversifyjs/common": "npm:1.4.0"
     "@inversifyjs/core": "npm:1.3.5"
   peerDependencies:
     reflect-metadata: ~0.2.2
-  checksum: 10c0/a7c4d0802ae3cbf3d21f1c97a24e066917a2560ff0a8f00c6401147f7c48846549959de3110e9849197eed2ccf6ac64f1208a1295a4beda8fe9ea8e5cdf5f197
+  checksum: 10c0/f4acff320cebec022b408c7f081192e7e96296d40ee9cbc3915c6fe331333af53f4a418058e31c9d760bb00e36e97d4ae3ef5e4e18096f60f46f45b9a6540aeb
   languageName: node
   linkType: hard
 
@@ -5677,7 +5677,7 @@ __metadata:
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     gray-matter: "patch:gray-matter@npm%3A4.0.3#~/.yarn/patches/gray-matter-npm-4.0.3-852ae4f34c.patch"
     immer: "npm:^10.1.1"
-    inversify: "npm:^6.2.1"
+    inversify: "npm:^6.2.2"
     js-yaml: "npm:^4.1.0"
     kysely: "npm:^0.27.5"
     prettier: "npm:3.4.2"
