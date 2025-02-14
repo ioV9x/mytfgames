@@ -5,6 +5,6 @@ import { Ajv } from "./ajv-jtd.mjs";
 
 export const UtilsModule = new ContainerModule((bind) => {
   bind(Ajv)
-    .toDynamicValue(() => new AjvImpl({}))
+    .toDynamicValue(() => new AjvImpl({ timestamp: "string" }))
     .inSingletonScope();
 });

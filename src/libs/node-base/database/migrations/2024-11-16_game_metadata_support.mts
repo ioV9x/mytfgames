@@ -173,7 +173,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     await trx.schema
       .createTable("game_metadata")
       .addColumn("game_id", "blob", (col) => col.notNull().primaryKey())
-      .addColumn("metadata_version", "integer", (col) => col.notNull())
+      .addColumn("medata_timestamp", "integer", (col) => col.notNull())
       .addColumn("name", "text", (col) => col.notNull())
       .addColumn("tfgames_site_game_id", "integer")
       .addColumn("synopsis", "text", (col) => col.notNull())
@@ -205,9 +205,9 @@ export async function up(db: Kysely<any>): Promise<void> {
     await trx.schema
       .createTable("author")
       .addColumn("author_id", "blob", (col) => col.notNull().primaryKey())
-      .addColumn("metadata_version", "integer", (col) => col.notNull())
+      .addColumn("medata_timestamp", "integer", (col) => col.notNull())
       .addColumn("name", "text", (col) => col.notNull())
-      .addColumn("tfgames_site_profile_id", "integer")
+      .addColumn("tfgames_site_profile_id", "integer", (col) => col.unique())
       .execute();
     await trx.schema
       .createIndex("author_____name")
@@ -247,7 +247,6 @@ export async function up(db: Kysely<any>): Promise<void> {
 
     await trx.schema
       .dropIndex("game_official_tfgames_author_____tfgames_profile_id")
-      .on("game_official_tfgames_author")
       .execute();
     await trx.schema.dropTable("game_official_tfgames_author").execute();
     await trx.schema.dropTable("tfgames_author").execute();

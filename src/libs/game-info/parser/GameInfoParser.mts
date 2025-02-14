@@ -11,7 +11,10 @@ interface GameInfoParser {
 export { GameInfoParser };
 
 export interface BundledGameInfo {
-  metadataVersion: number;
+  /**
+   * UNIX timestamp of the metadata.
+   */
+  metadataTimestamp: number;
   name: string;
   synopsis: string;
   description: string;
@@ -25,7 +28,10 @@ export interface BundledGameIds {
   tfgamesSiteGameId: number | null;
 }
 export interface BundledAuthorInfo {
-  metadataVersion: number;
+  /**
+   * UNIX timestamp of the metadata.
+   */
+  metadataTimestamp: number;
   uuid: Buffer;
   name: string;
   tfgamesSiteProfileId: number | null;

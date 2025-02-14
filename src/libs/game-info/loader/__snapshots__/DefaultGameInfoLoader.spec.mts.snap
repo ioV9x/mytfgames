@@ -116,7 +116,7 @@ exports[`DefaultGameInfoLoader > instance > should load game info from the meta 
 {
   "authors": [
     {
-      "metadataVersion": 0,
+      "metadataTimestamp": 1577847600,
       "name": "deedee",
       "tfgamesSiteProfileId": 38045,
       "uuid": Uint8Array [
@@ -255,7 +255,7 @@ If the download needs a password it is always the gamename, written in lower cas
       169,
     ],
   },
-  "metadataVersion": 0,
+  "metadataTimestamp": 1577854800,
   "name": "Secretary",
   "synopsis": "An erotic adventure/life simulation game where the character starts as a normal guy in his late twenties who is about to transition from a dead end IT Job to a new position as the personal Secretary to a very important executive. Your choices choose how your development progresses as you interact with coworkers and friends and steer your way to learn that there's more going on at this company than might first appear...
 ",

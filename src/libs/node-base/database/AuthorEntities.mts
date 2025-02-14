@@ -10,7 +10,7 @@ export interface AuthorTable {
   /**
    * The imported information version.
    */
-  metadata_version: number;
+  metadata_timestamp: number;
   /**
    * The display name of the author.
    */

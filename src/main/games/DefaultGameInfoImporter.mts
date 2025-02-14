@@ -24,7 +24,6 @@ export class DefaultGameInfoImporter {
       metadata =
         await this.gameInfoLoader.loadGameInfoFromMetaFolder(artifactFolder);
     } catch (error) {
-      console.log(error);
       throw new Error(`Failed to load game info from folder`, { cause: error });
     }
     const game = await this.db.transaction().execute(async (trx) => {
@@ -46,7 +45,7 @@ export class DefaultGameInfoImporter {
           last_update_datetime: Temporal.Now.instant().toString({
             smallestUnit: "second",
           }),
-          metadata_version: metadata.gameInfo.metadataVersion,
+          metadata_timestamp: metadata.gameInfo.metadataTimestamp,
           tfgames_site_game_id: metadata.gameInfo.ids.tfgamesSiteGameId,
         })
         .onConflict((oc) =>
@@ -57,13 +56,13 @@ export class DefaultGameInfoImporter {
               synopsis: eb.ref("excluded.synopsis"),
               full_description: eb.ref("excluded.full_description"),
               last_update_datetime: eb.ref("excluded.last_update_datetime"),
-              metadata_version: eb.ref("excluded.metadata_version"),
+              metadata_timestamp: eb.ref("excluded.metadata_timestamp"),
               tfgames_site_game_id: eb.ref("excluded.tfgames_site_game_id"),
             }))
             .whereRef(
-              "excluded.metadata_version",
+              "excluded.metadata_timestamp",
               "<",
-              "game_metadata.metadata_version",
+              "game_metadata.metadata_timestamp",
             ),
         )
         .returning([
