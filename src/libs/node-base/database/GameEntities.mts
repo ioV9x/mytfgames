@@ -43,7 +43,7 @@ export interface GameMetadataTable {
   /**
    * The imported information version.
    */
-  metadata_version: number;
+  metadata_timestamp: number;
   /**
    * The title of the game.
    */

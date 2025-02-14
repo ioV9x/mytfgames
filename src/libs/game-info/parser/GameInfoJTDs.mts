@@ -32,7 +32,7 @@ export const GameInfoFrontMatterTypeDefinition = {
             properties: {
               uuid: { type: "string" },
               name: { type: "string" },
-              "metadata-version": { type: "int32" },
+              "metadata-timestamp": { type: "timestamp" },
             },
             optionalProperties: {
               "tfgames.site": { type: "int32", nullable: true },
@@ -42,7 +42,7 @@ export const GameInfoFrontMatterTypeDefinition = {
         tags: {
           elements: { type: "string" },
         },
-        "metadata-version": { type: "int32" },
+        "metadata-timestamp": { type: "timestamp" },
       },
     },
   },

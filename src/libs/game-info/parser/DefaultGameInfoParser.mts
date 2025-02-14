@@ -1,6 +1,7 @@
 import parseFrontMatter from "gray-matter";
 import { inject, injectable } from "inversify";
 import { load as yamlLoad } from "js-yaml";
+import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
 
 import { Ajv } from "$node-base/utils";
@@ -75,7 +76,9 @@ export class DefaultGameInfoParser implements GameInfoParser {
         });
       }
       return {
-        metadataVersion: author["metadata-version"],
+        metadataTimestamp: sanitizeMetadataTimestamp(
+          author["metadata-timestamp"],
+        ),
         uuid: authorUuid,
         name: author.name,
         tfgamesSiteProfileId: author["tfgames.site"] ?? null,
@@ -83,7 +86,9 @@ export class DefaultGameInfoParser implements GameInfoParser {
     });
 
     return {
-      metadataVersion: parsed.data["metadata-version"],
+      metadataTimestamp: sanitizeMetadataTimestamp(
+        parsed.data["metadata-timestamp"],
+      ),
       name: parsed.data.name,
       synopsis: parsed.data.synopsis,
       description: parsed.content,
@@ -127,4 +132,19 @@ export class DefaultGameInfoParser implements GameInfoParser {
       note: parsed.content,
     };
   }
+}
+
+function sanitizeMetadataTimestamp(timestamp: string | Date): number {
+  return toHistoricalUnixTimestamp(timestamp).epochMilliseconds / 1000;
+}
+function toHistoricalUnixTimestamp(timestamp: string | Date): Temporal.Instant {
+  const parsed = toUnixTimestamp(timestamp);
+  const now = Temporal.Now.instant();
+  const ltd = Temporal.Instant.compare(parsed, now) > 0 ? now : parsed;
+  return ltd.round({ smallestUnit: "second", roundingMode: "floor" });
+}
+function toUnixTimestamp(timestamp: string | Date): Temporal.Instant {
+  return typeof timestamp === "string"
+    ? Temporal.Instant.from(timestamp)
+    : Temporal.Instant.fromEpochMilliseconds(timestamp.getTime());
 }
