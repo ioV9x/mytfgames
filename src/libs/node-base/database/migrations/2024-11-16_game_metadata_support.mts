@@ -241,6 +241,17 @@ export async function up(db: Kysely<any>): Promise<void> {
       .column("author_id")
       .execute();
 
+    // the correct thing to do would be to migrate data from
+    // game_official_tfgames_author to game_author, but since we are still in
+    // pre-release, we can just drop the table
+
+    await trx.schema
+      .dropIndex("game_official_tfgames_author_____tfgames_profile_id")
+      .on("game_official_tfgames_author")
+      .execute();
+    await trx.schema.dropTable("game_official_tfgames_author").execute();
+    await trx.schema.dropTable("tfgames_author").execute();
+
     ////////////////////////////////////////////////////////////////////////////
     // db views
     //
@@ -257,6 +268,45 @@ export async function down(db: Kysely<any>): Promise<void> {
     ////////////////////////////////////////////////////////////////////////////
     // author
     //
+    await trx.schema
+      .createTable("tfgames_author")
+      .addColumn("tfgames_profile_id", "integer", (col) =>
+        col.notNull().primaryKey(),
+      )
+      .addColumn("username", "text", (col) => col.notNull().unique())
+      .modifyEnd(sql`STRICT`)
+      .execute();
+
+    await trx.schema
+      .createTable("game_official_tfgames_author")
+      .addColumn("game_id", "blob", (col) => col.notNull())
+      .addColumn("tfgames_profile_id", "integer", (col) => col.notNull())
+      .addPrimaryKeyConstraint("game_official_tfgames_author_pk", [
+        "game_id",
+        "tfgames_profile_id",
+      ])
+      .addForeignKeyConstraint(
+        "game_official_listing_created_by_tfgames_author_fk",
+        ["game_id"],
+        "game",
+        ["game_id"],
+        (cb) => cb.onDelete("cascade"),
+      )
+      .addForeignKeyConstraint(
+        "tfgames_author_creates_game_official_listing_fk",
+        ["tfgames_profile_id"],
+        "tfgames_author",
+        ["tfgames_profile_id"],
+        (cb) => cb.onDelete("cascade"),
+      )
+      .modifyEnd(sql`STRICT`)
+      .execute();
+    await trx.schema
+      .createIndex("game_official_tfgames_author_____tfgames_profile_id")
+      .on("game_official_tfgames_author")
+      .column("tfgames_profile_id")
+      .execute();
+
     await trx.schema.dropIndex("game_author_____author_id").execute();
     await trx.schema.dropTable("game_author").execute();
 
