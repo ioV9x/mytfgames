@@ -1,6 +1,6 @@
 import parseFrontMatter from "gray-matter";
 import { inject, injectable } from "inversify";
-import { load as yamlLoad } from "js-yaml";
+import { CORE_SCHEMA, load as yamlLoad } from "js-yaml";
 import { Temporal } from "temporal-polyfill";
 import * as uuid from "uuid";
 
@@ -52,6 +52,13 @@ export class DefaultGameInfoParser implements GameInfoParser {
   parseGameInfo(gameMD: string): BundledGameInfo {
     const parsed = parseFrontMatter(gameMD, {
       language: "yaml",
+      engines: {
+        yaml: {
+          parse(input: string): object {
+            return yamlLoad(input, { schema: CORE_SCHEMA }) as object;
+          },
+        },
+      },
     });
 
     if (!this.#validateGameInfoFrontMatter(parsed.data)) {
@@ -102,7 +109,7 @@ export class DefaultGameInfoParser implements GameInfoParser {
   }
 
   parseArtifactYaml(artifactYaml: string): BundledArtifactInfo {
-    const parsed = yamlLoad(artifactYaml);
+    const parsed = yamlLoad(artifactYaml, { schema: CORE_SCHEMA });
 
     if (!this.#validateArtifactMetadata(parsed)) {
       throw new Error("Invalid artifact metadata", {
@@ -119,6 +126,13 @@ export class DefaultGameInfoParser implements GameInfoParser {
   parseChangelog(version: string, changelogMD: string): BundledVersionInfo {
     const parsed = parseFrontMatter(changelogMD, {
       language: "yaml",
+      engines: {
+        yaml: {
+          parse(input: string): object {
+            return yamlLoad(input, { schema: CORE_SCHEMA }) as object;
+          },
+        },
+      },
     });
 
     if (!this.#validateChangelogFrontMatter(parsed.data)) {

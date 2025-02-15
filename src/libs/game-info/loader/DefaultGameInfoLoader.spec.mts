@@ -7,7 +7,7 @@ import { DefaultGameInfoParser } from "../parser/DefaultGameInfoParser.mjs";
 import { DefaultGameInfoLoader } from "./DefaultGameInfoLoader.mjs";
 
 describe("DefaultGameInfoLoader", () => {
-  const ajv = new Ajv();
+  const ajv = new Ajv({ timestamp: "string" });
   let gameInfoParser: DefaultGameInfoParser;
 
   beforeEach(() => {

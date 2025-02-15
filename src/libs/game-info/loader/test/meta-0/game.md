@@ -9,7 +9,7 @@ authors:
   - name: deedee
     uuid: "f3b3b3b4-1b1b-4b3b-8b3b-3b1b1b3b1b1b"
     tfgames.site: 38045
-    metadata-timestamp: 2020-01-01 03:00:00 # metadata timestamp (RFC 3339)
+    metadata-timestamp: 2020-01-01 03:00:00Z # metadata timestamp (RFC 3339)
 tags:
   - AT:MF
   - AT:FF
@@ -36,7 +36,7 @@ tags:
   - MM:Draw
   - MM:SFX
   - MM:Video
-metadata-timestamp: 2020-01-01 05:00:00 # metadata timestamp (RFC 3339)
+metadata-timestamp: 2020-01-01 05:00:00Z # metadata timestamp (RFC 3339)
 schema-version: "0" # metadata format version, must be "0"
 ---
 
