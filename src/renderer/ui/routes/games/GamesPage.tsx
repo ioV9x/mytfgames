@@ -1,6 +1,6 @@
 import "./GamesPage.scss";
 
-import { Add as AddIcon } from "@carbon/icons-react";
+import { Add as AddIcon, Information } from "@carbon/icons-react";
 import {
   Button,
   Pagination,
@@ -15,6 +15,7 @@ import {
   TableToolbar,
   TableToolbarContent,
   TableToolbarSearch,
+  Tooltip,
 } from "@carbon/react";
 import { JSX, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
@@ -172,26 +173,23 @@ const GameTableHeaders: {
   render(game: LoadedGame): JSX.Element | string;
 }[] = [
   {
-    key: "id",
-    header: "ID",
-    render(game) {
-      return game.id;
-    },
-  },
-  {
     key: "name",
     header: "Name",
     order: GameOrderType.Name,
     render(game) {
       const name = makeGameDisplayName(game) ?? <i>N/A</i>;
-      return <AppLink href={`/games/${game.id}`}>{name}</AppLink>;
-    },
-  },
-  {
-    key: "numLikes",
-    header: "Likes",
-    render(game) {
-      return game.listing?.numLikes.toString() ?? <i>N/A</i>;
+      return (
+        <>
+          <AppLink href={`/games/${game.id}`}>{name}</AppLink>{" "}
+          <Tooltip
+            className="games__id_tooltip"
+            label={<span className="games__id_tooltip_content">{game.id}</span>}
+            autoAlign
+          >
+            <Information />
+          </Tooltip>
+        </>
+      );
     },
   },
   {
@@ -201,6 +199,7 @@ const GameTableHeaders: {
     render(game) {
       return (
         game.listing?.lastUpdateTimestamp ??
+        game.metadata?.lastUpdateTimestamp ??
         game.userNotes?.lastChangeTimestamp ?? <i>N/A</i>
       );
     },
@@ -258,7 +257,7 @@ function GameTable({
   return (
     <>
       {pagination}
-      <Table isSortable={true}>
+      <Table isSortable={true} experimentalAutoAlign>
         <TableHead>
           <TableRow>
             {GameTableHeaders.map((header) => (

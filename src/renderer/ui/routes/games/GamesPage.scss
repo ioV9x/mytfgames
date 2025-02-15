@@ -1,5 +1,14 @@
 @use "@carbon/react/scss/spacing" as *;
+@use "@carbon/type" as *;
 
 .games__content {
   padding: $spacing-05;
+}
+.games__id_tooltip {
+  vertical-align: middle;
+}
+.games__id_tooltip_content {
+  @each $key, $value in $helper-text-01 {
+    #{$key}: $value;
+  }
 }
