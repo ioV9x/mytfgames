@@ -43,6 +43,17 @@ export class ElectronBrowserSessionConfigurer
           supportFetchAPI: true,
         },
       },
+      {
+        scheme: "game",
+        privileges: {
+          standard: true,
+          secure: true,
+          stream: true,
+          supportFetchAPI: true,
+          allowServiceWorkers: false,
+          corsEnabled: true,
+        },
+      },
     ]);
   }
 
@@ -98,9 +109,11 @@ export class ElectronBrowserSessionConfigurer
     }
     const stat = fs.statSync(resourcePath, { throwIfNoEntry: false });
     const resourceUrl = pathToFileURL(
-      stat?.isDirectory()
-        ? path.join(resourcePath, "index.html")
-        : resourcePath,
+      stat == null
+        ? path.join(this.rendererAppPath, "index.html")
+        : stat.isDirectory()
+          ? path.join(resourcePath, "index.html")
+          : resourcePath,
     );
     return net.fetch(resourceUrl.href);
   };

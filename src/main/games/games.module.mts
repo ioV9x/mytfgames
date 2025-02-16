@@ -7,6 +7,7 @@ import { DefaultGameInfoImporter } from "./DefaultGameInfoImporter.mjs";
 import { DefaultGameVersionService } from "./DefaultGameVersionService.mjs";
 import { GameDataService } from "./GameDataService.mjs";
 import { GameVersionService } from "./GameVersionService.mjs";
+import { HtmlGamePlayService } from "./HtmlGamePlayService.mjs";
 
 export const GamesModule = new ContainerModule((bind) => {
   bind(GameDataService).to(DefaultGameDataService).inSingletonScope();
@@ -18,4 +19,7 @@ export const GamesModule = new ContainerModule((bind) => {
 
   bind(DefaultGameInfoImporter).toSelf().inSingletonScope();
   bind(IpcServiceProvider).toService(DefaultGameInfoImporter);
+
+  bind(HtmlGamePlayService).toSelf().inSingletonScope();
+  bind(IpcServiceProvider).toService(HtmlGamePlayService);
 });

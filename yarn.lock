@@ -5405,6 +5405,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime@npm:^4.0.6":
+  version: 4.0.6
+  resolution: "mime@npm:4.0.6"
+  bin:
+    mime: bin/cli.js
+  checksum: 10c0/1797b1c6da4cdb817fc18a4b8d99d6034885946f3d3680c2e4eb18bf19d4a64b42559f1eae0d1607e216f584311f9f806b5bfa1426baebeae4807bec5e14188a
+  languageName: node
+  linkType: hard
+
 "mimic-fn@npm:^2.0.0, mimic-fn@npm:^2.1.0":
   version: 2.1.0
   resolution: "mimic-fn@npm:2.1.0"
@@ -5680,6 +5689,7 @@ __metadata:
     inversify: "npm:^6.2.2"
     js-yaml: "npm:^4.1.0"
     kysely: "npm:^0.27.5"
+    mime: "npm:^4.0.6"
     prettier: "npm:3.5.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"

@@ -1,12 +1,13 @@
 import "./GameVersionArtifacts.scss";
 
-import { Add, TrashCan } from "@carbon/icons-react";
+import { Add, PlayFilledAlt, TrashCan } from "@carbon/icons-react";
 import {
   Button,
   ButtonSize,
   ComboBox,
   DataTable,
   Dropdown,
+  IconButton,
   Modal,
   Stack,
   Table,
@@ -74,7 +75,7 @@ export function GameVersionArtifacts({
   gameSId,
   versions,
 }: GameVersionArtifactsProps) {
-  const { artifacts } = useIpc();
+  const { artifacts, games } = useIpc();
   const artifactPlatforms = useAppSelector((state) =>
     selectArtifactPlatforms(state),
   );
@@ -167,6 +168,7 @@ export function GameVersionArtifacts({
                     {header.header}
                   </TableHeader>
                 ))}
+                <TableHeader aria-label="overflow actions" />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -181,6 +183,27 @@ export function GameVersionArtifacts({
                   {row.cells.map((cell) => (
                     <TableCell key={cell.id}>{cell.value}</TableCell>
                   ))}
+                  <TableCell className="cds--table-column-menu">
+                    {artifactRows.find((r) => r.id === row.id)!.platform ===
+                      "html" && (
+                      <IconButton
+                        label="Play"
+                        kind="ghost"
+                        size="sm"
+                        onClick={() => {
+                          games
+                            .startGame(
+                              gameSId,
+                              artifactRows.find((r) => r.id === row.id)!
+                                .version,
+                            )
+                            .catch(console.error);
+                        }}
+                      >
+                        <PlayFilledAlt />
+                      </IconButton>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

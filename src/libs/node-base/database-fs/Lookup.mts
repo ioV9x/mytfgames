@@ -98,3 +98,66 @@ export async function dbfsFindNodeNoByPath(
 
   return rr === undefined ? rr : BigInt(rr.node_no);
 }
+
+interface NodeContent {
+  blake3Hash: Buffer;
+  data: Buffer | null;
+  size: bigint;
+}
+/**
+ * Resolves a path to the content. The path is resolved relative to the root node.
+ *
+ * @param qc The query creator, either the database connection or a transaction
+ * @param path The path to resolve
+ * @returns The node number of the resolved path or undefined if not found
+ */
+export async function dbfsResolveFileNodeContentByPath(
+  qc: AppQueryCreator,
+  path: string,
+): Promise<NodeContent | undefined>;
+/**
+ * Resolves a path to a node number. The path is resolved relative to the anchor node.
+ * If the path is absolute, the anchor node must be the root node.
+ *
+ * @param qc The query creator, either the database connection or a transaction
+ * @param anchor Search starting point, defaults to the root node
+ * @param path The path to resolve
+ * @returns The node number of the resolved path or undefined if not found
+ */
+export async function dbfsResolveFileNodeContentByPath(
+  qc: AppQueryCreator,
+  anchor: bigint,
+  path: string,
+): Promise<NodeContent | undefined>;
+export async function dbfsResolveFileNodeContentByPath(
+  qc: AppQueryCreator,
+  anchorOrPath: bigint | string,
+  path?: string,
+): Promise<NodeContent | undefined> {
+  const nodeNo = await dbfsFindNodeNoByPath(qc, anchorOrPath as bigint, path!);
+  if (nodeNo === undefined) {
+    return undefined;
+  }
+
+  const rr = await qc
+    .selectFrom("node_file")
+    .where("file_no", "=", nodeNo)
+    .innerJoin(
+      "node_file_content",
+      "node_file_content.blake3_hash",
+      "node_file.blake3_hash",
+    )
+    .select([
+      "node_file_content.blake3_hash as blake3Hash",
+      "node_file_content.data",
+      "node_file_content.size",
+    ])
+    .executeTakeFirst();
+
+  return rr === undefined
+    ? rr
+    : {
+        ...rr,
+        size: BigInt(rr.size),
+      };
+}
