@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "~7.6.1",
+    "@electron-forge/maker-base": "~7.6.1",
     "@electron-forge/maker-zip": "~7.6.1",
     "@electron-forge/plugin-fuses": "~7.6.1",
     "@electron-forge/plugin-vite": "~7.6.1",
@@ -58,6 +59,7 @@
     "@electron/fuses": "^1.8.0",
     "@eslint/js": "^9.20.0",
     "@napi-rs/blake-hash": "^1.3.4",
+    "@types/archiver": "^6.0.3",
     "@types/better-sqlite3": "^7.6.12",
     "@types/bunyan": "^1.8.11",
     "@types/js-yaml": "^4.0.9",
@@ -67,6 +69,7 @@
     "@types/remarkable": "^2.0.8",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "archiver": "^7.0.1",
     "electron": "^33.4.0",
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^9.1.0",

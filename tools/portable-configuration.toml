@@ -1,0 +1,6 @@
+[paths]
+database = "<config-dir>/data/db.sqlite3"
+blob_store = "<config-dir>/data/blobs"
+logs = "<config-dir>/data/logs"
+user_data = "<config-dir>/data"
+session_data = "<config-dir>/data/chromium"

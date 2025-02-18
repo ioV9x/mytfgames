@@ -10,7 +10,7 @@ import {
   AppConfigurationTree,
   ConfigurationInput,
 } from "$node-base/configuration";
-import { Ajv } from "$node-base/utils";
+import { Ajv, isErrnoException } from "$node-base/utils";
 
 import { AppConfigurationLoader } from "./AppConfiguration.mjs";
 
@@ -72,23 +72,46 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
     this.#validate = this.ajv.compile(appConfigurationSchema);
   }
 
-  get configurationFilePath(): string {
-    const configurationDir = app.isPackaged
-      ? app.getPath("userData")
-      : path.resolve(app.getAppPath(), "_data");
-    return path.join(configurationDir, "configuration.toml");
-  }
-
   loadConfiguration(): AppConfigurationTree {
-    const configurationFilePath = this.configurationFilePath;
-    const minimal = fs.existsSync(configurationFilePath)
-      ? this.loadConfigurationFileFrom(configurationFilePath)
-      : this.makeDefaultConfiguration();
+    const [configurationFilePath, minimal] = this.#tryLoadConfigurationFile();
     const expanded = this.expandConfigurationTree(
       configurationFilePath,
-      minimal,
+      minimal ?? this.makeDefaultConfiguration(),
     );
     return expanded;
+  }
+  #tryLoadConfigurationFile(): [string, ConfigurationInput | undefined] {
+    const configFileName = "configuration.toml";
+    if (!app.isPackaged) {
+      return this.#tryLoadSingleConfigurationFile(
+        app.getAppPath(),
+        "_data",
+        configFileName,
+      );
+    }
+    const portableLoadResult = this.#tryLoadSingleConfigurationFile(
+      path.dirname(app.getPath("exe")),
+      configFileName,
+    );
+    return portableLoadResult[1]
+      ? portableLoadResult
+      : this.#tryLoadSingleConfigurationFile(
+          app.getPath("userData"),
+          configFileName,
+        );
+  }
+  #tryLoadSingleConfigurationFile(
+    ...filePathSegments: string[]
+  ): [string, ConfigurationInput | undefined] {
+    const configFilePath = path.resolve(...filePathSegments);
+    try {
+      return [configFilePath, this.loadConfigurationFileFrom(configFilePath)];
+    } catch (e) {
+      if (isErrnoException(e) && e.code === "ENOENT") {
+        return [configFilePath, undefined];
+      }
+      throw e;
+    }
   }
 
   makeDefaultConfiguration(): ConfigurationInput {
@@ -134,7 +157,7 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
     minimal: ConfigurationInput["paths"] = {},
   ): AppConfigurationTree["paths"] {
     const configurationDirectory = path.dirname(configurationFilePath);
-    const prefixRegex = /^<([-a-z]+)>(\/+(.+))?$/;
+    const prefixRegex = /^<([-a-z]+)>(?:\/+(.+))?$/;
 
     const well_known_prefix_paths = Object.assign(
       Object.create(null) as Record<string, string>,
@@ -153,12 +176,7 @@ export class ElectronAppConfigurationLoader implements AppConfigurationLoader {
       if (!match) {
         return configPath;
       }
-      const [_, prefix, _1, rest] = match as unknown as [
-        string,
-        string,
-        string?,
-        string?,
-      ];
+      const [_, prefix, rest] = match as unknown as [string, string, string?];
       const prefixPath = well_known_prefix_paths[prefix];
       if (prefixPath == null) {
         throw new Error(`unknown prefix: ${prefix}`);

@@ -11,6 +11,7 @@
     "package.json",
     "tools/**/*.mts",
     "src/**/vite.config.mts",
-    "src/libs/**/vitest.config.mts"
+    "src/libs/**/vitest.config.mts",
+    "tools/maker-portable-zip.ts"
   ]
 }

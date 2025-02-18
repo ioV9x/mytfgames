@@ -7,6 +7,8 @@ import { FusesPlugin } from "@electron-forge/plugin-fuses";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import type { ForgeConfig } from "@electron-forge/shared-types";
 
+import { MakerPortableZip } from "./tools/maker-portable-zip";
+
 const config: ForgeConfig = {
   packagerConfig: {
     asar: false,
@@ -15,8 +17,15 @@ const config: ForgeConfig = {
     onlyModules: ["better-sqlite3"],
     force: true, // better-sqlite3 uses prebuilds, so this is inxepensive
   },
-  makers: [new MakerZIP({})],
-
+  makers: [
+    new MakerZIP(),
+    new MakerPortableZip({
+      embeddedConfiguration: path.join(
+        __dirname,
+        "tools/portable-configuration.toml",
+      ),
+    }),
+  ],
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.
