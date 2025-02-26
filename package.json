@@ -23,7 +23,7 @@
     "@carbon/icons-react": "^11.55.0",
     "@carbon/react": "^1.76.0",
     "@carbon/styles": "^1.75.0",
-    "@reduxjs/toolkit": "^2.5.1",
+    "@reduxjs/toolkit": "^2.6.0",
     "ajv": "^8.17.1",
     "better-sqlite3": "^11.8.1",
     "bunyan": "^1.8.15",
