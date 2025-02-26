@@ -1,6 +1,6 @@
 import type { Generated } from "kysely";
 
-export type GameId = Buffer;
+export type GameId = Buffer<ArrayBuffer>;
 export type TfgamesGameId = number;
 
 export interface GameTable {
