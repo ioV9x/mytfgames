@@ -34,7 +34,7 @@ export class DefaultGameDataService implements GameDataService {
     userRating?: number;
     note: string;
   }): Promise<GameSId> {
-    const game_id = uuid.v4({}, Buffer.allocUnsafe(16)) as GameId;
+    const game_id: GameId = uuid.v4(undefined, Buffer.allocUnsafe(16));
     const last_change_datetime = Temporal.Now.instant().toString({
       smallestUnit: "second",
     });
