@@ -1244,29 +1244,52 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inversifyjs/common@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@inversifyjs/common@npm:1.4.0"
-  checksum: 10c0/03f76538de4d678f09c1d8a84351bcbedd5add502c46af27b8ce439d07162c428fccf26d23f0452e2adf1aaa893e179372c04f2aa9bfc3554e3125e43a76dd2b
+"@inversifyjs/common@npm:1.5.0":
+  version: 1.5.0
+  resolution: "@inversifyjs/common@npm:1.5.0"
+  checksum: 10c0/be0da03561d27abd9eb0c20c7f46c69bf8338a5027b0169242939908cebc037bfb6b7ea894c199d2a5a4e643864a5155206a0c154080001c643671e1d90b4554
   languageName: node
   linkType: hard
 
-"@inversifyjs/core@npm:1.3.5":
-  version: 1.3.5
-  resolution: "@inversifyjs/core@npm:1.3.5"
+"@inversifyjs/container@npm:1.5.3":
+  version: 1.5.3
+  resolution: "@inversifyjs/container@npm:1.5.3"
   dependencies:
-    "@inversifyjs/common": "npm:1.4.0"
-    "@inversifyjs/reflect-metadata-utils": "npm:0.2.4"
-  checksum: 10c0/c0b08d574be8a5a6b4c69910b443491b9b48f37a122e606e5b1a23c5d988f89f87571ef06c01465d20284515941a86685fd0eb1967be3d2e4957f8ea1fb602e5
+    "@inversifyjs/common": "npm:1.5.0"
+    "@inversifyjs/core": "npm:4.0.1"
+    "@inversifyjs/reflect-metadata-utils": "npm:1.1.0"
+  peerDependencies:
+    reflect-metadata: ~0.2.2
+  checksum: 10c0/84250f14aae30e919762e1e0acf69848cd1e6647d845883c628bab1a06a2897e1474ca6b6f84dea000f40ac4e4e0204c96c0e8b943392655772b7946871afe22
   languageName: node
   linkType: hard
 
-"@inversifyjs/reflect-metadata-utils@npm:0.2.4":
-  version: 0.2.4
-  resolution: "@inversifyjs/reflect-metadata-utils@npm:0.2.4"
+"@inversifyjs/core@npm:4.0.1":
+  version: 4.0.1
+  resolution: "@inversifyjs/core@npm:4.0.1"
+  dependencies:
+    "@inversifyjs/common": "npm:1.5.0"
+    "@inversifyjs/prototype-utils": "npm:0.1.0"
+    "@inversifyjs/reflect-metadata-utils": "npm:1.1.0"
+  checksum: 10c0/950e3af81970ce24419e8fe1530f2a683743f8a5b75447cd7ad041305ae30a4d6584b08fd52c6e7d768b3b7cc919a2cec151a53fe710b824a25229195333b9f2
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/prototype-utils@npm:0.1.0":
+  version: 0.1.0
+  resolution: "@inversifyjs/prototype-utils@npm:0.1.0"
+  dependencies:
+    "@inversifyjs/common": "npm:1.5.0"
+  checksum: 10c0/8c57b268ecad77b0ce4dc7d9658adec3ba6fbda29eb9d6d851518c78c4d09dbffc1433f4bc1b0a270058b58ef0e38a32ea732e689e5b266630d7abd13a78ecd8
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/reflect-metadata-utils@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@inversifyjs/reflect-metadata-utils@npm:1.1.0"
   peerDependencies:
     reflect-metadata: 0.2.2
-  checksum: 10c0/cfe93bf2366ea8fbf8e968c06e422b93ad20e5a264706aa632bca481a35f2324c38f826d639b8039181760e6a2a8cf9ef89ca57b7cec9851638cf99a1377596a
+  checksum: 10c0/e654a2f390efc3abe1fd36629d680ecadf40a7f27c20e06435b9b7b60f9b33c619387faad5a862ac89764e8da877c29147cb92f868488ea25ce565b8f81660dd
   languageName: node
   linkType: hard
 
@@ -4813,15 +4836,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inversify@npm:^6.2.2":
-  version: 6.2.2
-  resolution: "inversify@npm:6.2.2"
+"inversify@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "inversify@npm:7.0.1"
   dependencies:
-    "@inversifyjs/common": "npm:1.4.0"
-    "@inversifyjs/core": "npm:1.3.5"
+    "@inversifyjs/common": "npm:1.5.0"
+    "@inversifyjs/container": "npm:1.5.3"
+    "@inversifyjs/core": "npm:4.0.1"
   peerDependencies:
     reflect-metadata: ~0.2.2
-  checksum: 10c0/f4acff320cebec022b408c7f081192e7e96296d40ee9cbc3915c6fe331333af53f4a418058e31c9d760bb00e36e97d4ae3ef5e4e18096f60f46f45b9a6540aeb
+  checksum: 10c0/8fca34cce0182f3d70ecc9c1d57aaa7026dac167b93be6d4887bdd705b7a267d0dd42b6613d443b7a3b32bb17d4f372f47e0e38354300503416a823bf0b2653c
   languageName: node
   linkType: hard
 
@@ -5749,7 +5773,7 @@ __metadata:
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     gray-matter: "patch:gray-matter@npm%3A4.0.3#~/.yarn/patches/gray-matter-npm-4.0.3-852ae4f34c.patch"
     immer: "npm:^10.1.1"
-    inversify: "npm:^6.2.2"
+    inversify: "npm:^7.0.1"
     js-yaml: "npm:^4.1.0"
     kysely: "npm:^0.27.6"
     mime: "npm:^4.0.6"
