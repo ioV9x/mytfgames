@@ -18,16 +18,15 @@ import { AppModule } from "./app/app.module.mjs";
 import { ArtifactsModule } from "./artifacts/artifacts.module.mjs";
 import { ConfigurationModule } from "./configuration/configuration.module.mjs";
 import { GamesModule } from "./games/games.module.mjs";
-import { LogModule } from "./log/log.module.mjs";
+import { bindDynamicCategoryLoggers, LogModule } from "./log/log.module.mjs";
 import { PalBrowserModule } from "./pal/browser.module.mjs";
 import { PalDialogsModule } from "./pal/dialogs.module.mjs";
 import { PalIpcModule } from "./pal/Ipc/IpcModule.mjs";
 import { PalWorkerModule } from "./pal/worker/worker.module.mjs";
 
-const container = new Container({
-  skipBaseClassChecks: true,
-});
-container.load(
+const container = new Container();
+bindDynamicCategoryLoggers(container.bind.bind(container));
+await container.load(
   // keep this list sorted
   AppModule,
   ArtifactsModule,

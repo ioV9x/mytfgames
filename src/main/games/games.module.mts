@@ -9,7 +9,7 @@ import { GameDataService } from "./GameDataService.mjs";
 import { GameVersionService } from "./GameVersionService.mjs";
 import { HtmlGamePlayService } from "./HtmlGamePlayService.mjs";
 
-export const GamesModule = new ContainerModule((bind) => {
+export const GamesModule = new ContainerModule(({ bind }) => {
   bind(GameDataService).to(DefaultGameDataService).inSingletonScope();
   bind(IpcServiceProvider).toService(GameDataService);
 

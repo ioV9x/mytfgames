@@ -1,4 +1,4 @@
-import { ContainerModule, injectable } from "inversify";
+import { ContainerModule } from "inversify";
 
 import { RemoteProcedureServer } from "$pure-base/ipc";
 
@@ -8,9 +8,9 @@ import {
   WorkerIpcServer,
 } from "./WorkerIpcServer.mjs";
 
-export const PalIpcModule = new ContainerModule((bind) => {
+export const PalIpcModule = new ContainerModule(({ bind }) => {
   bind<RemoteProcedureServer>(RemoteProcedureServerInjectionSymbol)
-    .to(injectable()(RemoteProcedureServer))
+    .toResolvedValue(() => new RemoteProcedureServer())
     .inSingletonScope();
 
   bind(IpcServer).to(WorkerIpcServer).inSingletonScope();

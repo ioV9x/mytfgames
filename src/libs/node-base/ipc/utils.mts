@@ -1,4 +1,4 @@
-import { interfaces } from "inversify";
+import { ContainerModuleLoadOptions, ServiceIdentifier } from "inversify";
 
 import { makeServiceIdentifier } from "$node-base/utils";
 import {
@@ -10,8 +10,8 @@ import {
 } from "$pure-base/ipc";
 
 export function bindIpcServices(
-  bind: interfaces.Bind,
-  endpoint: interfaces.ServiceIdentifier<IpcEndpoint>,
+  { bind }: ContainerModuleLoadOptions,
+  endpointId: ServiceIdentifier<IpcEndpoint>,
   proto: RemoteServiceCollectionShape,
 ): void {
   const serviceCollectionId = makeServiceIdentifier<typeof proto>(
@@ -19,8 +19,9 @@ export function bindIpcServices(
   );
 
   bind(serviceCollectionId)
-    .toDynamicValue((context) =>
-      forgeRemoteServiceCollection(context.container.get(endpoint), proto),
+    .toResolvedValue(
+      (endpoint: IpcEndpoint) => forgeRemoteServiceCollection(endpoint, proto),
+      [endpointId],
     )
     .inSingletonScope();
 
@@ -28,8 +29,9 @@ export function bindIpcServices(
     ([, descriptor]) => isRemoteServiceShape(descriptor),
   )) {
     bind(serviceDescriptor![RemoteServiceId])
-      .toDynamicValue(
-        (context) => context.container.get(serviceCollectionId)[key],
+      .toResolvedValue(
+        (serviceCollection: typeof proto) => serviceCollection[key],
+        [serviceCollectionId],
       )
       .inSingletonScope();
   }

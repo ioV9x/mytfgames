@@ -11,7 +11,7 @@ import {
   ElectronBrowserWindowFactory,
 } from "./browser/ElectronBrowserWindow.mjs";
 
-export const PalBrowserModule = new ContainerModule((bind) => {
+export const PalBrowserModule = new ContainerModule(({ bind }) => {
   bind(BrowserSessionConfigurer)
     .to(ElectronBrowserSessionConfigurer)
     .inSingletonScope();

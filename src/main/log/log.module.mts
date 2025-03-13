@@ -1,47 +1,64 @@
 import path from "node:path";
 
-import { createLogger, levelFromName, stdSerializers } from "bunyan";
+import BunyanLogger, {
+  createLogger,
+  levelFromName,
+  stdSerializers,
+} from "bunyan";
 import { app } from "electron/main";
-import { ContainerModule } from "inversify";
+import {
+  BindToFluentSyntax,
+  ContainerModule,
+  ServiceIdentifier,
+} from "inversify";
 
 import { AppConfigurationTree } from "$node-base/configuration";
 
-import { BaseLogger, CategoryLogger, LogCategoryKey } from "./constants.mjs";
+import { LOG_CATEGORY_REGISTRY } from "./categories.mjs";
+import { BaseLogger } from "./constants.mjs";
+import { Logger } from "./logger.mjs";
 
-export const LogModule = new ContainerModule((bind) => {
+type BindFn = <T>(
+  this: void,
+  serviceIdentifier: ServiceIdentifier<T>,
+) => BindToFluentSyntax<T>;
+export function bindDynamicCategoryLoggers(bind: BindFn): void {
+  for (const registration of Object.entries(LOG_CATEGORY_REGISTRY) as [
+    string,
+    ServiceIdentifier<Logger>,
+  ][]) {
+    bindCategoryLogger(bind, ...registration);
+  }
+}
+function bindCategoryLogger(
+  bind: BindFn,
+  categoryId: string,
+  categoryLogger: ServiceIdentifier<Logger>,
+): void {
+  bind(categoryLogger)
+    .toResolvedValue(
+      (logger: BunyanLogger) => logger.child({ category: categoryId }),
+      [BaseLogger],
+    )
+    .inTransientScope();
+}
+
+export const LogModule = new ContainerModule(({ bind }) => {
   bind(BaseLogger)
-    .toDynamicValue((ctx) =>
-      createLogger({
-        name: "app",
-        hostname: "N/A",
-        streams: [
-          {
-            level: app.isPackaged ? levelFromName.info : levelFromName.debug,
-            path: path.join(
-              ctx.container.get(AppConfigurationTree).paths.logs,
-              "app.log",
-            ),
-          },
-        ],
-        serializers: stdSerializers,
-      }),
+    .toResolvedValue(
+      (appConfigurationTree: AppConfigurationTree) =>
+        createLogger({
+          name: "app",
+          hostname: "N/A",
+          streams: [
+            {
+              level: app.isPackaged ? levelFromName.info : levelFromName.debug,
+              path: path.join(appConfigurationTree.paths.logs, "app.log"),
+            },
+          ],
+          serializers: stdSerializers,
+        }),
+      [AppConfigurationTree],
     )
     .inSingletonScope();
-
-  bind(CategoryLogger)
-    .toDynamicValue((ctx) => {
-      const category = ctx.currentRequest.target
-        .getCustomTags()
-        ?.find(({ key }) => key === LogCategoryKey);
-      if (category == null) {
-        throw new Error("No category provided");
-      }
-      if (typeof category.value !== "string") {
-        throw new Error("Category must be a string");
-      }
-      const baseLogger = ctx.container.get(BaseLogger);
-
-      return baseLogger.child({ category: category.value });
-    })
-    .inTransientScope();
 });
