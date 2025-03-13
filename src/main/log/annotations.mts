@@ -1,19 +1,12 @@
-import { createTaggedDecorator, inject } from "inversify";
+import { inject } from "inversify";
 
-import { CategoryLogger, LogCategoryKey } from "./constants.mjs";
+import { makeServiceIdentifier } from "$node-base/utils";
 
-export function logger(category: string) {
-  const withCategory = createTaggedDecorator({
-    key: LogCategoryKey,
-    value: category,
-  });
-  const injectLogger = inject(CategoryLogger);
-  return function (
-    target: object,
-    propertyKey: string | symbol | undefined,
-    parameterIndex: number,
-  ) {
-    withCategory(target, propertyKey, parameterIndex);
-    injectLogger(target, propertyKey, parameterIndex);
-  };
+import { LOG_CATEGORY_REGISTRY as knownCategories } from "./categories.mjs";
+import { Logger } from "./logger.mjs";
+
+export function logger(category: string): ParameterDecorator {
+  return inject(
+    (knownCategories[category] ??= makeServiceIdentifier<Logger>(category)),
+  );
 }

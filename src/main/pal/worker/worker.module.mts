@@ -6,12 +6,12 @@ import { bindIpcServices } from "$node-base/ipc";
 import { NodeWorkerShim, WorkerShim } from "./Worker.mjs";
 import { WorkerIpcEndpoint } from "./WorkerIpcEndpoint.mjs";
 
-export const PalWorkerModule = new ContainerModule((bind) => {
-  bind(WorkerShim).to(NodeWorkerShim).inSingletonScope();
-  bind(WorkerIpcEndpoint).toSelf().inSingletonScope();
+export const PalWorkerModule = new ContainerModule((options) => {
+  options.bind(WorkerShim).to(NodeWorkerShim).inSingletonScope();
+  options.bind(WorkerIpcEndpoint).toSelf().inSingletonScope();
 
   bindIpcServices(
-    bind,
+    options,
     WorkerIpcEndpoint,
     DefaultWorkerRemoteServiceCollection,
   );

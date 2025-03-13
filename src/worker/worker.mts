@@ -15,7 +15,7 @@ import { PalIpcModule } from "./pal/ipc/ipc.module.mjs";
 import { IpcServer } from "./pal/ipc/WorkerIpcServer.mjs";
 
 const container = new Container();
-container.load(
+await container.load(
   // keep this list sorted
   ArtifactsModule,
   BaseConfigurationModule,

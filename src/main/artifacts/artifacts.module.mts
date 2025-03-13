@@ -7,7 +7,7 @@ import { ArtifactOperationService } from "./ArtifactOperationService.mjs";
 import { ArtifactsOperationSchedule } from "./ArtifactsOperationSchedule.mjs";
 import { DefaultArtifactOperationService } from "./DefaultArtifactOperationService.mjs";
 
-export const ArtifactsModule = new ContainerModule((bind) => {
+export const ArtifactsModule = new ContainerModule(({ bind }) => {
   bind(ArtifactOperationService)
     .to(DefaultArtifactOperationService)
     .inTransientScope();
