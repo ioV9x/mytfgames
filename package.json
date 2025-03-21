@@ -85,7 +85,7 @@
     "typescript-eslint": "^8.26.1",
     "vite": "^6.2.2",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.8"
+    "vitest": "^3.0.9"
   },
   "resolutions": {
     "@ibm/plex": "npm:empty-npm-package@1.0.0",
