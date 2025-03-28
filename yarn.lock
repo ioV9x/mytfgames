@@ -1891,12 +1891,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.17.24, @types/node@npm:^20.9.0":
+"@types/node@npm:*, @types/node@npm:^20.9.0":
   version: 20.17.24
   resolution: "@types/node@npm:20.17.24"
   dependencies:
     undici-types: "npm:~6.19.2"
   checksum: 10c0/2a39ce4c4cd4588a05b2a485cc0a1407cbea608dd1ab03e36add59d61712718d95c84b492ca5190753f0be2bce748aeeb0f2a1412e712775462befe3820b3ff9
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.17.28":
+  version: 20.17.28
+  resolution: "@types/node@npm:20.17.28"
+  dependencies:
+    undici-types: "npm:~6.19.2"
+  checksum: 10c0/d77214e54d8f303d0a79fc896f8c4267b057fbc774448f6d09d24874d521293cd6036292e79b2791a6aef18895bd80dc58c1853bd8a0cf261b08500083f07273
   languageName: node
   linkType: hard
 
@@ -5767,7 +5776,7 @@ __metadata:
     "@types/better-sqlite3": "npm:^7.6.12"
     "@types/bunyan": "npm:^1.8.11"
     "@types/js-yaml": "npm:^4.0.9"
-    "@types/node": "npm:^20.17.24"
+    "@types/node": "npm:^20.17.28"
     "@types/react": "npm:^18.3.18"
     "@types/react-dom": "npm:^18.3.5"
     "@types/react-is": "npm:^18.3.1"
