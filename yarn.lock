@@ -1258,27 +1258,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inversifyjs/container@npm:1.5.4":
-  version: 1.5.4
-  resolution: "@inversifyjs/container@npm:1.5.4"
+"@inversifyjs/container@npm:1.6.0":
+  version: 1.6.0
+  resolution: "@inversifyjs/container@npm:1.6.0"
   dependencies:
     "@inversifyjs/common": "npm:1.5.0"
-    "@inversifyjs/core": "npm:5.0.0"
+    "@inversifyjs/core": "npm:5.1.0"
     "@inversifyjs/reflect-metadata-utils": "npm:1.1.0"
   peerDependencies:
     reflect-metadata: ~0.2.2
-  checksum: 10c0/5187be673cbffffd4cbf95b8de25e528963e8e2a3edaebae0a49e17bab762347f267ba8d21e15a178cee7bd6c681a814143f07f2805a297118da4908b648b55e
+  checksum: 10c0/811b155b89f711c28832fc2a0741d4d3aeddb5a4ed2665d4287addb1113e811c8b1bc6f37542bf9c60ad45bb948303107a741f4a9405270c0123111a04be974f
   languageName: node
   linkType: hard
 
-"@inversifyjs/core@npm:5.0.0":
-  version: 5.0.0
-  resolution: "@inversifyjs/core@npm:5.0.0"
+"@inversifyjs/core@npm:5.1.0":
+  version: 5.1.0
+  resolution: "@inversifyjs/core@npm:5.1.0"
   dependencies:
     "@inversifyjs/common": "npm:1.5.0"
     "@inversifyjs/prototype-utils": "npm:0.1.0"
     "@inversifyjs/reflect-metadata-utils": "npm:1.1.0"
-  checksum: 10c0/b510079e51c0d6e7c5c14a16caa07ce2bf4e835f27ad9d284905cc1832767adf7e9ec4d8075de3f66da7cd43613eca5a6125736a36dd66feadea6d3179233922
+  checksum: 10c0/3d4487bad212c675ade4ac342032b8eef051b79248e531ad08ca7b7599156bdec86dd65fa44dc61302abc1500a430dab4adccd3eb776198085c4d18914ba555a
   languageName: node
   linkType: hard
 
@@ -4853,16 +4853,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inversify@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "inversify@npm:7.1.0"
+"inversify@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "inversify@npm:7.2.0"
   dependencies:
     "@inversifyjs/common": "npm:1.5.0"
-    "@inversifyjs/container": "npm:1.5.4"
-    "@inversifyjs/core": "npm:5.0.0"
+    "@inversifyjs/container": "npm:1.6.0"
+    "@inversifyjs/core": "npm:5.1.0"
   peerDependencies:
     reflect-metadata: ~0.2.2
-  checksum: 10c0/12d2ab07b0b61c16daf1452cb1af17713cf42f314adcee639fba035da85a0084f2594b43bb09a0d2e19210cc7a2314d018a4e66f4e8f669e6ec8cc9f7b5dc4f3
+  checksum: 10c0/9da6241597ff054d028a1ff5b4c5807c01913acc9cfcf35920586bbed30f5cde9f1350ea709e8261ccbf04f64fe1a662fec4661200e72e1b81a945b2232ffc02
   languageName: node
   linkType: hard
 
@@ -5791,7 +5791,7 @@ __metadata:
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     gray-matter: "patch:gray-matter@npm%3A4.0.3#~/.yarn/patches/gray-matter-npm-4.0.3-852ae4f34c.patch"
     immer: "npm:^10.1.1"
-    inversify: "npm:^7.1.0"
+    inversify: "npm:^7.2.0"
     js-yaml: "npm:^4.1.0"
     kysely: "npm:^0.27.6"
     mime: "npm:^4.0.6"
