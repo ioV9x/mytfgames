@@ -61,9 +61,6 @@ export function upsert<K extends string | number, T extends object>(
   id: K,
   ...updates: Partial<T>[]
 ) {
-  let current = record[id];
-  if (current == null) {
-    current = record[id] = Object.create(null) as T;
-  }
+  const current = (record[id] ??= Object.create(null) as T);
   Object.assign(current, ...updates);
 }
