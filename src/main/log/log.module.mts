@@ -1,10 +1,6 @@
 import path from "node:path";
 
-import BunyanLogger, {
-  createLogger,
-  levelFromName,
-  stdSerializers,
-} from "bunyan";
+import { createLogger, levelFromName, stdSerializers } from "bunyan";
 import { app } from "electron/main";
 import {
   BindToFluentSyntax,
@@ -37,7 +33,7 @@ function bindCategoryLogger(
 ): void {
   bind(categoryLogger)
     .toResolvedValue(
-      (logger: BunyanLogger) => logger.child({ category: categoryId }),
+      (logger) => logger.child({ category: categoryId }),
       [BaseLogger],
     )
     .inTransientScope();
@@ -46,7 +42,7 @@ function bindCategoryLogger(
 export const LogModule = new ContainerModule(({ bind }) => {
   bind(BaseLogger)
     .toResolvedValue(
-      (appConfigurationTree: AppConfigurationTree) =>
+      (appConfigurationTree) =>
         createLogger({
           name: "app",
           hostname: "N/A",

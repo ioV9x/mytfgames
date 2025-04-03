@@ -8,7 +8,7 @@ import { AppDatabase, DatabaseProvider } from "$node-base/database";
 export const DatabaseModule = new ContainerModule(({ bind }) => {
   bind(DatabaseProvider)
     .toResolvedValue(
-      (configTree: AppConfigurationTree) => {
+      (configTree) => {
         const dbPath = configTree.paths.database;
         const dialect = new SqliteDialect({
           database() {
