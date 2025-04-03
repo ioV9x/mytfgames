@@ -1892,12 +1892,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.17.24, @types/node@npm:^20.9.0":
-  version: 20.17.24
-  resolution: "@types/node@npm:20.17.24"
+"@types/node@npm:*, @types/node@npm:^22.14.0, @types/node@npm:^22.7.7":
+  version: 22.14.0
+  resolution: "@types/node@npm:22.14.0"
   dependencies:
-    undici-types: "npm:~6.19.2"
-  checksum: 10c0/2a39ce4c4cd4588a05b2a485cc0a1407cbea608dd1ab03e36add59d61712718d95c84b492ca5190753f0be2bce748aeeb0f2a1412e712775462befe3820b3ff9
+    undici-types: "npm:~6.21.0"
+  checksum: 10c0/9d79f3fa1af9c2c869514f419c4a4905b34c10e12915582fd1784868ac4e74c6d306cf5eb47ef889b6750ab85a31be96618227b86739c4a3e0b1c15063f384c6
   languageName: node
   linkType: hard
 
@@ -3453,16 +3453,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^33.4.5":
-  version: 33.4.5
-  resolution: "electron@npm:33.4.5"
+"electron@npm:^35.1.3":
+  version: 35.1.3
+  resolution: "electron@npm:35.1.3"
   dependencies:
     "@electron/get": "npm:^2.0.0"
-    "@types/node": "npm:^20.9.0"
+    "@types/node": "npm:^22.7.7"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10c0/0fc0c1dcb8036deee1b7037679de0325e2abecd165f2074065a0a326f9b359a5d7b5b0d72d6fac0e3290abe0b8602c29647728becc43f63a8f043fc50b8c703d
+  checksum: 10c0/6a838a9a4136a9c81ef4b7836d44dac9348a7f5ff64f8c89423a461d28d6ed9c6e2f9146caf73e49b3003045fc0171eeb97ac78a43dc7b7a7cc2b992e131d52c
   languageName: node
   linkType: hard
 
@@ -5768,7 +5768,7 @@ __metadata:
     "@types/better-sqlite3": "npm:^7.6.12"
     "@types/bunyan": "npm:^1.8.11"
     "@types/js-yaml": "npm:^4.0.9"
-    "@types/node": "npm:^20.17.24"
+    "@types/node": "npm:^22.14.0"
     "@types/react": "npm:^18.3.20"
     "@types/react-dom": "npm:^18.3.6"
     "@types/react-is": "npm:^18.3.1"
@@ -5783,7 +5783,7 @@ __metadata:
     domelementtype: "npm:^2.3.0"
     domhandler: "npm:^5.0.3"
     dompurify: "npm:^3.2.5"
-    electron: "npm:^33.4.5"
+    electron: "npm:^35.1.3"
     electron-devtools-installer: "npm:^4.0.0"
     eslint: "npm:^9.23.0"
     eslint-config-prettier: "npm:^9.1.0"
@@ -5874,11 +5874,11 @@ __metadata:
   linkType: hard
 
 "node-abi@npm:^3.3.0, node-abi@npm:^3.45.0":
-  version: 3.67.0
-  resolution: "node-abi@npm:3.67.0"
+  version: 3.74.0
+  resolution: "node-abi@npm:3.74.0"
   dependencies:
     semver: "npm:^7.3.5"
-  checksum: 10c0/72ce2edbdfb84745bc201a4e48aa7146fd88a0d2c80046b6b17f28439c9a7683eab846f40f1e819349c31f7d9331ed5c50d1e741208d938dd5f38b29cab2275e
+  checksum: 10c0/a6c83c448d5e8b591f749a0157c9ec02f653021cdf3415c1a44fcb5fc8afc124acad186bc1ec76cb4db2485cc2dcdda187aacd382c54b6e3093ffc0389603643
   languageName: node
   linkType: hard
 
@@ -7929,10 +7929,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.19.2":
-  version: 6.19.8
-  resolution: "undici-types@npm:6.19.8"
-  checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
   languageName: node
   linkType: hard
 
