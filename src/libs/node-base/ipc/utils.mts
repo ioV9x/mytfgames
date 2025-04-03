@@ -20,7 +20,7 @@ export function bindIpcServices(
 
   bind(serviceCollectionId)
     .toResolvedValue(
-      (endpoint: IpcEndpoint) => forgeRemoteServiceCollection(endpoint, proto),
+      (endpoint) => forgeRemoteServiceCollection(endpoint, proto),
       [endpointId],
     )
     .inSingletonScope();
@@ -30,7 +30,7 @@ export function bindIpcServices(
   )) {
     bind(serviceDescriptor![RemoteServiceId])
       .toResolvedValue(
-        (serviceCollection: typeof proto) => serviceCollection[key],
+        (serviceCollection) => serviceCollection[key],
         [serviceCollectionId],
       )
       .inSingletonScope();
