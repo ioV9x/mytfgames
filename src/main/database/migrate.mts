@@ -1,10 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import { DatabaseSync } from "node:sqlite";
 
-import SQLite from "better-sqlite3";
-import { Kysely, Migrator, SqliteDialect } from "kysely";
+import { Kysely, Migrator } from "kysely";
 
 import { AppDatabase, ViteMigrationProvider } from "$node-base/database";
+import { NodeSqliteDialect } from "$node-base/database/kysely-support/NodeSqliteDialect.mjs";
 import { isErrnoException } from "$node-base/utils";
 
 export async function migrate(dbPath: string): Promise<void> {
@@ -41,10 +42,10 @@ export async function migrate(dbPath: string): Promise<void> {
     }
   }
 
-  const rawDatabase = new SQLite(tmpDbPath, { fileMustExist: false });
-  rawDatabase.pragma("journal_mode = WAL");
+  const rawDatabase = new DatabaseSync(tmpDbPath, { open: true });
+  rawDatabase.exec("PRAGMA journal_mode = WAL;");
   const db = new Kysely<AppDatabase>({
-    dialect: new SqliteDialect({
+    dialect: new NodeSqliteDialect({
       database: rawDatabase,
     }),
   });
@@ -58,7 +59,6 @@ export async function migrate(dbPath: string): Promise<void> {
   const migrations = await migrator.getMigrations();
   if (!migrations.some((migration) => migration.executedAt == null)) {
     await db.destroy();
-    rawDatabase.close();
     fs.rmSync(tmpDbPath);
     fs.rmdirSync(tmpDir);
     return;
@@ -71,7 +71,6 @@ export async function migrate(dbPath: string): Promise<void> {
   }
 
   await db.destroy();
-  rawDatabase.close();
 
   fs.renameSync(tmpDbPath, dbPath);
   try {

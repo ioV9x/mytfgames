@@ -1,5 +1,6 @@
-import SQLite from "better-sqlite3";
-import { Kysely, Migrator, SqliteDialect } from "kysely";
+import { DatabaseSync } from "node:sqlite";
+
+import { Kysely, Migrator } from "kysely";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import {
@@ -8,22 +9,17 @@ import {
   WellKnownDirectory,
 } from "$node-base/database";
 
+import { NodeSqliteDialect } from "../database/kysely-support/NodeSqliteDialect.mjs";
 import { dbfsMakeDirectoryNode } from "./Create.mjs";
 
-let canRun: boolean;
-try {
-  new SQLite(":memory:");
-  canRun = true;
-} catch {
-  canRun = false;
-}
-
-describe.runIf(canRun)("database-fs:Create", () => {
+describe("database-fs:Create", () => {
   let db: Kysely<AppDatabase>;
 
   beforeEach(async () => {
     db = new Kysely<AppDatabase>({
-      dialect: new SqliteDialect({ database: new SQLite(":memory:") }),
+      dialect: new NodeSqliteDialect({
+        database: new DatabaseSync(":memory:"),
+      }),
       log: ["error"],
     });
     const migrator = new Migrator({

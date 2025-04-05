@@ -12,7 +12,12 @@ export const builtins = [
   ...builtinModules.map((m) => [m, `node:${m}`]).flat(),
 ];
 
-export const external = [...builtins, "@napi-rs/blake-hash", "better-sqlite3"];
+export const external = [
+  ...builtins,
+  "@napi-rs/blake-hash",
+  "better-sqlite3",
+  "node:sqlite",
+];
 
 export function getBuildConfig(env: ConfigEnv<"build">): UserConfig {
   const { root, mode, command } = env;
