@@ -18,11 +18,11 @@
     "test": "vitest --typecheck"
   },
   "dependencies": {
-    "@carbon/colors": "^11.30.0",
-    "@carbon/grid": "^11.33.0",
-    "@carbon/icons-react": "^11.57.0",
-    "@carbon/react": "^1.79.0",
-    "@carbon/styles": "^1.78.0",
+    "@carbon/colors": "^11.31.0",
+    "@carbon/grid": "^11.34.0",
+    "@carbon/icons-react": "^11.58.0",
+    "@carbon/react": "^1.80.1",
+    "@carbon/styles": "^1.79.1",
     "@reduxjs/toolkit": "^2.6.1",
     "ajv": "^8.17.1",
     "better-sqlite3": "^11.9.1",
