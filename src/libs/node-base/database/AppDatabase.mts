@@ -1,4 +1,4 @@
-import type { Kysely, QueryCreator } from "kysely";
+import type { Dialect, Kysely, QueryCreator } from "kysely";
 
 import { makeServiceIdentifier } from "$node-base/utils";
 
@@ -69,3 +69,12 @@ type DatabaseProvider = Kysely<AppDatabase>;
 const DatabaseProvider =
   makeServiceIdentifier<DatabaseProvider>("kysely database");
 export { DatabaseProvider };
+
+type DatabaseDialectFactory = (
+  dbPath: string,
+  requireExisting?: boolean,
+) => Dialect;
+const DatabaseDialectFactory = makeServiceIdentifier<DatabaseDialectFactory>(
+  "database dialect factory",
+);
+export { DatabaseDialectFactory };

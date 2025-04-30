@@ -1,13 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import SQLite from "better-sqlite3";
-import { Kysely, Migrator, SqliteDialect } from "kysely";
+import { CompiledQuery, Dialect, Kysely, Migrator } from "kysely";
 
-import { AppDatabase, ViteMigrationProvider } from "$node-base/database";
+import {
+  AppDatabase,
+  DatabaseDialectFactory,
+  ViteMigrationProvider,
+} from "$node-base/database";
 import { isErrnoException } from "$node-base/utils";
 
-export async function migrate(dbPath: string): Promise<void> {
+export async function migrate(
+  dialectProvider: DatabaseDialectFactory,
+  dbPath: string,
+): Promise<void> {
   const dbDir = path.dirname(dbPath);
   const dbName = path.basename(dbPath);
   fs.mkdirSync(dbDir, { recursive: true });
@@ -41,24 +47,16 @@ export async function migrate(dbPath: string): Promise<void> {
     }
   }
 
-  const rawDatabase = new SQLite(tmpDbPath, { fileMustExist: false });
-  rawDatabase.pragma("journal_mode = WAL");
-  const db = new Kysely<AppDatabase>({
-    dialect: new SqliteDialect({
-      database: rawDatabase,
-    }),
-  });
+  const dialect = dialectProvider(tmpDbPath, false);
+  await forceWalMode(dialect);
+  const db = new Kysely<AppDatabase>({ dialect });
 
-  const migrator = new Migrator({
-    db,
-    provider: new ViteMigrationProvider(),
-  });
+  const migrator = new Migrator({ db, provider: new ViteMigrationProvider() });
 
   // check if we need to run any migrations
   const migrations = await migrator.getMigrations();
   if (!migrations.some((migration) => migration.executedAt == null)) {
     await db.destroy();
-    rawDatabase.close();
     fs.rmSync(tmpDbPath);
     fs.rmdirSync(tmpDir);
     return;
@@ -71,7 +69,6 @@ export async function migrate(dbPath: string): Promise<void> {
   }
 
   await db.destroy();
-  rawDatabase.close();
 
   fs.renameSync(tmpDbPath, dbPath);
   try {
@@ -82,4 +79,21 @@ export async function migrate(dbPath: string): Promise<void> {
     }
   }
   fs.rmdirSync(tmpDir);
+}
+
+async function forceWalMode(dialect: Dialect): Promise<void> {
+  const driver = dialect.createDriver();
+  try {
+    await driver.init();
+    const connection = await driver.acquireConnection();
+    try {
+      await connection.executeQuery(
+        CompiledQuery.raw("PRAGMA journal_mode = WAL;"),
+      );
+    } finally {
+      await driver.releaseConnection(connection);
+    }
+  } finally {
+    await driver.destroy();
+  }
 }

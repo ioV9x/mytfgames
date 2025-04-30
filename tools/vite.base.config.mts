@@ -12,7 +12,12 @@ export const builtins = [
   ...builtinModules.map((m) => [m, `node:${m}`]).flat(),
 ];
 
-export const external = [...builtins, "@napi-rs/blake-hash", "better-sqlite3"];
+export const external = [
+  ...builtins,
+  "@napi-rs/blake-hash",
+  "better-sqlite3",
+  "node:sqlite",
+];
 
 export function getBuildConfig(env: ConfigEnv<"build">): UserConfig {
   const { root, mode, command } = env;
@@ -65,7 +70,12 @@ export function getBuildDefine(
     getDefinesFor(command, name),
   );
 
-  return Object.assign({}, ...defines) as Record<string, string | undefined>;
+  return Object.assign(
+    {
+      __CATCH_MAIN_EXCEPTIONS__: JSON.stringify(command !== "serve"),
+    },
+    ...defines,
+  ) as Record<string, string | undefined>;
 }
 
 declare global {

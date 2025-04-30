@@ -1,4 +1,4 @@
-import type { Session } from "electron/main";
+import type { CustomScheme, Session } from "electron/main";
 
 import { makeServiceIdentifier } from "$node-base/utils";
 
@@ -10,11 +10,13 @@ export function isBrowserSession(v: object): v is BrowserSession {
   return "type" in v && v.type === BrowserSessionTypeId;
 }
 
+export const CustomProtocolScheme = makeServiceIdentifier<CustomScheme>(
+  "custom protocol scheme",
+);
+
 interface BrowserSessionConfigurer {
   configure(nativeSession: Session): BrowserSession | Promise<BrowserSession>;
   dereference(browserSession: BrowserSession): Session;
-
-  registerCustomProtocolPriviliges(): void;
 }
 const BrowserSessionConfigurer =
   makeServiceIdentifier<BrowserSessionConfigurer>("browser session configurer");

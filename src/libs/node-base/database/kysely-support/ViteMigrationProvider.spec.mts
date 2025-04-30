@@ -1,24 +1,18 @@
-import SQLite from "better-sqlite3";
-import { Kysely, Migrator, SqliteDialect } from "kysely";
+import { DatabaseSync } from "node:sqlite";
+
+import { Kysely, Migrator } from "kysely";
 import { describe, expect, it } from "vitest";
 
 import { AppDatabase } from "$node-base/database";
 
+import { NodeSqliteDialect } from "./NodeSqliteDialect.mjs";
 import { ViteMigrationProvider } from "./ViteMigrationProvider.mjs";
 
-let canRun: boolean;
-try {
-  new SQLite(":memory:");
-  canRun = true;
-} catch {
-  canRun = false;
-}
-
-describe.runIf(canRun)("ViteDatabaseProvider", () => {
+describe("ViteDatabaseProvider", () => {
   it("should migrate the database", async () => {
-    const database = new SQLite(":memory:");
+    const database = new DatabaseSync(":memory:");
     const db = new Kysely<AppDatabase>({
-      dialect: new SqliteDialect({ database }),
+      dialect: new NodeSqliteDialect({ database }),
     });
     const migrator = new Migrator({
       db,

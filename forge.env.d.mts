@@ -7,6 +7,8 @@ declare global {
   const RENDERER_VITE_DEV_SERVER_URL: string | undefined;
   const RENDERER_VITE_NAME: string;
 
+  const __CATCH_MAIN_EXCEPTIONS__: boolean | undefined;
+
   interface VitePluginRuntimeKeys {
     VITE_DEV_SERVER_URL: `${string}_VITE_DEV_SERVER_URL`;
     VITE_NAME: `${string}_VITE_NAME`;

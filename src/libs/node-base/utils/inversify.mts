@@ -1,4 +1,4 @@
-import { ServiceIdentifier } from "inversify";
+import { BindToFluentSyntax, ServiceIdentifier } from "inversify";
 
 export function makeServiceIdentifier<T extends object>(
   debugNameOrSymbol: string | symbol,
@@ -7,3 +7,8 @@ export function makeServiceIdentifier<T extends object>(
     ? debugNameOrSymbol
     : Symbol(debugNameOrSymbol);
 }
+
+export type BindFn = <T>(
+  this: void,
+  serviceIdentifier: ServiceIdentifier<T>,
+) => BindToFluentSyntax<T>;
