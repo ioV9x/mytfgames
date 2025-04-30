@@ -31,12 +31,16 @@ import type {
 
 import {
   CompiledQuery,
+  createQueryId,
   DatabaseConnection,
   DeleteQueryNode,
   Driver,
+  IdentifierNode,
   InsertQueryNode,
   MergeQueryNode,
+  QueryCompiler,
   QueryResult,
+  RawNode,
   SelectQueryNode,
   UpdateQueryNode,
 } from "kysely";
@@ -89,6 +93,45 @@ export class NodeSqliteDriver implements Driver {
   // eslint-disable-next-line @typescript-eslint/require-await
   async releaseConnection(): Promise<void> {
     this.#connectionMutex.unlock();
+  }
+
+  async savepoint(
+    connection: DatabaseConnection,
+    savepointName: string,
+    compileQuery: QueryCompiler["compileQuery"],
+  ): Promise<void> {
+    await connection.executeQuery(
+      compileQuery(
+        parseSavepointCommand("savepoint", savepointName),
+        createQueryId(),
+      ),
+    );
+  }
+
+  async rollbackToSavepoint(
+    connection: DatabaseConnection,
+    savepointName: string,
+    compileQuery: QueryCompiler["compileQuery"],
+  ): Promise<void> {
+    await connection.executeQuery(
+      compileQuery(
+        parseSavepointCommand("rollback to", savepointName),
+        createQueryId(),
+      ),
+    );
+  }
+
+  async releaseSavepoint(
+    connection: DatabaseConnection,
+    savepointName: string,
+    compileQuery: QueryCompiler["compileQuery"],
+  ): Promise<void> {
+    await connection.executeQuery(
+      compileQuery(
+        parseSavepointCommand("release", savepointName),
+        createQueryId(),
+      ),
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -158,6 +201,16 @@ class NodeSqliteConnection implements DatabaseConnection {
       };
     }
   }
+}
+
+function parseSavepointCommand(
+  command: string,
+  savepointName: string,
+): RawNode {
+  return RawNode.createWithChildren([
+    RawNode.createWithSql(`${command} `),
+    IdentifierNode.create(savepointName), // ensures savepointName gets sanitized
+  ]);
 }
 
 class ConnectionMutex {

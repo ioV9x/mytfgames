@@ -520,8 +520,8 @@ export async function up(db: Kysely<any>): Promise<void> {
               ),
             ]),
           )
-          .orderBy("details.last_crawl_datetime asc")
-          .orderBy("last_update_datetime desc"),
+          .orderBy("details.last_crawl_datetime", "asc")
+          .orderBy("last_update_datetime", "desc"),
       )
       .execute();
   });
