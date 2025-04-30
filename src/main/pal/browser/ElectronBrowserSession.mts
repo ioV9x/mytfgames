@@ -31,32 +31,6 @@ export class ElectronBrowserSessionConfigurer
     this.rendererAppPath = this.configuration.root.paths.renderer_app;
   }
 
-  registerCustomProtocolPriviliges(): void {
-    protocol.registerSchemesAsPrivileged([
-      {
-        scheme: "app",
-        privileges: {
-          standard: true,
-          codeCache: true,
-          secure: true,
-          stream: true,
-          supportFetchAPI: true,
-        },
-      },
-      {
-        scheme: "game",
-        privileges: {
-          standard: true,
-          secure: true,
-          stream: true,
-          supportFetchAPI: true,
-          allowServiceWorkers: false,
-          corsEnabled: true,
-        },
-      },
-    ]);
-  }
-
   configure(nativeSession: Session): BrowserSession | Promise<BrowserSession> {
     let browserSession = sessionWrappers.get(nativeSession);
     if (browserSession == null) {

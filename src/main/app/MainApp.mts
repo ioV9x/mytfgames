@@ -1,5 +1,3 @@
-import fs from "node:fs";
-
 import { app, session } from "electron/main";
 import installExtension, { REDUX_DEVTOOLS } from "electron-devtools-installer";
 import { inject, injectable } from "inversify";
@@ -14,7 +12,6 @@ import {
 } from "$main/pal";
 import { AppConfiguration } from "$node-base/configuration";
 
-import { migrate } from "../database/migrate.mjs";
 import { WorkerShim } from "../pal/worker/Worker.mjs";
 import { JobSchedulingService } from "./JobSchedulingService.mjs";
 
@@ -43,17 +40,8 @@ export class MainApp {
   }
 
   async run(): Promise<void> {
-    this.setupPaths();
-
-    if (!app.requestSingleInstanceLock()) {
-      app.quit();
-      return;
-    }
-
     this.initialize();
 
-    // apply migrations before starting the renderer in order to avoid DB access
-    await migrate(this.configuration.root.paths.database);
     // start the worker before the renderer, but after the migrations as the
     // worker will open a database connection on startup
     await this.workerShim.start();
@@ -61,27 +49,7 @@ export class MainApp {
     await this.startRenderer();
   }
 
-  setupPaths(): void {
-    const paths = this.configuration.root.paths;
-
-    this.setupElectronPath("userData", paths.user_data);
-
-    // logs path should be set via app.setAppLogsPath and is therefore special
-    fs.mkdirSync(paths.logs, { recursive: true });
-    app.setAppLogsPath(paths.logs);
-
-    this.setupElectronPath("sessionData", paths.session_data);
-
-    fs.mkdirSync(paths.blob_store, { recursive: true });
-  }
-  private setupElectronPath(which: string, path: string): void {
-    fs.mkdirSync(path, { recursive: true });
-    app.setPath(which, path);
-  }
-
   initialize(): void {
-    this.sessionConfigurer.registerCustomProtocolPriviliges();
-
     app.on("window-all-closed", this.onWindowAllClosed.bind(this));
     app.on("activate", this.onActivate.bind(this));
   }

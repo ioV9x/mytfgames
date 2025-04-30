@@ -1,6 +1,9 @@
 import { ContainerModule } from "inversify";
 
-import { BrowserSessionConfigurer } from "./browser/BrowserSession.mjs";
+import {
+  BrowserSessionConfigurer,
+  CustomProtocolScheme,
+} from "./browser/BrowserSession.mjs";
 import {
   BrowserWindowConfigurer,
   BrowserWindowFactory,
@@ -21,4 +24,26 @@ export const PalBrowserModule = new ContainerModule(({ bind }) => {
   bind(BrowserWindowConfigurer)
     .to(ElectronBrowserWindowConfigurer)
     .inSingletonScope();
+
+  bind(CustomProtocolScheme).toConstantValue({
+    scheme: "app",
+    privileges: {
+      standard: true,
+      codeCache: true,
+      secure: true,
+      stream: true,
+      supportFetchAPI: true,
+    },
+  });
+  bind(CustomProtocolScheme).toConstantValue({
+    scheme: "game",
+    privileges: {
+      standard: true,
+      secure: true,
+      stream: true,
+      supportFetchAPI: true,
+      allowServiceWorkers: false,
+      corsEnabled: true,
+    },
+  });
 });
