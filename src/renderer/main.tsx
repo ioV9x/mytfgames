@@ -47,11 +47,11 @@ function main(ev: MessageEvent) {
         enableV12TileDefaultIcons
         enableV12TileRadioIcons
       >
-        <IpcContext.Provider value={boundservices}>
+        <IpcContext value={boundservices}>
           <ReduxProvider store={store}>
             <App />
           </ReduxProvider>
-        </IpcContext.Provider>
+        </IpcContext>
       </FeatureFlags>
     </React.StrictMode>,
   );
